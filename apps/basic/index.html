@@ -12,10 +12,25 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, sans-serif; background-color: var(--bg-color); overflow: hidden; color: #333; }
     
+    /* ヘッダーエリア */
     #header-area { background: var(--panel-bg); border-bottom: 1px solid var(--border-color); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-shrink: 0; z-index: 50; }
     
     .header-left { display: flex; align-items: center; gap: 15px; }
-    .home-link { text-decoration: none; font-size: 18px; margin-right: 5px; }
+    
+    /* 戻るリンク（デザイン変更） */
+    .home-link { 
+        text-decoration: none; 
+        font-size: 14px; 
+        font-weight: bold; 
+        color: #666; 
+        margin-right: 5px; 
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.2s;
+    }
+    .home-link:hover { color: var(--accent-blue); }
+
     .app-title { font-size: 18px; font-weight: bold; color: var(--primary-color); white-space: nowrap; }
     
     .app-desc { font-size: 11px; color: #555; background: #f1f8e9; padding: 4px 10px; border-radius: 4px; border: 1px solid #c5e1a5; display: flex; align-items: center; gap: 10px; }
@@ -34,6 +49,7 @@
     .btn-print { background: var(--primary-color); color: #fff; }
     .btn-print:hover { background: #263238; }
 
+    /* メインレイアウト */
     #main-container { display: flex; height: calc(100% - 60px); padding: 10px; gap: 10px; }
     #stock-panel { width: 250px; flex-shrink: 0; background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     #stock-controls { padding: 10px; background: #fff; border-bottom: 1px dashed #ddd; display: flex; gap: 8px; flex-direction: column; }
@@ -47,6 +63,7 @@
     .stock-column:last-child { border-right: none; }
     .idx-header { font-size: 10px; font-weight: bold; color: #999; margin: 8px 0 2px 0; border-bottom: 1px solid #eee; }
 
+    /* カレンダーエリア */
     #calendar-wrapper { flex: 1; background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border-color); display: flex; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
     #row-headers { width: 35px; flex-shrink: 0; border-right: 1px solid #ddd; background: #fcfcfc; z-index: 10; display: flex; flex-direction: column; padding-top: 36px; }
     .row-label { flex: 1; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; text-orientation: upright; font-size: 12px; font-weight: bold; color: #888; letter-spacing: 2px; border-bottom: 1px dashed #999; user-select: none; }
@@ -65,6 +82,7 @@
     .slot.mid { background: rgba(250,250,250,0.5); }
     .slot.low { background: rgba(245,245,245,0.5); }
 
+    /* カードスタイル */
     .card { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 6px 8px; font-size: 12px; font-weight: bold; cursor: grab; box-shadow: 0 1px 2px rgba(0,0,0,0.1); border-left-width: 5px; color: #333; user-select: none; }
     .type-boy { border-left-color: #2196f3; }
     .type-girl { border-left-color: #e91e63; }
@@ -80,6 +98,7 @@
     .sortable-drag { opacity: 1; transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
     #print-title { display: none; }
 
+    /* 印刷用設定 */
     @media print {
         @page { size: A3 landscape; margin: 5mm; }
         body { background: #fff; overflow: visible; -webkit-print-color-adjust: exact; }
@@ -103,8 +122,8 @@
     <div id="print-title">入試スケジュール表</div>
     <div id="header-area">
         <div class="header-left">
-            <a href="../index.html" class="home-link">🏠</a>
-            <div class="app-title">📅 入試シミュレーター</div>
+            <a href="../index.html" class="home-link">◀ アプリ一覧</a>
+            <div class="app-title">📅 入試シミュレーター <small style="font-size: 0.7em; font-weight: normal;">(Basic)</small></div>
             <div class="app-desc">
                 <span class="free-badge">✅ 個人・塾での利用フリー</span>
                 <span style="border-left:1px solid #ccc; padding-left:10px;">💡 学校名をドラッグして、入試回や備考を自由に入力してください</span>
@@ -201,19 +220,15 @@ const App = {
             container.appendChild(card);
         });
         
-        // ★ストック内での並び替え・移動を禁止する設定
         new Sortable(container, {
             group: { name: 'schools', pull: 'clone', put: true },
-            sort: false, // ソート禁止
+            sort: false, 
             animation: 150,
             filter: ".idx-header",
-            
-            // リスト内での移動をブロック
             onMove: (evt) => {
-                if (evt.from === evt.to) return false; // 自分自身へのドロップ禁止
-                if (evt.to.classList.contains('stock-column') && evt.from.classList.contains('stock-column')) return false; // 列同士の移動禁止
+                if (evt.from === evt.to) return false;
+                if (evt.to.classList.contains('stock-column') && evt.from.classList.contains('stock-column')) return false;
             },
-
             onAdd: (evt) => { evt.item.parentNode.removeChild(evt.item); }
         });
     },
