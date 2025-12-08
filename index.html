@@ -14,48 +14,50 @@
         }
 
         body {
-            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             margin: 0;
             padding: 0;
             color: var(--text-gray);
             background-color: var(--bg-light);
-            text-align: center; /* 全体を中央寄せ */
+            text-align: center;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* --- メインエリア --- */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 画面の縦真ん中に配置 */
+            justify-content: center;
             align-items: center;
             padding: 40px 20px;
         }
 
-        /* --- ロゴエリア --- */
-        .logo-container {
-            margin-bottom: 20px;
-        }
+        /* --- ロゴ設定 --- */
+        .logo-container { margin-bottom: 30px; }
 
         .brand-logo {
-            width: 150px; /* ロゴを大きく！ */
-            height: 150px;
-            animation: float 6s ease-in-out infinite; /* ふわふわ浮かぶアニメーション */
+            width: 160px;
+            height: 160px;
+            animation: float 6s ease-in-out infinite;
         }
-
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
             100% { transform: translateY(0px); }
         }
 
+        .body-color { fill: #aebbc9; }
+        .head-color { fill: #1a2a44; }
+        .cheek-color { fill: #fff; }
+        .beak-color { fill: #e05a5a; }
+        .sakura-color { fill: #ffcae0; }
+
         h1 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--primary-navy);
-            margin: 10px 0 5px;
+            margin: 0 0 10px 0;
             letter-spacing: 0.1em;
         }
 
@@ -65,19 +67,20 @@
             color: #888;
         }
 
-        /* --- 2つのボタン（入り口） --- */
+        /* --- メニューカード設定 --- */
         .nav-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            max-width: 600px;
+            gap: 25px;
+            max-width: 500px;
             width: 100%;
         }
 
+        /* 共通カードスタイル */
         .nav-card {
             background: #fff;
             border: 2px solid #eee;
-            border-radius: 20px;
+            border-radius: 15px;
             padding: 30px 20px;
             transition: 0.3s;
             text-decoration: none;
@@ -85,28 +88,45 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .nav-card:hover {
-            border-color: var(--accent-sakura);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 202, 224, 0.3);
+            position: relative; /* バッジ表示用 */
         }
 
         .icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
         }
 
-        .nav-card h2 {
-            margin: 0;
-            font-size: 1.2rem;
+        .nav-card h2 { margin: 0; font-size: 1.1rem; }
+        .nav-card p { font-size: 0.8rem; color: #999; margin-top: 5px; }
+
+        /* --- アクティブなカード（Apps） --- */
+        a.nav-card:hover {
+            border-color: var(--accent-sakura);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 202, 224, 0.3);
+            cursor: pointer;
         }
-        
-        .nav-card p {
-            font-size: 0.8rem;
-            color: #999;
-            margin-top: 5px;
+
+        /* --- 準備中のカード（Books） --- */
+        .nav-card.disabled {
+            background-color: #f9f9f9; /* 背景を少しグレーに */
+            opacity: 0.7;              /* 全体を少し薄く */
+            cursor: default;           /* 指カーソルにしない */
+            border-style: dashed;      /* 枠線を点線に */
+        }
+
+        /* 準備中バッジ */
+        .coming-soon-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #888;
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
         }
 
         /* --- Twitterリンク --- */
@@ -114,26 +134,24 @@
             margin-top: 60px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             color: #888;
             font-size: 0.9rem;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 10px 25px;
             border-radius: 50px;
             transition: 0.3s;
+            border: 1px solid transparent;
         }
         
         .twitter-link:hover {
-            background-color: #f0f0f0;
-            color: #000;
+            background-color: #fff;
+            border-color: #ddd;
+            color: var(--primary-navy);
         }
 
-        /* --- スマホ対応 --- */
         @media (max-width: 600px) {
-            .nav-grid {
-                grid-template-columns: 1fr; /* スマホでは縦並び */
-                max-width: 300px;
-            }
+            .nav-grid { grid-template-columns: 1fr; max-width: 280px; }
         }
     </style>
 </head>
@@ -142,15 +160,18 @@
     <main>
         <div class="logo-container">
             <svg class="brand-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="55" r="38" fill="#556b8d" />
-                <path d="M 20 45 Q 50 5 80 45 Z" fill="#333" />
-                <ellipse cx="70" cy="55" rx="12" ry="9" fill="#fff" transform="rotate(-15 70 55)"/>
-                <path d="M 45 60 Q 50 68 55 60 L 50 55 Z" fill="#e05a5a" />
-                
-                <circle cx="40" cy="45" r="3" fill="#fff" />
-
-                <path d="M 75 25 C 75 25, 90 10, 95 25 C 100 40, 80 50, 75 40 C 70 50, 50 40, 55 25 C 60 10, 75 25, 75 25" 
-                      fill="#ffcae0" stroke="#fff" stroke-width="2" transform="rotate(20 80 30)" />
+                <g transform="translate(5,0)">
+                    <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z" class="body-color"/>
+                    <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color"/>
+                    <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color"/>
+                    <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color"/>
+                    <path d="M 80 65 L 90 75 L 80 80" class="head-color"/>
+                </g>
+                <g transform="translate(35, 10) rotate(-10)">
+                    <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
+                    <rect x="15" y="18" width="20" height="8" class="head-color" />
+                    <circle cx="35" cy="30" r="3" class="sakura-color"/>
+                </g>
             </svg>
         </div>
 
@@ -163,11 +184,13 @@
                 <h2>Apps</h2>
                 <p>学習ツール・アプリ</p>
             </a>
-            <a href="./books/index.html" class="nav-card">
-                <span class="icon">🌸</span>
+
+            <div class="nav-card disabled">
+                <span class="coming-soon-badge">Coming Soon</span>
+                <span class="icon" style="opacity: 0.5;">🌸</span>
                 <h2>Books</h2>
-                <p>オリジナル絵本</p>
-            </a>
+                <p>準備中</p>
+            </div>
         </div>
 
         <a href="https://x.com/Sakura_Academia" target="_blank" class="twitter-link">
