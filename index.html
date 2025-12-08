@@ -55,83 +55,92 @@
         .sakura-color { fill: #ffcae0; }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.8rem; /* 少し大きく */
             color: var(--primary-navy);
             margin: 0 0 10px 0;
             letter-spacing: 0.1em;
         }
 
         .sub-text {
-            font-size: 0.9rem;
-            margin-bottom: 50px;
+            font-size: 1rem; /* 少し大きく */
+            margin-bottom: 60px; /* 余白を広げる */
             color: #888;
         }
 
-        /* --- メニューカード設定 --- */
+        /* --- メニューカード設定（サイズアップ） --- */
         .nav-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            max-width: 500px;
+            gap: 30px; /* 間隔を広げる */
+            max-width: 600px; /* 全体の幅を広げる */
             width: 100%;
         }
 
-        /* 共通カードスタイル */
+        /* 共通カードスタイル（サイズアップ） */
         .nav-card {
             background: #fff;
-            border: 2px solid #eee;
-            border-radius: 15px;
-            padding: 30px 20px;
+            border: 3px solid #eee; /* 枠線を少し太く */
+            border-radius: 20px; /* 角丸を強く */
+            padding: 40px 30px; /* 内側の余白を広げる */
             transition: 0.3s;
             text-decoration: none;
             color: var(--primary-navy);
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative; /* バッジ表示用 */
+            position: relative;
         }
 
         .icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 3rem; /* アイコンを大きく */
+            margin-bottom: 15px;
             display: block;
         }
 
-        .nav-card h2 { margin: 0; font-size: 1.1rem; }
-        .nav-card p { font-size: 0.8rem; color: #999; margin-top: 5px; }
+        .nav-card h2 {
+            margin: 0;
+            font-size: 1.4rem; /* タイトルを大きく */
+            font-weight: bold;
+        }
+        
+        .nav-card p {
+            font-size: 0.95rem; /* 説明文を大きく */
+            color: #999;
+            margin-top: 8px;
+        }
 
         /* --- アクティブなカード（Apps） --- */
         a.nav-card:hover {
             border-color: var(--accent-sakura);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 202, 224, 0.3);
+            transform: translateY(-8px); /* 浮き上がりを強く */
+            box-shadow: 0 15px 30px rgba(255, 202, 224, 0.4); /* 影を強く */
             cursor: pointer;
         }
 
         /* --- 準備中のカード（Books） --- */
         .nav-card.disabled {
-            background-color: #f9f9f9; /* 背景を少しグレーに */
-            opacity: 0.7;              /* 全体を少し薄く */
-            cursor: default;           /* 指カーソルにしない */
-            border-style: dashed;      /* 枠線を点線に */
+            background-color: #f9f9f9;
+            opacity: 0.7;
+            cursor: default;
+            border-style: dashed;
         }
 
-        /* 準備中バッジ */
+        /* 準備中バッジ（サイズアップ） */
         .coming-soon-badge {
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: -12px;
+            right: -12px;
             background-color: #888;
             color: #fff;
-            font-size: 0.7rem;
-            padding: 4px 10px;
+            font-size: 0.8rem;
+            padding: 5px 12px;
             border-radius: 20px;
             font-weight: bold;
         }
 
         /* --- Twitterリンク --- */
         .twitter-link {
-            margin-top: 60px;
+            margin-top: 70px;
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -150,8 +159,28 @@
             color: var(--primary-navy);
         }
 
+        /* --- フッター（クレジット） --- */
+        footer {
+            padding: 20px;
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        /* Geminiのロゴ風装飾（任意） */
+        .gemini-sparkle {
+            color: transparent;
+            background: linear-gradient(45deg, #4285F4, #DB4437, #F4B400, #0F9D58);
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: bold;
+        }
+
         @media (max-width: 600px) {
-            .nav-grid { grid-template-columns: 1fr; max-width: 280px; }
+            .nav-grid { grid-template-columns: 1fr; max-width: 320px; }
+            h1 { font-size: 1.5rem; }
+            .sub-text { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -176,7 +205,7 @@
         </div>
 
         <h1>桜アカデミア</h1>
-        <p class="sub-text">中学受験のための学習ツールと絵本</p>
+        <p class="sub-text">中学受験のためのツールと子供向けの絵本</p>
 
         <div class="nav-grid">
             <a href="./apps/index.html" class="nav-card">
@@ -199,6 +228,10 @@
         </a>
 
     </main>
+
+    <footer>
+        <p>Created with <span class="gemini-sparkle">Gemini</span>. このページとロゴはすべてAIによって作成されています。</p>
+    </footer>
 
 </body>
 </html>
