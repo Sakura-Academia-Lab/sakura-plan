@@ -1,155 +1,454 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>入試シミュレーター選択 | 桜アカデミア</title>
-<style>
-    /* デザイン設定 */
-    body { font-family: "Helvetica Neue", Arial, sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; color: #333; padding: 20px; box-sizing: border-box; }
-    
-    /* 戻るボタン */
-    .back-home-btn {
-        position: absolute; top: 20px; left: 20px;
-        text-decoration: none; color: #555; font-size: 14px; font-weight: bold;
-        display: flex; align-items: center; gap: 5px;
-        padding: 8px 16px; background: white; border-radius: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s;
-    }
-    .back-home-btn:hover { transform: translateX(-3px); color: #0288d1; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apps | 桜アカデミア</title>
+    <style>
+        /* --- 共通設定 --- */
+        :root {
+            --primary-navy: #1a2a44;
+            --accent-sakura: #ffcae0;
+            --text-gray: #555555;
+            --bg-light: #fdfdfd;
+        }
 
-    .brand-name { font-size: 14px; color: #888; font-weight: bold; letter-spacing: 0.05em; margin-bottom: 5px; margin-top: 40px; }
-    h1 { margin-top: 0; margin-bottom: 15px; color: #37474f; font-size: 26px; text-align: center; }
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-gray);
+            background-color: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-    /* フリー利用OKメッセージ */
-    .welcome-msg {
-        background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9;
-        padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold;
-        margin-bottom: 15px; display: flex; align-items: center; gap: 6px;
-    }
+        /* --- ヘッダーエリア --- */
+        header {
+            background: #fff;
+            padding: 20px 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
 
-    /* Xへのコンタクトボタン */
-    .x-contact-btn {
-        display: inline-flex; align-items: center; gap: 8px;
-        background-color: #000; color: #fff; text-decoration: none;
-        padding: 10px 20px; border-radius: 30px; font-size: 12px; font-weight: bold;
-        transition: opacity 0.2s, transform 0.2s;
-        margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .x-contact-btn:hover { opacity: 0.8; transform: translateY(-2px); }
-    .x-icon { font-size: 14px; }
-    
-    .container { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
-    
-    /* カードグループ（縦並び用） */
-    .card-group { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 300px; }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 1000px;
+        }
 
-    /* カードデザイン */
-    .card { 
-        background: white; padding: 40px 30px; border-radius: 12px; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; width: 100%; box-sizing: border-box;
-        transition: all 0.3s ease; text-decoration: none; color: inherit; 
-        border: 2px solid transparent; 
-        display: flex; flex-direction: column; align-items: center; position: relative;
-    }
-    
-    /* Basic版（クリック可） */
-    .card.active:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: #0288d1; cursor: pointer; }
-    
-    /* Advanced版（ロック中） */
-    .card.locked { background: #f9f9f9; color: #999; border: 1px dashed #ccc; cursor: not-allowed; }
-    .card.locked .icon { opacity: 0.5; }
-    .card.locked .title { color: #888; }
+        .header-logo-icon {
+            width: 60px;
+            height: 60px;
+        }
+        .header-logo-icon svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
 
-    .icon { font-size: 50px; margin-bottom: 20px; display: block; }
-    .title { font-size: 20px; font-weight: bold; margin-bottom: 10px; display: block; color: #0288d1; }
-    .desc { font-size: 13px; color: #666; line-height: 1.6; }
-    
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
-    .badge-basic { background: #e3f2fd; color: #0277bd; border: 1px solid #b3e5fc; }
-    .badge-lock { background: #eee; color: #777; border: 1px solid #ccc; }
+        .header-text h1 {
+            color: var(--primary-navy);
+            margin: 0;
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+        .header-text p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #888;
+        }
 
-    /* ダウンロードエリア */
-    .download-area {
-        text-align: center; width: 100%;
-        background: #fff; border-radius: 12px; padding: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .dl-btn {
-        display: inline-block; text-decoration: none;
-        background: #546e7a; color: white; font-size: 13px; font-weight: bold;
-        padding: 8px 20px; border-radius: 20px; transition: 0.3s;
-        margin-bottom: 5px;
-    }
-    .dl-btn:hover { background: #455a64; transform: translateY(-2px); }
-    .dl-note { font-size: 11px; color: #888; display: block; line-height: 1.4; }
+        .back-link {
+            position: absolute;
+            top: 20px;
+            right: 5%;
+            text-decoration: none;
+            color: #888;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .back-link:hover { color: var(--primary-navy); }
 
-    .footer { margin-top: 50px; font-size: 11px; color: #aaa; }
+        .x-btn {
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .x-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.8;
+        }
 
-    /* スマホ対応 */
-    @media (max-width: 600px) {
-        .back-home-btn { position: static; margin-bottom: 20px; align-self: flex-start; }
-        body { align-items: center; padding-top: 40px; }
-    }
-</style>
+        /* --- メインコンテンツ --- */
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        /* --- カードデザイン --- */
+        .app-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .app-icon-area {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+        }
+        .app-icon-area svg { width: 100%; height: 100%; overflow: visible; }
+
+        .app-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-navy);
+            margin: 5px 0;
+        }
+        .app-title small {
+            font-size: 0.8em;
+            color: #888;
+            font-weight: normal;
+        }
+
+        .app-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        .free-use-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #c8e6c9;
+        }
+        .note-text {
+            display: block;
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+        }
+
+        .btn-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .main-btn {
+            background-color: var(--primary-navy);
+            color: #fff;
+            padding: 12px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            display: block;
+        }
+        .main-btn:hover {
+            background-color: var(--accent-sakura);
+            color: var(--primary-navy);
+            transform: translateY(-2px);
+        }
+
+        .sub-btn {
+            background-color: #f0f2f5;
+            color: #555;
+            padding: 10px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+        .sub-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .dl-note {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 5px;
+            line-height: 1.4;
+            display: block;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        /* --- 状態別スタイル --- */
+        .app-card.active { border-top: 5px solid var(--primary-navy); }
+        .app-card.disabled {
+            background-color: #f9f9f9;
+            border: 2px dashed #ddd;
+            opacity: 0.8;
+        }
+        .app-card.disabled .main-btn {
+            background-color: #ccc;
+            pointer-events: none;
+        }
+
+        /* バッジ */
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .status-badge.ver { background: #e3f2fd; color: #1976d2; border: 1px solid #bbdefb; }
+        .status-badge.soon { background: #eee; color: #777; }
+
+        /* --- 更新履歴エリア --- */
+        .update-history {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .update-history h3 {
+            font-size: 1.1rem;
+            color: var(--primary-navy);
+            margin: 0 0 15px 0;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 8px;
+        }
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .history-item {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 8px;
+        }
+        .history-item:last-child { border-bottom: none; }
+        .history-date {
+            color: #888;
+            font-weight: bold;
+            min-width: 90px;
+        }
+        .history-content { color: #555; }
+        .history-tag {
+            font-size: 0.7rem;
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+            color: #666;
+        }
+
+        /* SVGカラー定義 */
+        .body-color { fill: #aebbc9; }
+        .head-color { fill: #1a2a44; }
+        .cheek-color { fill: #fff; }
+        .beak-color { fill: #e05a5a; }
+        .sakura-color { fill: #ffcae0; }
+        .pc-color { fill: #1a2a44; }
+        .screen-color { fill: #4facfe; }
+        .data-bar { fill: #fff; opacity: 0.9; }
+        .data-line { stroke: #feca57; stroke-width: 2; fill: none; }
+        .data-text { fill: #fff; opacity: 0.5; }
+        .sim-bg { fill: #eef2f5; }
+        .cube-face { fill: #aebbc9; stroke: #fff; stroke-width: 2; }
+        .cube-cut { stroke: #ff6b6b; stroke-width: 3; stroke-dasharray: 5,5; }
+
+        footer { text-align: center; padding: 30px; font-size: 0.8rem; color: #aaa; }
+
+        @media (max-width: 600px) {
+            .header-top { flex-direction: column; text-align: center; }
+            .back-link { position: static; margin-bottom: 10px; }
+            .history-item { flex-direction: column; gap: 5px; }
+        }
+    </style>
 </head>
 <body>
 
-    <a href="https://sakura-academia-lab.github.io/sakura-plan/" class="back-home-btn">
-        ◀ 総合トップに戻る
-    </a>
-
-    <div class="brand-name">🌸 桜アカデミア</div>
-    <h1>中学入試シミュレーター</h1>
-
-    <div class="welcome-msg">
-        ✅ 「Basic版」は個人・塾問わず、どなたでもご自由にお使いいただけます
-    </div>
-
-    <a href="https://x.com/Sakura_Academia" target="_blank" class="x-contact-btn">
-        <span class="x-icon">𝕏</span> 感想・機能追加のご要望はこちら
-    </a>
-    
-    <div class="container">
+    <header>
+        <a href="../index.html" class="back-link">◀ ホームに戻る</a>
         
-        <div class="card-group">
-            <a href="./basic/index.html" class="card active">
-                <span class="badge badge-basic">公開・配布用</span>
-                <span class="icon">✨</span>
-                <span class="title">Basic 版</span>
-                <span class="desc">
-                    学校名のみのシンプル設計。<br>
-                    入試回や備考を自由にメモできる<br>
-                    汎用性の高いバージョンです。
-                </span>
-            </a>
-
-            <div class="download-area">
-                <a href="./basic_simulator.zip" download class="dl-btn">📥 オフライン版をDL (ZIP)</a>
-                <span class="dl-note">
-                    ※ ネットがない環境で使いたい方へ。<br>
-                    ダウンロード後、解凍して中身の<br>
-                    index.htmlを開いてください。
-                </span>
+        <div class="header-top">
+            <div class="header-logo-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color"/>
+                    <path d="M 10 20 L 90 20 L 90 70 L 10 70 Z" class="pc-color"/>
+                    <rect x="15" y="25" width="70" height="40" class="screen-color"/>
+                    <g transform="translate(20, 30)">
+                        <rect x="0" y="0" width="30" height="2" class="data-text"/>
+                        <rect x="0" y="5" width="20" height="2" class="data-text"/>
+                        <rect x="40" y="10" width="5" height="20" class="data-bar"/>
+                        <rect x="48" y="5" width="5" height="25" class="data-bar"/>
+                        <path d="M 38 25 L 45 20 L 53 10 L 63 15" class="data-line"/>
+                    </g>
+                    <g transform="translate(55, 45) scale(0.6)">
+                         <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z" class="body-color"/>
+                        <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color"/>
+                        <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color"/>
+                        <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color"/>
+                        <path d="M 40 55 Q 30 65 10 60" class="body-color" stroke="#1a2a44" stroke-width="3"/>
+                         <g transform="translate(35, 10) rotate(-10)">
+                            <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
+                            <rect x="15" y="18" width="20" height="8" class="head-color" />
+                            <circle cx="35" cy="30" r="3" class="sakura-color"/>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>Applications</h1>
+                <p>中学受験をサポートするツールコレクション</p>
             </div>
         </div>
 
-        <div class="card-group">
-            <div class="card locked" onclick="alert('申し訳ありません。\nAdvanced版は現在、一般公開しておりません。')">
-                <span class="badge badge-lock">🔒 公開準備中</span>
-                <span class="icon">📊</span>
-                <span class="title">Advanced 版</span>
-                <span class="desc">
-                    偏差値(SS)データ搭載。<br>
-                    自動並び替えや判定機能などがついた<br>
-                    高機能バージョンです。
-                </span>
+        <a href="https://x.com/Sakura_Academia" target="_blank" class="x-btn">
+            <span>𝕏</span> 感想・機能追加のご要望はこちら
+        </a>
+    </header>
+
+    <main>
+        <div class="app-grid">
+
+            <div class="app-card active">
+                <span class="status-badge ver">Ver 1.0</span>
+                <div class="app-icon-area">
+                    <svg viewBox="0 0 100 100">
+                        <rect x="15" y="15" width="70" height="70" rx="10" class="sim-bg"/>
+                        <rect x="25" y="25" width="30" height="4" fill="#ccc"/>
+                        <rect x="25" y="35" width="40" height="4" fill="#ccc"/>
+                        <path d="M 60 70 L 60 40 L 70 30 L 80 50 L 85 20" fill="none" stroke="#4facfe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="85" cy="20" r="3" fill="#ff6b6b"/>
+                    </svg>
+                </div>
+                <div class="app-title">入試シミュレーター <small>(Basic版)</small></div>
+                
+                <div class="app-desc">
+                    <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
+                    学校パネルをドラッグ＆ドロップ。<br>
+                    パズル感覚で直感的に併願パターンを作成できます。<br>
+                    <span class="note-text">※偏差値データは、現在実装しておりません。</span>
+                </div>
+
+                <div class="btn-group">
+                    <a href="https://sakura-academia-lab.github.io/sakura-plan/apps/basic/index.html" target="_blank" class="main-btn">
+                        ブラウザで使う &rarr;
+                    </a>
+                    
+                    <div>
+                        <a href="../basic_simulator.zip" download class="sub-btn">
+                            📥 オフライン版をDL (ZIP)
+                        </a>
+                        <span class="dl-note">
+                            ※ネット環境がない場所で使いたい方向け。<br>
+                            更新があった場合は再度ダウンロードが必要です。<br>
+                            （ブラウザ版は自動的に最新になります）
+                        </span>
+                    </div>
+                </div>
             </div>
+
+            <div class="app-card disabled">
+                <span class="status-badge soon">Coming Soon</span>
+                <div class="app-icon-area">
+                    <svg viewBox="0 0 100 100">
+                        <g transform="translate(50, 50) rotate(10) translate(-50, -50)">
+                            <path d="M 25 25 L 75 25 L 90 40 L 40 40 Z" class="cube-face" fill="#cbd5e1"/>
+                            <path d="M 25 25 L 40 40 L 40 90 L 25 75 Z" class="cube-face" fill="#94a3b8"/>
+                            <path d="M 40 90 L 90 90 L 90 40 L 40 40 Z" class="cube-face" fill="#e2e8f0"/>
+                            <line x1="15" y1="15" x2="95" y2="95" class="cube-cut"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="app-title">立体図形スライサー</div>
+                <div class="app-desc">
+                    立方体や三角錐の切断を3Dでシミュレーション。<br>
+                    苦手な断面図を指一本で回転・確認できます。<br>
+                    <br>
+                    現在鋭意開発中です。
+                </div>
+                <div class="btn-group">
+                    <a href="#" class="main-btn">開発中... 🚧</a>
+                </div>
+            </div>
+
         </div>
 
-    </div>
+        <section class="update-history">
+            <h3>📢 Update History</h3>
+            <ul class="history-list">
+                <li class="history-item">
+                    <span class="history-date">2025.12.08</span>
+                    <span class="history-content">
+                        Webサイトを公開しました。<br>
+                        「入試シミュレーター (Basic版) Ver 1.0」をリリースしました。
+                        <span class="history-tag">New</span>
+                    </span>
+                </li>
+            </ul>
+        </section>
 
-    <div class="footer">© 2025 Sakura Academia</div>
+    </main>
+
+    <footer>
+        &copy; 2025 Sakura Academia
+    </footer>
 
 </body>
 </html>
