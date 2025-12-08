@@ -55,33 +55,33 @@
         .sakura-color { fill: #ffcae0; }
 
         h1 {
-            font-size: 1.8rem; /* 少し大きく */
+            font-size: 1.8rem;
             color: var(--primary-navy);
             margin: 0 0 10px 0;
             letter-spacing: 0.1em;
         }
 
         .sub-text {
-            font-size: 1rem; /* 少し大きく */
-            margin-bottom: 60px; /* 余白を広げる */
+            font-size: 1rem;
+            margin-bottom: 60px;
             color: #888;
         }
 
-        /* --- メニューカード設定（サイズアップ） --- */
+        /* --- メニューカード設定 --- */
         .nav-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px; /* 間隔を広げる */
-            max-width: 600px; /* 全体の幅を広げる */
+            gap: 30px;
+            max-width: 600px;
             width: 100%;
         }
 
-        /* 共通カードスタイル（サイズアップ） */
+        /* 共通カードスタイル */
         .nav-card {
             background: #fff;
-            border: 3px solid #eee; /* 枠線を少し太く */
-            border-radius: 20px; /* 角丸を強く */
-            padding: 40px 30px; /* 内側の余白を広げる */
+            border: 3px solid #eee;
+            border-radius: 20px;
+            padding: 40px 20px; /* 横の余白を少し調整 */
             transition: 0.3s;
             text-decoration: none;
             color: var(--primary-navy);
@@ -92,19 +92,20 @@
         }
 
         .icon {
-            font-size: 3rem; /* アイコンを大きく */
+            font-size: 3rem;
             margin-bottom: 15px;
             display: block;
         }
 
         .nav-card h2 {
             margin: 0;
-            font-size: 1.4rem; /* タイトルを大きく */
+            font-size: 1.4rem;
             font-weight: bold;
+            white-space: nowrap; /* 文字が折り返さないようにする */
         }
         
         .nav-card p {
-            font-size: 0.95rem; /* 説明文を大きく */
+            font-size: 0.95rem;
             color: #999;
             margin-top: 8px;
         }
@@ -112,12 +113,12 @@
         /* --- アクティブなカード（Apps） --- */
         a.nav-card:hover {
             border-color: var(--accent-sakura);
-            transform: translateY(-8px); /* 浮き上がりを強く */
-            box-shadow: 0 15px 30px rgba(255, 202, 224, 0.4); /* 影を強く */
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(255, 202, 224, 0.4);
             cursor: pointer;
         }
 
-        /* --- 準備中のカード（Books） --- */
+        /* --- 準備中のカード（Picture Books） --- */
         .nav-card.disabled {
             background-color: #f9f9f9;
             opacity: 0.7;
@@ -125,7 +126,7 @@
             border-style: dashed;
         }
 
-        /* 準備中バッジ（サイズアップ） */
+        /* 準備中バッジ */
         .coming-soon-badge {
             position: absolute;
             top: -12px;
@@ -159,16 +160,13 @@
             color: var(--primary-navy);
         }
 
-        /* --- フッター（クレジット） --- */
+        /* --- フッター --- */
         footer {
             padding: 20px;
             font-size: 0.75rem;
             color: #aaa;
         }
-        footer p {
-            margin: 5px 0;
-        }
-        /* Geminiのロゴ風装飾（任意） */
+        footer p { margin: 5px 0; }
         .gemini-sparkle {
             color: transparent;
             background: linear-gradient(45deg, #4285F4, #DB4437, #F4B400, #0F9D58);
@@ -217,7 +215,7 @@
             <div class="nav-card disabled">
                 <span class="coming-soon-badge">Coming Soon</span>
                 <span class="icon" style="opacity: 0.5;">🌸</span>
-                <h2>Books</h2>
+                <h2>Picture Books</h2>
                 <p>準備中</p>
             </div>
         </div>
