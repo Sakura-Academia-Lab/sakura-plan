@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入試スケジュール・シミュレーター</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script src="school_data.js"></script>
+
+<style>
+    :root { --primary-color: #37474f; --accent-blue: #0288d1; --bg-color: #f0f2f5; --panel-bg: #ffffff; --border-color: #e0e0e0; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, sans-serif; background-color: var(--bg-color); overflow: hidden; color: #333; }
+    
+    #header-area { background: var(--panel-bg); border-bottom: 1px solid var(--border-color); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-shrink: 0; z-index: 50; }
+    
+    .header-left { display: flex; align-items: center; gap: 15px; }
+    .home-link { text-decoration: none; font-size: 18px; margin-right: 5px; }
+    .app-title { font-size: 18px; font-weight: bold; color: var(--primary-color); white-space: nowrap; }
+    
+    .app-desc { font-size: 11px; color: #555; background: #f1f8e9; padding: 4px 10px; border-radius: 4px; border: 1px solid #c5e1a5; display: flex; align-items: center; gap: 10px; }
+    .free-badge { background: #2e7d32; color: #fff; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 10px; }
+
+    .header-actions { display: flex; align-items: center; gap: 15px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn { border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
+    
+    /* Xボタン */
+    .btn-x { background: #000; color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+    .btn-x:hover { opacity: 0.8; }
+    
+    .btn-reset { background: #fff; border: 1px solid #d32f2f; color: #d32f2f; }
+    .btn-reset:hover { background: #ffebee; }
+    .btn-print { background: var(--primary-color); color: #fff; }
+    .btn-print:hover { background: #263238; }
+
+    #main-container { display: flex; height: calc(100% - 60px); padding: 10px; gap: 10px; }
+    #stock-panel { width: 250px; flex-shrink: 0; background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    #stock-controls { padding: 10px; background: #fff; border-bottom: 1px dashed #ddd; display: flex; gap: 8px; flex-direction: column; }
+    .control-row { display: flex; gap: 5px; }
+    .select-wrapper { flex: 1; }
+    .select-wrapper select { width: 100%; padding: 6px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; background: #f9f9f9; font-weight: bold; color: #444; cursor: pointer; }
+    .panel-header { padding: 8px; background: #eee; border-bottom: 1px solid #ddd; font-size: 11px; font-weight: bold; text-align: center; color: #555; display: flex; }
+    .ph-col { flex: 1; }
+    #stock-lists { display: flex; flex: 1; overflow: hidden; }
+    .stock-column { flex: 1; overflow-y: auto; padding: 8px; background: #fafafa; border-right: 1px solid #eee; display: flex; flex-direction: column; gap: 6px; }
+    .stock-column:last-child { border-right: none; }
+    .idx-header { font-size: 10px; font-weight: bold; color: #999; margin: 8px 0 2px 0; border-bottom: 1px solid #eee; }
+
+    #calendar-wrapper { flex: 1; background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border-color); display: flex; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
+    #row-headers { width: 35px; flex-shrink: 0; border-right: 1px solid #ddd; background: #fcfcfc; z-index: 10; display: flex; flex-direction: column; padding-top: 36px; }
+    .row-label { flex: 1; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; text-orientation: upright; font-size: 12px; font-weight: bold; color: #888; letter-spacing: 2px; border-bottom: 1px dashed #999; user-select: none; }
+    .row-label:last-child { border-bottom: none; }
+    #calendar-scroll { flex: 1; overflow-x: auto; overflow-y: hidden; display: flex; }
+    .day-column { width: 170px; min-width: 170px; flex-shrink: 0; border-right: 1px solid #ccc; display: flex; flex-direction: column; height: 100%; }
+    .day-column.new-day { border-left: 2px solid #999; }
+    .day-header { height: 36px; line-height: 36px; text-align: center; font-size: 13px; font-weight: bold; color: #fff; background: #546e7a; border-bottom: 1px solid #37474f; flex-shrink: 0; }
+    .day-header.pm { background: #78909c; }
+    .day-header.jan { background: #00838f; }
+    .day-header.late { background: #e65100; }
+    .slot-container { flex: 1; display: flex; flex-direction: column; }
+    .slot { flex: 1; border-bottom: 1px dashed #999; padding: 6px; overflow-y: auto; overflow-x: hidden; transition: background 0.2s; display: flex; flex-direction: column; gap: 6px; position: relative; }
+    .slot:last-child { border-bottom: none; }
+    .slot.top { background: rgba(255,255,255,0.5); }
+    .slot.mid { background: rgba(250,250,250,0.5); }
+    .slot.low { background: rgba(245,245,245,0.5); }
+
+    .card { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 6px 8px; font-size: 12px; font-weight: bold; cursor: grab; box-shadow: 0 1px 2px rgba(0,0,0,0.1); border-left-width: 5px; color: #333; user-select: none; }
+    .type-boy { border-left-color: #2196f3; }
+    .type-girl { border-left-color: #e91e63; }
+    .type-coed { border-left-color: #4caf50; }
+    .card.in-calendar { border-left-width: 1px; display: flex; flex-direction: column; justify-content: center; padding: 8px; min-height: 65px; }
+    .card.in-calendar.type-boy { border-top: 4px solid #2196f3; }
+    .card.in-calendar.type-girl { border-top: 4px solid #e91e63; }
+    .card.in-calendar.type-coed { border-top: 4px solid #4caf50; }
+    .school-name-large { font-size: 15px; font-weight: 900; color: #222; margin-bottom: 4px; display: block; }
+    .free-input { width: 100%; padding: 4px; font-size: 11px; border: 1px solid #ccc; border-radius: 3px; background: #f9f9f9; margin-top: 2px; }
+    .free-input:focus { background: #fff; border-color: var(--accent-blue); outline: none; }
+    .sortable-ghost { opacity: 0.4; background: #bdbdbd; }
+    .sortable-drag { opacity: 1; transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    #print-title { display: none; }
+
+    @media print {
+        @page { size: A3 landscape; margin: 5mm; }
+        body { background: #fff; overflow: visible; -webkit-print-color-adjust: exact; }
+        #header-area, #stock-panel { display: none !important; }
+        #print-title { display: block; text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid #333; }
+        #main-container { height: auto; padding: 0; display: block; }
+        #calendar-wrapper { border: none; box-shadow: none; display: flex; width: 100%; overflow: visible; }
+        #row-headers { display: flex !important; height: auto; border-right: 2px solid #000; padding-top: 30px; }
+        .row-label { height: 250px; border-bottom: 1px solid #000; color: #000; flex: none; }
+        #calendar-scroll { overflow: visible; display: flex; flex-wrap: wrap; }
+        .day-column { flex: 1; min-width: 120px; width: auto; border: 1px solid #000; margin-bottom: -1px; margin-right: -1px; page-break-inside: avoid; }
+        .day-header { background: #ccc !important; color: #000 !important; border-bottom: 1px solid #000; font-size: 11px; height: 30px; line-height: 30px; }
+        .slot { height: 250px; border-bottom: 1px solid #000; padding: 2px; flex: none; }
+        .card.in-calendar { border: 1px solid #000; box-shadow: none; margin-bottom: 4px; min-height: 60px; }
+        .free-input { border: none; background: transparent; padding: 0; font-weight: bold; font-size: 11px; }
+        .free-input::placeholder { color: transparent; }
+    }
+</style>
+</head>
+<body>
+    <div id="print-title">入試スケジュール表</div>
+    <div id="header-area">
+        <div class="header-left">
+            <a href="../index.html" class="home-link">🏠</a>
+            <div class="app-title">📅 入試シミュレーター</div>
+            <div class="app-desc">
+                <span class="free-badge">✅ 個人・塾での利用フリー</span>
+                <span style="border-left:1px solid #ccc; padding-left:10px;">💡 学校名をドラッグして、入試回や備考を自由に入力してください</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="https://x.com/Sakura_Academia" target="_blank" class="btn-x">
+                𝕏 学校追加のリクエスト
+            </a>
+
+            <div class="btn-group">
+                <button class="btn btn-reset" onclick="App.resetCalendar()">リセット</button>
+                <button class="btn btn-print" onclick="window.print()">🖨️ 印刷</button>
+            </div>
+        </div>
+    </div>
+    <div id="main-container">
+        <div id="stock-panel">
+            <div id="stock-controls">
+                <div class="control-row">
+                    <div class="select-wrapper"><select id="gender-select"><option value="boy">👦 男子受験</option><option value="girl">👧 女子受験</option></select></div>
+                    <div class="select-wrapper"><select id="region-select"><option value="feb" selected>🗼 2月校</option><option value="jan">🎍 1月校</option></select></div>
+                </div>
+            </div>
+            <div class="panel-header"><div class="ph-col" id="header-gender-label">男子校</div><div class="ph-col">共学校</div></div>
+            <div id="stock-lists"><div id="stock-gender" class="stock-column"></div><div id="stock-coed" class="stock-column"></div></div>
+        </div>
+        <div id="calendar-wrapper">
+            <div id="row-headers"><div class="row-label">チャレンジ</div><div class="row-label">実力相応</div><div class="row-label">安全圏</div></div>
+            <div id="calendar-scroll"></div>
+        </div>
+    </div>
+<script>
+const CALENDAR_DEF = [
+    { id: "jan_early", label: "1月 前半", type: "jan", newDay: true },
+    { id: "jan_late",  label: "1月 後半", type: "jan", newDay: false },
+    { id: "feb1_am", label: "2/1 AM", type: "am", newDay: true }, { id: "feb1_pm", label: "2/1 PM", type: "pm", newDay: false },
+    { id: "feb2_am", label: "2/2 AM", type: "am", newDay: true }, { id: "feb2_pm", label: "2/2 PM", type: "pm", newDay: false },
+    { id: "feb3_am", label: "2/3 AM", type: "am", newDay: true }, { id: "feb3_pm", label: "2/3 PM", type: "pm", newDay: false },
+    { id: "feb4_am", label: "2/4 AM", type: "am", newDay: true }, { id: "feb4_pm", label: "2/4 PM", type: "pm", newDay: false },
+    { id: "feb5", label: "2/5", type: "am", newDay: true }, { id: "feb6_etc", label: "2/6以降", type: "late", newDay: true }
+];
+const App = {
+    data: [],
+    init: function() {
+        if (window.SCHOOL_DATA) { this.data = window.SCHOOL_DATA; } 
+        else { alert("エラー: 'school_data.js' が読み込めませんでした。"); return; }
+        this.renderCalendar(); this.bindEvents(); this.refreshStock();
+    },
+    bindEvents: function() {
+        document.getElementById('gender-select').addEventListener('change', () => this.refreshStock());
+        document.getElementById('region-select').addEventListener('change', () => this.refreshStock());
+    },
+    renderCalendar: function() {
+        const area = document.getElementById('calendar-scroll');
+        area.innerHTML = "";
+        CALENDAR_DEF.forEach(col => {
+            const wrapper = document.createElement('div');
+            wrapper.className = `day-column${col.newDay ? ' new-day' : ''}`;
+            wrapper.innerHTML = `<div class="day-header ${col.type}">${col.label}</div><div class="slot-container"><div class="slot top" data-slot-id="${col.id}"></div><div class="slot mid" data-slot-id="${col.id}"></div><div class="slot low" data-slot-id="${col.id}"></div></div>`;
+            area.appendChild(wrapper);
+        });
+        document.querySelectorAll('.slot').forEach(slot => {
+            new Sortable(slot, {
+                group: 'schools', animation: 150, ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
+                onEnd: () => {},
+                onAdd: (evt) => { this.transformToCalendarCard(evt.item); this.sortSlot(evt.to); }
+            });
+        });
+    },
+    refreshStock: function() {
+        const gender = document.getElementById('gender-select').value;
+        const region = document.getElementById('region-select').value;
+        const containerG = document.getElementById('stock-gender');
+        const containerC = document.getElementById('stock-coed');
+        containerG.innerHTML = ""; containerC.innerHTML = "";
+        document.getElementById('header-gender-label').innerText = (gender === 'boy') ? "男子校" : "女子校";
+        const filtered = this.data.filter(s => s.region === region);
+        filtered.sort((a,b) => a.kana.localeCompare(b.kana, 'ja'));
+        const genderList = filtered.filter(s => (gender === 'boy' && s.type === 'boy') || (gender === 'girl' && s.type === 'girl'));
+        const coedList = filtered.filter(s => s.type === 'coed');
+        this.fillStockColumn(containerG, genderList); this.fillStockColumn(containerC, coedList);
+    },
+    fillStockColumn: function(container, list) {
+        let lastIndex = "";
+        list.forEach(school => {
+            const idx = this.getIndexChar(school.kana);
+            if (idx !== lastIndex) {
+                const header = document.createElement('div'); header.className = 'idx-header'; header.innerText = idx;
+                container.appendChild(header); lastIndex = idx;
+            }
+            const card = document.createElement('div');
+            card.className = `card type-${school.type}`; card.setAttribute('data-id', school.id); card.innerText = school.name;
+            container.appendChild(card);
+        });
+        
+        // ★ストック内での並び替え・移動を禁止する設定
+        new Sortable(container, {
+            group: { name: 'schools', pull: 'clone', put: true },
+            sort: false, // ソート禁止
+            animation: 150,
+            filter: ".idx-header",
+            
+            // リスト内での移動をブロック
+            onMove: (evt) => {
+                if (evt.from === evt.to) return false; // 自分自身へのドロップ禁止
+                if (evt.to.classList.contains('stock-column') && evt.from.classList.contains('stock-column')) return false; // 列同士の移動禁止
+            },
+
+            onAdd: (evt) => { evt.item.parentNode.removeChild(evt.item); }
+        });
+    },
+    transformToCalendarCard: function(el) {
+        const id = el.getAttribute('data-id');
+        const school = this.data.find(s => s.id === id);
+        el.className = `card in-calendar type-${school.type}`;
+        el.innerHTML = `<div><span class="school-name-large">${school.name}</span></div><input type="text" class="free-input" placeholder="例: 第2回 特待" onmousedown="event.stopPropagation()">`;
+        el.setAttribute('data-ss', 0);
+    },
+    sortSlot: function(container) { Array.from(container.children).forEach(item => container.appendChild(item)); },
+    getIndexChar: function(kana) {
+        if (!kana) return "他"; const c = kana.charAt(0);
+        if (/[あ-お]/.test(c)) return "あ行"; 
+        if (/[か-こが-ご]/.test(c)) return "か行"; 
+        if (/[さ-そざ-ぞ]/.test(c)) return "さ行";
+        if (/[た-とだ-ど]/.test(c)) return "た行"; 
+        if (/[な-の]/.test(c)) return "な行"; 
+        if (/[は-ほば-ぼぱ-ぽ]/.test(c)) return "は行";
+        if (/[ま-も]/.test(c)) return "ま行"; 
+        if (/[や-よ]/.test(c)) return "や行"; 
+        if (/[ら-ろ]/.test(c)) return "ら行";
+        if (/[わ-ん]/.test(c)) return "わ行"; return "他";
+    },
+    resetCalendar: function() { if(confirm('カレンダーを全てクリアしますか？')) document.querySelectorAll('.slot').forEach(s => s.innerHTML = ""); }
+};
+window.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>

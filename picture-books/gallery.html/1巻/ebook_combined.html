@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本 - 第1巻 (統合版)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
+
+        :root {
+            --page-width: 210mm;
+            --page-height: 297mm;
+            --bg-color: #f0f0f0;
+            --text-color: #4a4a4a;
+        }
+
+        /* Global Print Settings */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Zen Maru Gothic', sans-serif;
+            color: var(--text-color);
+        }
+
+        /* ============================
+           SCREEN VIEW STYLES
+           ============================ */
+        body {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #book-stage {
+            position: relative;
+            width: auto;
+            height: 90vh;
+            /* Fit to screen */
+            aspect-ratio: 210/297;
+            /* A4 Ratio */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            max-width: 95vw;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .page.active {
+            display: flex;
+            z-index: 2;
+        }
+
+        /* Combined Layout Styles (Screen) */
+        .page-content-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-area {
+            width: 100%;
+            height: 65%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .image-area img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Contain for screen to see full image */
+        }
+
+        .text-area {
+            width: 100%;
+            height: 35%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            font-size: 20pt;
+            /* Screen Font Size */
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Controls */
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-btn {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+            background: #f8f9fa;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .print-btn {
+            background: #ff7e5f;
+            color: white;
+        }
+
+        .print-btn:hover {
+            background: #feb47b;
+        }
+
+        /* ============================
+           PRINT VIEW STYLES (HIDDEN ON SCREEN)
+           ============================ */
+        #print-area {
+            display: none;
+        }
+
+        @media print {
+
+            /* Hide Screen Elements */
+            #book-stage,
+            #controls {
+                display: none !important;
+            }
+
+            body {
+                background: none;
+                height: auto;
+                display: block;
+                overflow: visible;
+                margin: 0;
+            }
+
+            /* Show Print Area */
+            #print-area {
+                display: block !important;
+            }
+
+            .print-page {
+                position: relative;
+                width: 210mm;
+                height: 297mm;
+                page-break-after: always;
+                display: flex;
+                flex-direction: column;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            .print-page:last-child {
+                page-break-after: auto;
+            }
+
+            /* Cover Style (Full Bleed) */
+            .print-page.cover img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            /* Combined Layout Styles (Print) */
+            .print-page .print-content-wrapper {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .print-page .print-image-area {
+                width: 100%;
+                height: 65%;
+                display: flex;
+                justify-content: center;
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            .print-page .print-image-area img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .print-page .print-text-area {
+                width: 100%;
+                height: 35%;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 20px 40px;
+                box-sizing: border-box;
+                font-size: 32pt;
+                /* Print Font Size */
+                line-height: 1.4;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CONTROL BAR -->
+    <div id="controls">
+        <button onclick="prevPage()" id="btn-prev" class="control-btn">◀ 前へ</button>
+        <button onclick="window.print()" class="control-btn print-btn">PDF保存 / 印刷</button>
+        <button onclick="nextPage()" id="btn-next" class="control-btn">次へ ▶</button>
+    </div>
+
+    <!-- SCREEN VIEW AREA -->
+    <div id="book-stage">
+        <!-- P1 Cover -->
+        <div class="page active" id="p1"><img src="生成画像/cover_front.png" class="cover-image" alt="Front Cover"></div>
+
+        <!-- P2 Story 1 -->
+        <div class="page" id="p2">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="生成画像/page1.png"></div>
+                <div class="text-area">
+                    <p>おはよう、<span class="boy-name"></span>くん</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- P3 Story 2 -->
+        <div class="page" id="p3">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="生成画像/page2.png"></div>
+                <div class="text-area">
+                    <p>きみはだれ？</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- P4 Story 3 -->
+        <div class="page" id="p4">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="生成画像/page3.png"></div>
+                <div class="text-area">
+                    <p>おいで…</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- P5 Story 4 -->
+        <div class="page" id="p5">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="生成画像/page4.png"></div>
+                <div class="text-area">
+                    <p>ピョン ピョン！<br>うれしいダンス</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- P6 Story 5 -->
+        <div class="page" id="p6">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="生成画像/page5.png"></div>
+                <div class="text-area">
+                    <p>てにのった！<br>きみのなまえ<span class="buncho-name"></span>！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- P7 Story 6 -->
+        <div class="page" id="p7">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="生成画像/page6.png"></div>
+                <div class="text-area">
+                    <p><span class="buncho-name"></span>は<span class="boy-name"></span>くんが<br>だいすき</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- P8 Story 7 -->
+        <div class="page" id="p8">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="生成画像/page7.png"></div>
+                <div class="text-area">
+                    <p>おやすみ、<span class="buncho-name"></span><br>またあした</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- P9 Back Cover -->
+        <div class="page" id="p9"><img src="生成画像/cover_back.png" class="cover-image" alt="Back Cover"></div>
+    </div>
+
+
+    <!-- PRINT VIEW AREA (SHADOW DOM FOR PRINTING) -->
+    <div id="print-area">
+        <!-- Cover -->
+        <div class="print-page cover"><img src="生成画像/cover_front.png"></div>
+
+        <!-- Pages -->
+        <!-- 1 -->
+        <div class="print-page">
+            <div class="print-content-wrapper">
+                <div class="print-image-area"><img src="生成画像/page1.png"></div>
+                <!-- Sourced from Preview.html -->
+                <div class="print-text-area">
+                    <p>おはよう、<span class="boy-name"></span>くん</p>
+                </div>
+            </div>
+        </div>
+        <!-- 2 -->
+        <div class="print-page">
+            <div class="print-content-wrapper">
+                <div class="print-image-area"><img src="生成画像/page2.png"></div>
+                <div class="print-text-area">
+                    <p>きみはだれ？</p>
+                </div>
+            </div>
+        </div>
+        <!-- 3 -->
+        <div class="print-page">
+            <div class="print-content-wrapper">
+                <div class="print-image-area"><img src="生成画像/page3.png"></div>
+                <div class="print-text-area">
+                    <p>おいで…</p>
+                </div>
+            </div>
+        </div>
+        <!-- 4 -->
+        <div class="print-page">
+            <div class="print-content-wrapper">
+                <div class="print-image-area"><img src="生成画像/page4.png"></div>
+                <div class="print-text-area">
+                    <p>ピョン ピョン！<br>うれしいダンス</p>
+                </div>
+            </div>
+        </div>
+        <!-- 5 -->
+        <div class="print-page">
+            <div class="print-content-wrapper">
+                <div class="print-image-area"><img src="生成画像/page5.png"></div>
+                <div class="print-text-area">
+                    <p>てにのった！<br>きみのなまえ<span class="buncho-name"></span>！</p>
+                </div>
+            </div>
+        </div>
+        <!-- 6 -->
+        <div class="print-page">
+            <div class="print-content-wrapper">
+                <div class="print-image-area"><img src="生成画像/page6.png"></div>
+                <div class="print-text-area">
+                    <p><span class="buncho-name"></span>は<span class="boy-name"></span>くんが<br>だいすき</p>
+                </div>
+            </div>
+        </div>
+        <!-- 7 -->
+        <div class="print-page">
+            <div class="print-content-wrapper">
+                <div class="print-image-area"><img src="生成画像/page7.png"></div>
+                <div class="print-text-area">
+                    <p>おやすみ、<span class="buncho-name"></span><br>またあした</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Cover -->
+        <div class="print-page cover"><img src="生成画像/cover_back.png"></div>
+    </div>
+
+
+    <script src="settings.js"></script>
+    <script>
+        let currentPage = 1;
+        const totalPages = 9;
+
+        function adjustTextSize() {
+            const textContainers = document.querySelectorAll('.text-area, .print-text-area');
+            textContainers.forEach(container => {
+                const paragraph = container.querySelector('p');
+                if (!paragraph) return;
+
+                // We need to differentiate between Screen and Print for resetting
+                // But simplified: reset to 32pt (max) and shrink?
+                // Or just rely on CSS defaults and shrink?
+                // Inline styles override CSS.
+
+                // Let's check window context. If printing, this script runs differently? 
+                // Creating a one-size-fits-all resizer is tricky with display:none elements.
+                // However, the user asked for resizing for the *Screen* view mostly?
+                // "Web page view is small".
+                // Actually, resizing should happen for both.
+
+                // For simplicity, let's target the visible ones or reset correctly.
+                const isPrintArea = container.classList.contains('print-text-area');
+                const defaultSize = isPrintArea ? 32 : 20;
+
+                paragraph.style.fontSize = defaultSize + 'pt';
+
+                // Only measure if visible
+                if (container.offsetParent !== null) {
+                    let size = defaultSize;
+                    while (paragraph.scrollHeight > container.clientHeight && size > 10) {
+                        size--;
+                        paragraph.style.fontSize = `${size}pt`;
+                    }
+                }
+            });
+        }
+
+        function updateView() {
+            if (typeof settings !== 'undefined') {
+                document.querySelectorAll('.boy-name').forEach(el => el.textContent = settings.boyName);
+                document.querySelectorAll('.buncho-name').forEach(el => el.textContent = settings.bunchoName);
+                document.title = `${settings.boyName}と${settings.bunchoName} - 第1巻 (統合版)`;
+            }
+
+            // Adjust text size
+            // Note: Hidden elements (print area) have 0 height, so resize won't work there until printed?
+            // Actually, @media print applies when printing. JS runs before.
+            // Responsive text in print is hard. 
+            // We'll focus on Screen view resizing as that's what's visible.
+            adjustTextSize();
+
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === totalPages;
+
+            document.getElementById('btn-prev').style.opacity = currentPage === 1 ? '0.5' : '1';
+            document.getElementById('btn-next').style.opacity = currentPage === totalPages ? '0.5' : '1';
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                const currentEl = document.getElementById(`p${currentPage}`);
+                const nextEl = document.getElementById(`p${currentPage + 1}`);
+
+                currentEl.classList.remove('active');
+                nextEl.classList.add('active');
+
+                currentPage++;
+                updateView();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                const currentEl = document.getElementById(`p${currentPage}`);
+                const prevEl = document.getElementById(`p${currentPage - 1}`);
+
+                currentEl.classList.remove('active');
+                prevEl.classList.add('active');
+
+                currentPage--;
+                updateView();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateView);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === 'ArrowLeft') prevPage();
+        });
+    </script>
+</body>
+
+</html>

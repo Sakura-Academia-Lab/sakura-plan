@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本 - 第1巻 (電子書籍版)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
+
+        :root {
+            --page-width: 210mm;
+            --page-height: 297mm;
+            --bg-color: #f0f0f0;
+            --text-color: #4a4a4a;
+        }
+
+        /* Global Print Settings */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Zen Maru Gothic', sans-serif;
+            color: var(--text-color);
+        }
+
+        /* ============================
+           SCREEN VIEW STYLES
+           ============================ */
+        body {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #book-stage {
+            position: relative;
+            width: auto;
+            height: 90vh;
+            /* Fit to screen */
+            aspect-ratio: 210/297;
+            /* A4 Ratio */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            max-width: 95vw;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: none;
+            /* Flex when active */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .page.active {
+            display: flex;
+            z-index: 2;
+        }
+
+        .image-content {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-content {
+            width: 100%;
+            padding: 40px;
+            font-size: 24pt;
+            /* Screen Font Size */
+            line-height: 1.6;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        /* Controls */
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-btn {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+            background: #f8f9fa;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .print-btn {
+            background: #ff7e5f;
+            color: white;
+        }
+
+        .print-btn:hover {
+            background: #feb47b;
+        }
+
+        /* ============================
+           PRINT VIEW STYLES (HIDDEN ON SCREEN)
+           ============================ */
+        #print-area {
+            display: none;
+        }
+
+        @media print {
+
+            /* Hide Screen Elements */
+            #book-stage,
+            #controls {
+                display: none !important;
+            }
+
+            body {
+                background: none;
+                height: auto;
+                display: block;
+                overflow: visible;
+                margin: 0;
+            }
+
+            /* Show Print Area */
+            #print-area {
+                display: block !important;
+            }
+
+            .print-page {
+                position: relative;
+                width: 210mm;
+                /* Force A4 Width */
+                height: 297mm;
+                /* Force A4 Height */
+                page-break-after: always;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+                margin: 0;
+                padding: 0;
+            }
+
+            .print-page:last-child {
+                page-break-after: auto;
+            }
+
+            /* Default Image Style: Contain (No cropping, visible entire image) */
+            .print-page img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+            }
+
+            /* Cover Image Style: Cover (Full Bleed, no margins, might crop edges) */
+            .print-page.cover img {
+                object-fit: cover;
+            }
+
+            .print-text {
+                font-size: 36pt;
+                /* Print Font Size */
+                text-align: center;
+                padding: 40px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CONTROL BAR -->
+    <div id="controls">
+        <button onclick="prevPage()" id="btn-prev" class="control-btn">◀ 前へ</button>
+        <button onclick="window.print()" class="control-btn print-btn">PDF保存 / 印刷</button>
+        <button onclick="nextPage()" id="btn-next" class="control-btn">次へ ▶</button>
+    </div>
+
+    <!-- SCREEN VIEW AREA -->
+    <div id="book-stage">
+        <!-- P1: Front Cover -->
+        <div class="page active" id="p1"><img src="生成画像/cover_front.png" class="cover-image" alt="Front Cover"></div>
+        <!-- P2: Img 1 -->
+        <div class="page" id="p2"><img src="生成画像/page1.png" class="image-content" alt="Page 1 Image"></div>
+        <!-- P3: Txt 1 -->
+        <div class="page" id="p3">
+            <div class="text-content">
+                <p>おはよう、<span class="boy-name"></span>くん</p>
+            </div>
+        </div>
+
+        <!-- P4: Img 2 -->
+        <div class="page" id="p4"><img src="生成画像/page2.png" class="image-content" alt="Page 2 Image"></div>
+        <!-- P5: Txt 2 -->
+        <div class="page" id="p5">
+            <div class="text-content">
+                <p>きみはだれ？</p>
+            </div>
+        </div>
+
+        <!-- P6: Img 3 -->
+        <div class="page" id="p6"><img src="生成画像/page3.png" class="image-content" alt="Page 3 Image"></div>
+        <!-- P7: Txt 3 -->
+        <div class="page" id="p7">
+            <div class="text-content">
+                <p>おいで…</p>
+            </div>
+        </div>
+
+        <!-- P8: Img 4 -->
+        <div class="page" id="p8"><img src="生成画像/page4.png" class="image-content" alt="Page 4 Image"></div>
+        <!-- P9: Txt 4 -->
+        <div class="page" id="p9">
+            <div class="text-content">
+                <p>ピョン ピョン！<br>うれしいダンス</p>
+            </div>
+        </div>
+
+        <!-- P10: Img 5 -->
+        <div class="page" id="p10"><img src="生成画像/page5.png" class="image-content" alt="Page 5 Image"></div>
+        <!-- P11: Txt 5 -->
+        <div class="page" id="p11">
+            <div class="text-content">
+                <p>てにのった！<br>きみのなまえ<span class="buncho-name"></span>！</p>
+            </div>
+        </div>
+
+        <!-- P12: Img 6 -->
+        <div class="page" id="p12"><img src="生成画像/page6.png" class="image-content" alt="Page 6 Image"></div>
+        <!-- P13: Txt 6 -->
+        <div class="page" id="p13">
+            <div class="text-content">
+                <p><span class="buncho-name"></span>は<span class="boy-name"></span>くんが<br>だいすき</p>
+            </div>
+        </div>
+
+        <!-- P14: Img 7 -->
+        <div class="page" id="p14"><img src="生成画像/page7.png" class="image-content" alt="Page 7 Image"></div>
+        <!-- P15: Txt 7 -->
+        <div class="page" id="p15">
+            <div class="text-content">
+                <p>おやすみ、<span class="buncho-name"></span><br>またあした</p>
+            </div>
+        </div>
+
+        <!-- P16: Back Cover -->
+        <div class="page" id="p16"><img src="生成画像/cover_back.png" class="cover-image" alt="Back Cover"></div>
+    </div>
+
+
+    <!-- PRINT VIEW AREA (SHADOW DOM FOR PRINTING) -->
+    <div id="print-area">
+        <div class="print-page cover"><img src="生成画像/cover_front.png"></div>
+        <div class="print-page"><img src="生成画像/page1.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>おはよう、<span class="boy-name"></span>くん</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="生成画像/page2.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>きみはだれ？</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="生成画像/page3.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>おいで…</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="生成画像/page4.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>ピョン ピョン！<br>うれしいダンス</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="生成画像/page5.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>てにのった！<br>きみのなまえ<span class="buncho-name"></span>！</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="生成画像/page6.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p><span class="buncho-name"></span>は<span class="boy-name"></span>くんが<br>だいすき</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="生成画像/page7.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>おやすみ、<span class="buncho-name"></span><br>またあした</p>
+            </div>
+        </div>
+        <div class="print-page cover"><img src="生成画像/cover_back.png"></div>
+    </div>
+
+
+    <script src="settings.js"></script>
+    <script>
+        let currentPage = 1;
+        const totalPages = 16;
+
+        function adjustTextSize() {
+            const textContainers = document.querySelectorAll('.text-content');
+            textContainers.forEach(container => {
+                const paragraph = container.querySelector('p');
+                if (!paragraph) return;
+
+                // Reset to default to measure
+                paragraph.style.fontSize = '24pt';
+
+                // Iteratively reduce size if overflowing
+                // Check if container offsetParent is null (hidden) ?
+                // For main view it works. For print view, it's display:block, so it might shrink unnecessarily if not careful?
+                // But .text-content is ONLY used in Screen View.
+                // Print view uses .print-text.
+
+                if (container.offsetParent !== null) {
+                    let size = 24;
+                    while (paragraph.scrollHeight > container.clientHeight && size > 10) {
+                        size--;
+                        paragraph.style.fontSize = `${size}pt`;
+                    }
+                }
+            });
+        }
+
+        function updateView() {
+            // Update names locally (Targeting both screen and print)
+            if (typeof settings !== 'undefined') {
+                document.querySelectorAll('.boy-name').forEach(el => el.textContent = settings.boyName);
+                document.querySelectorAll('.buncho-name').forEach(el => el.textContent = settings.bunchoName);
+                document.title = `${settings.boyName}と${settings.bunchoName} - 第1巻 (電子書籍)`;
+            }
+
+            // Adjust text size after names are updated
+            adjustTextSize();
+
+            // Screen Controls Visibility
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === totalPages;
+            document.getElementById('btn-prev').style.opacity = currentPage === 1 ? '0.5' : '1';
+            document.getElementById('btn-next').style.opacity = currentPage === totalPages ? '0.5' : '1';
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                const currentEl = document.getElementById(`p${currentPage}`);
+                const nextEl = document.getElementById(`p${currentPage + 1}`);
+
+                currentEl.classList.remove('active');
+                nextEl.classList.add('active');
+
+                currentPage++;
+                updateView();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                const currentEl = document.getElementById(`p${currentPage}`);
+                const prevEl = document.getElementById(`p${currentPage - 1}`);
+
+                currentEl.classList.remove('active');
+                prevEl.classList.add('active');
+
+                currentPage--;
+                updateView();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', updateView);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === 'ArrowLeft') prevPage();
+        });
+    </script>
+</body>
+
+</html>

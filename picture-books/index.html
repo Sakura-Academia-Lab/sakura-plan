@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本ギャラリー</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fdfbf7;
+            color: #4a4a4a;
+            font-family: 'Zen Maru Gothic', sans-serif;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(to bottom, #fff, #fdfbf7);
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #5d5d5d;
+            margin: 0;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+            place-items: center;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 210/297;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .book-info {
+            padding: 25px;
+        }
+
+        .vol-badge {
+            display: inline-block;
+            background: #ff7e5f;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .book-title {
+            font-size: 1.5em;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .read-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: #4a4a4a;
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .book-card:hover .read-btn {
+            background: #ff7e5f;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 0.9em;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>絵本の世界</h1>
+        <div class="subtitle">心温まる物語をお届けします</div>
+    </header>
+
+    <main>
+        <!-- Volume 1 Card -->
+        <a href="自分用/1巻/ebook.html" class="book-card">
+            <img src="自分用/1巻/生成画像/cover_front.png" alt="第1巻 表紙" class="book-cover">
+            <div class="book-info">
+                <span class="vol-badge">第1巻</span>
+                <div class="book-title" id="vol1-title">男の子と桜文鳥の物語</div>
+                <div class="read-btn">この本を読む</div>
+            </div>
+        </a>
+
+        <!-- Placeholder for Volume 2 -->
+        <!-- Future volumes can be added here -->
+    </main>
+
+    <footer>
+        &copy; 2024 Picture Book Project. All rights reserved.
+    </footer>
+
+    <!-- Script to load dynamic title if needed, or keep static generic title -->
+    <script>
+        // Optional: Load title from settings if we wanted perfect sync, 
+        // but settings.js is in a subdir. For now, keep generic or use relative path import.
+        // Simple fetch to get settings? No, keep it simple HTML for now.
+    </script>
+
+</body>
+
+</html>
