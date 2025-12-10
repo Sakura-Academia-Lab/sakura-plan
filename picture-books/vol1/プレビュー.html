@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本 - 第1巻</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            color: #4a4a4a;
+            /* Gentle dark gray */
+        }
+
+        .page-container {
+            width: 420mm;
+            /* A3 Landscape width */
+            height: 297mm;
+            /* A3 Landscape height */
+            background-color: white;
+            margin: 20px auto;
+            display: flex;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        .illustration-area {
+            width: 65%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fafafa;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .illustration-area img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .text-area {
+            width: 35%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            box-sizing: border-box;
+            font-size: 32pt;
+            /* Large, readable font size */
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .page-container {
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page 1 -->
+    <div class="page-container">
+        <div class="illustration-area">
+            <img src="images/page1.png" alt="Page 1 Illustration">
+        </div>
+        <div class="text-area">
+            <p>おはよう！<span class="boy-name"></span>くん</p>
+        </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div class="page-container">
+        <div class="illustration-area">
+            <img src="images/page2.png" alt="Page 2 Illustration">
+        </div>
+        <div class="text-area">
+            <p>きみはだれ？</p>
+        </div>
+    </div>
+
+    <!-- Page 3 -->
+    <div class="page-container">
+        <div class="illustration-area">
+            <img src="images/page3.png" alt="Page 3 Illustration">
+        </div>
+        <div class="text-area">
+            <p>おいで…</p>
+        </div>
+    </div>
+
+    <!-- Page 4 -->
+    <div class="page-container">
+        <div class="illustration-area">
+            <img src="images/page4.png" alt="Page 4 Illustration">
+        </div>
+        <div class="text-area">
+            <p>ピョン ピョン！<br>うれしいダンス</p>
+        </div>
+    </div>
+
+    <!-- Page 5 -->
+    <div class="page-container">
+        <div class="illustration-area">
+            <img src="images/page5.png" alt="Page 5 Illustration">
+        </div>
+        <div class="text-area">
+            <p>てにのった！<br>きみのなまえは<span class="buncho-name"></span>！</p>
+        </div>
+    </div>
+
+    <!-- Page 6 -->
+    <div class="page-container">
+        <div class="illustration-area">
+            <img src="images/page6.png" alt="Page 6 Illustration">
+        </div>
+        <div class="text-area">
+            <p><span class="buncho-name"></span>は<span class="boy-name"></span>くんが<br>だいすき</p>
+        </div>
+    </div>
+
+    <!-- Page 7 -->
+    <div class="page-container">
+        <div class="illustration-area">
+            <img src="images/page7.png" alt="Page 7 Illustration">
+        </div>
+        <div class="text-area">
+            <p>おやすみ<span class="buncho-name"></span><br>またあした</p>
+        </div>
+    </div>
+
+</body>
+<script src="settings.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let boyName = settings.boyName;
+        // Check localStorage
+        const storedName = localStorage.getItem('boyName');
+        if (storedName) {
+            boyName = storedName;
+        }
+
+        // タイトルタグの更新
+        document.title = `${boyName}と${settings.bunchoName} - 第1巻`;
+
+        // 本文内の名前更新
+        document.querySelectorAll('.boy-name').forEach(el => el.textContent = boyName);
+        document.querySelectorAll('.buncho-name').forEach(el => el.textContent = settings.bunchoName);
+    });
+</script>
+
+</html>
