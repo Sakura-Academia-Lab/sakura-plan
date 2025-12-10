@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,31 +36,81 @@
         }
 
         /* --- SVGの色定義（共通） --- */
-        .body-color { fill: #aebbc9; }
-        .head-color { fill: #1a2a44; }
-        .cheek-color { fill: #fff; }
-        .beak-color { fill: #e05a5a; }
-        .sakura-color { fill: #ffcae0; }
-        .pc-color { fill: #1a2a44; }
-        .screen-color { fill: #4facfe; }
-        .data-bar { fill: #fff; opacity: 0.9; }
-        .data-line { stroke: #feca57; stroke-width: 2; fill: none; }
-        .data-text { fill: #fff; opacity: 0.5; }
-        .book-cover { fill: #e58e26; }
-        .book-page { fill: #fff; }
+        .body-color {
+            fill: #aebbc9;
+        }
+
+        .head-color {
+            fill: #1a2a44;
+        }
+
+        .cheek-color {
+            fill: #fff;
+        }
+
+        .beak-color {
+            fill: #e05a5a;
+        }
+
+        .sakura-color {
+            fill: #ffcae0;
+        }
+
+        .pc-color {
+            fill: #1a2a44;
+        }
+
+        .screen-color {
+            fill: #4facfe;
+        }
+
+        .data-bar {
+            fill: #fff;
+            opacity: 0.9;
+        }
+
+        .data-line {
+            stroke: #feca57;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .data-text {
+            fill: #fff;
+            opacity: 0.5;
+        }
+
+        .book-cover {
+            fill: #e58e26;
+        }
+
+        .book-page {
+            fill: #fff;
+        }
 
         /* --- メインロゴ設定 --- */
-        .logo-container { margin-bottom: 30px; }
+        .logo-container {
+            margin-bottom: 30px;
+        }
 
         .brand-logo {
             width: 160px;
             height: 160px;
             animation: float 6s ease-in-out infinite;
         }
+
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
 
         h1 {
@@ -105,6 +156,7 @@
             width: 120px;
             height: 120px;
         }
+
         .nav-card .icon svg {
             width: 100%;
             height: 100%;
@@ -117,7 +169,7 @@
             font-weight: bold;
             white-space: nowrap;
         }
-        
+
         .nav-card p {
             font-size: 0.95rem;
             color: #999;
@@ -139,6 +191,7 @@
             cursor: default;
             border-style: dashed;
         }
+
         .nav-card.disabled .icon {
             opacity: 0.6;
         }
@@ -169,7 +222,7 @@
             transition: 0.3s;
             border: 1px solid transparent;
         }
-        
+
         .twitter-link:hover {
             background-color: #fff;
             border-color: #ddd;
@@ -182,7 +235,11 @@
             font-size: 0.75rem;
             color: #aaa;
         }
-        footer p { margin: 5px 0; }
+
+        footer p {
+            margin: 5px 0;
+        }
+
         .gemini-sparkle {
             color: transparent;
             background: linear-gradient(45deg, #4285F4, #DB4437, #F4B400, #0F9D58);
@@ -192,28 +249,38 @@
         }
 
         @media (max-width: 600px) {
-            .nav-grid { grid-template-columns: 1fr; max-width: 320px; }
-            h1 { font-size: 1.5rem; }
-            .sub-text { font-size: 0.9rem; }
+            .nav-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .sub-text {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <main>
         <div class="logo-container">
             <svg class="brand-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <g transform="translate(5,0)">
-                    <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z" class="body-color"/>
-                    <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color"/>
-                    <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color"/>
-                    <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color"/>
-                    <path d="M 80 65 L 90 75 L 80 80" class="head-color"/>
+                    <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z" class="body-color" />
+                    <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color" />
+                    <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color" />
+                    <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color" />
+                    <path d="M 80 65 L 90 75 L 80 80" class="head-color" />
                 </g>
                 <g transform="translate(35, 10) rotate(-10)">
                     <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
                     <rect x="15" y="18" width="20" height="8" class="head-color" />
-                    <circle cx="35" cy="30" r="3" class="sakura-color"/>
+                    <circle cx="35" cy="30" r="3" class="sakura-color" />
                 </g>
             </svg>
         </div>
@@ -225,31 +292,33 @@
             <a href="./apps/index.html" class="nav-card">
                 <span class="icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color"/>
-                        <path d="M 10 20 L 90 20 L 90 70 L 10 70 Z" class="pc-color"/>
-                        <rect x="15" y="25" width="70" height="40" class="screen-color"/>
+                        <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color" />
+                        <path d="M 10 20 L 90 20 L 90 70 L 10 70 Z" class="pc-color" />
+                        <rect x="15" y="25" width="70" height="40" class="screen-color" />
                         <g transform="translate(20, 30)">
-                            <rect x="0" y="0" width="30" height="2" class="data-text"/>
-                            <rect x="0" y="5" width="20" height="2" class="data-text"/>
-                            <rect x="0" y="10" width="25" height="2" class="data-text"/>
-                            <rect x="0" y="15" width="28" height="2" class="data-text"/>
-                            <rect x="0" y="20" width="15" height="2" class="data-text"/>
-                            <rect x="40" y="10" width="5" height="20" class="data-bar" transform="translate(0, -10) scale(1, 1)"/>
-                            <rect x="40" y="10" width="5" height="20" class="data-bar"/>
-                            <rect x="48" y="5" width="5" height="25" class="data-bar"/>
-                            <rect x="56" y="15" width="5" height="15" class="data-bar"/>
-                            <path d="M 38 25 L 45 20 L 53 10 L 63 15" class="data-line"/>
+                            <rect x="0" y="0" width="30" height="2" class="data-text" />
+                            <rect x="0" y="5" width="20" height="2" class="data-text" />
+                            <rect x="0" y="10" width="25" height="2" class="data-text" />
+                            <rect x="0" y="15" width="28" height="2" class="data-text" />
+                            <rect x="0" y="20" width="15" height="2" class="data-text" />
+                            <rect x="40" y="10" width="5" height="20" class="data-bar"
+                                transform="translate(0, -10) scale(1, 1)" />
+                            <rect x="40" y="10" width="5" height="20" class="data-bar" />
+                            <rect x="48" y="5" width="5" height="25" class="data-bar" />
+                            <rect x="56" y="15" width="5" height="15" class="data-bar" />
+                            <path d="M 38 25 L 45 20 L 53 10 L 63 15" class="data-line" />
                         </g>
                         <g transform="translate(55, 45) scale(0.6)">
-                             <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z" class="body-color"/>
-                            <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color"/>
-                            <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color"/>
-                            <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color"/>
-                            <path d="M 40 55 Q 30 65 10 60" class="body-color" stroke="#1a2a44" stroke-width="3"/>
-                             <g transform="translate(35, 10) rotate(-10)">
+                            <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z"
+                                class="body-color" />
+                            <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color" />
+                            <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color" />
+                            <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color" />
+                            <path d="M 40 55 Q 30 65 10 60" class="body-color" stroke="#1a2a44" stroke-width="3" />
+                            <g transform="translate(35, 10) rotate(-10)">
                                 <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
                                 <rect x="15" y="18" width="20" height="8" class="head-color" />
-                                <circle cx="35" cy="30" r="3" class="sakura-color"/>
+                                <circle cx="35" cy="30" r="3" class="sakura-color" />
                             </g>
                         </g>
                     </svg>
@@ -258,54 +327,55 @@
                 <p>学習ツール・アプリ</p>
             </a>
 
-            <div class="nav-card disabled">
-                <span class="coming-soon-badge">Coming Soon</span>
+            <a href="./picture-books/index.html" class="nav-card">
                 <span class="icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <g transform="translate(-10, 50) rotate(-15)">
-                            <path d="M -5 10 L 85 10 L 85 55 L -5 55 Z" class="book-cover" transform="translate(0, 2)"/>
-                            <path d="M 0 10 Q 40 15 80 10 L 80 50 Q 40 55 0 50 Z" class="book-page"/>
-                            <path d="M 40 12 L 40 52" stroke="#ddd" stroke-width="1"/>
-                            <path d="M 45 20 L 75 20" stroke="#ccc" stroke-width="2"/>
-                            <path d="M 45 28 L 70 28" stroke="#ccc" stroke-width="2"/>
-                            <path d="M 45 36 L 75 36" stroke="#ccc" stroke-width="2"/>
-                            
+                            <path d="M -5 10 L 85 10 L 85 55 L -5 55 Z" class="book-cover"
+                                transform="translate(0, 2)" />
+                            <path d="M 0 10 Q 40 15 80 10 L 80 50 Q 40 55 0 50 Z" class="book-page" />
+                            <path d="M 40 12 L 40 52" stroke="#ddd" stroke-width="1" />
+                            <path d="M 45 20 L 75 20" stroke="#ccc" stroke-width="2" />
+                            <path d="M 45 28 L 70 28" stroke="#ccc" stroke-width="2" />
+                            <path d="M 45 36 L 75 36" stroke="#ccc" stroke-width="2" />
+
                             <g transform="translate(15, 25) scale(0.25)">
-                                 <circle cx="50" cy="50" r="40" class="body-color"/>
-                                 <path d="M 20 40 Q 50 10 80 40 L 50 20 Z" class="head-color"/>
-                                 <ellipse cx="30" cy="50" rx="10" ry="8" class="cheek-color"/>
-                                 <path d="M 10 50 L 20 55 L 15 65 Z" class="beak-color"/>
+                                <circle cx="50" cy="50" r="40" class="body-color" />
+                                <path d="M 20 40 Q 50 10 80 40 L 50 20 Z" class="head-color" />
+                                <ellipse cx="30" cy="50" rx="10" ry="8" class="cheek-color" />
+                                <path d="M 10 50 L 20 55 L 15 65 Z" class="beak-color" />
                             </g>
                         </g>
 
                         <g transform="translate(35, 0)">
                             <g transform="translate(30, 60) scale(0.45)">
-                                 <circle cx="50" cy="50" r="40" class="body-color"/>
-                                 <path d="M 20 40 Q 50 10 80 40 L 50 20 Z" class="head-color"/>
-                                 <ellipse cx="30" cy="50" rx="10" ry="8" class="cheek-color"/>
-                                 <circle cx="35" cy="42" r="4" fill="#333"/>
-                                 <path d="M 10 50 L 20 55 L 15 65 Z" class="beak-color"/>
-                                 <circle cx="65" cy="25" r="10" class="sakura-color"/>
-                                 <circle cx="75" cy="35" r="8" class="sakura-color" opacity="0.8"/>
+                                <circle cx="50" cy="50" r="40" class="body-color" />
+                                <path d="M 20 40 Q 50 10 80 40 L 50 20 Z" class="head-color" />
+                                <ellipse cx="30" cy="50" rx="10" ry="8" class="cheek-color" />
+                                <circle cx="35" cy="42" r="4" fill="#333" />
+                                <path d="M 10 50 L 20 55 L 15 65 Z" class="beak-color" />
+                                <circle cx="65" cy="25" r="10" class="sakura-color" />
+                                <circle cx="75" cy="35" r="8" class="sakura-color" opacity="0.8" />
                             </g>
                             <g transform="translate(50, 20) scale(0.9)">
-                                <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z" class="body-color"/>
-                                <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color"/>
-                                <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color"/>
-                                <circle cx="22" cy="32" r="2.5" fill="#333"/>
-                                <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color"/>
+                                <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z"
+                                    class="body-color" />
+                                <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color" />
+                                <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color" />
+                                <circle cx="22" cy="32" r="2.5" fill="#333" />
+                                <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color" />
                                 <g transform="translate(35, 10) rotate(-10) scale(0.8)">
                                     <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
                                     <rect x="15" y="18" width="20" height="8" class="head-color" />
-                                    <circle cx="35" cy="30" r="3" class="sakura-color"/>
+                                    <circle cx="35" cy="30" r="3" class="sakura-color" />
                                 </g>
                             </g>
                         </g>
                     </svg>
                 </span>
                 <h2>Picture Books</h2>
-                <p>準備中</p>
-            </div>
+                <p>絵本ギャラリー</p>
+            </a>
         </div>
 
         <a href="https://x.com/Sakura_Academia" target="_blank" class="twitter-link">
@@ -320,4 +390,5 @@
     </footer>
 
 </body>
+
 </html>
