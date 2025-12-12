@@ -165,7 +165,7 @@
         .text-content {
             width: 100%;
             padding: 40px;
-            font-size: 18pt;
+            font-size: 14pt;
             line-height: 1.6;
             height: 100%;
             display: flex;
@@ -250,42 +250,30 @@
         /* ============================
            MOBILE LAYOUT STYLES
            ============================ */
-        /* Mobile Styles - Always Active */
+        /* Mobile Styles - Always Active (Landscape Optimized) */
+        /* Revert to side controls (inherits from default) but adjust for mobile */
         #controls {
-            top: auto;
-            bottom: 20px;
-            left: 50%;
-            right: auto;
-            transform: translateX(-50%);
-            flex-direction: row;
-            width: 90%;
-            max-width: 400px;
-            justify-content: space-between;
-            padding: 15px 15px;
-            gap: 10px;
-        }
-
-        .control-btn {
-            min-width: auto;
-            padding: 10px;
-            font-size: 13px;
-            flex: 1;
-            white-space: nowrap;
-        }
-
-        .control-btn:first-child {
-            flex: 0.8;
+            right: 10px;
+            /* Closer to edge */
+            padding: 15px 10px;
+            gap: 15px;
+            transform: translateY(-50%) scale(0.8);
+            /* Make smaller */
+            transform-origin: right center;
         }
 
         #book-stage {
+            /* Maximize height for landscape reading */
             width: auto;
-            height: calc(100vh - 130px);
-            max-width: 95vw;
+            height: 98vh;
+            max-width: 90vw;
+            /* Leave some room for controls if they overlap, or centering */
         }
 
         body {
-            align-items: flex-start;
-            padding-top: 20px;
+            /* Center perfectly */
+            align-items: center;
+            padding-top: 0;
         }
     </style>
 </head>
@@ -430,9 +418,9 @@
             textContainers.forEach(container => {
                 const paragraph = container.querySelector('p');
                 if (!paragraph) return;
-                paragraph.style.fontSize = '20pt';
+                paragraph.style.fontSize = '14pt';
                 if (container.offsetParent !== null) {
-                    let size = 20;
+                    let size = 14;
                     while (paragraph.scrollHeight > container.clientHeight && size > 10) {
                         size--;
                         paragraph.style.fontSize = `${size}pt`;
