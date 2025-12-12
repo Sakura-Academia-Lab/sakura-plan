@@ -20,6 +20,24 @@
             text-align: center;
             padding: 60px 20px;
             background: linear-gradient(to bottom, #fff, #fdfbf7);
+            position: relative;
+            /* For absolute positioning of back link */
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            /* Left side usually feels more like "Back" */
+            text-decoration: none;
+            color: #888;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #5d5d5d;
         }
 
         h1 {
@@ -122,6 +140,7 @@
 <body>
 
     <header>
+        <a href="../index.html" class="back-link">◀ ホームに戻る</a>
         <h1>絵本の世界</h1>
         <div class="subtitle">心温まる物語をお届けします</div>
 

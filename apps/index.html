@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +29,7 @@
         header {
             background: #fff;
             padding: 20px 5%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -48,6 +49,7 @@
             width: 60px;
             height: 60px;
         }
+
         .header-logo-icon svg {
             width: 100%;
             height: 100%;
@@ -60,6 +62,7 @@
             font-size: 1.5rem;
             line-height: 1.2;
         }
+
         .header-text p {
             margin: 0;
             font-size: 0.8rem;
@@ -75,7 +78,10 @@
             font-size: 0.85rem;
             font-weight: bold;
         }
-        .back-link:hover { color: var(--primary-navy); }
+
+        .back-link:hover {
+            color: var(--primary-navy);
+        }
 
         .x-btn {
             background-color: #000;
@@ -89,8 +95,9 @@
             align-items: center;
             gap: 8px;
             transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
+
         .x-btn:hover {
             transform: translateY(-2px);
             opacity: 0.8;
@@ -119,7 +126,7 @@
             background: #fff;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -134,7 +141,12 @@
             height: 80px;
             margin-bottom: 15px;
         }
-        .app-icon-area svg { width: 100%; height: 100%; overflow: visible; }
+
+        .app-icon-area svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
 
         .app-title {
             font-size: 1.3rem;
@@ -142,6 +154,7 @@
             color: var(--primary-navy);
             margin: 5px 0;
         }
+
         .app-title small {
             font-size: 0.8em;
             color: #888;
@@ -155,6 +168,7 @@
             margin-bottom: 20px;
             flex-grow: 1;
         }
+
         .free-use-badge {
             display: inline-block;
             background: #e8f5e9;
@@ -166,6 +180,7 @@
             margin-bottom: 10px;
             border: 1px solid #c8e6c9;
         }
+
         .note-text {
             display: block;
             font-size: 0.75rem;
@@ -192,6 +207,7 @@
             transition: 0.3s;
             display: block;
         }
+
         .main-btn:hover {
             background-color: var(--accent-sakura);
             color: var(--primary-navy);
@@ -212,6 +228,7 @@
             align-items: center;
             gap: 5px;
         }
+
         .sub-btn:hover {
             background-color: #e0e0e0;
         }
@@ -227,12 +244,16 @@
         }
 
         /* --- 状態別スタイル --- */
-        .app-card.active { border-top: 5px solid var(--primary-navy); }
+        .app-card.active {
+            border-top: 5px solid var(--primary-navy);
+        }
+
         .app-card.disabled {
             background-color: #f9f9f9;
             border: 2px dashed #ddd;
             opacity: 0.8;
         }
+
         .app-card.disabled .main-btn {
             background-color: #ccc;
             pointer-events: none;
@@ -248,18 +269,28 @@
             padding: 4px 8px;
             border-radius: 6px;
         }
-        .status-badge.ver { background: #e3f2fd; color: #1976d2; border: 1px solid #bbdefb; }
-        .status-badge.soon { background: #eee; color: #777; }
+
+        .status-badge.ver {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+        }
+
+        .status-badge.soon {
+            background: #eee;
+            color: #777;
+        }
 
         /* --- 更新履歴エリア --- */
         .update-history {
             background: #fff;
             border-radius: 12px;
             padding: 20px 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             max-width: 800px;
             margin: 0 auto;
         }
+
         .update-history h3 {
             font-size: 1.1rem;
             color: var(--primary-navy);
@@ -267,11 +298,13 @@
             border-bottom: 2px solid #f0f2f5;
             padding-bottom: 8px;
         }
+
         .history-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         .history-item {
             display: flex;
             gap: 15px;
@@ -280,13 +313,21 @@
             border-bottom: 1px dashed #eee;
             padding-bottom: 8px;
         }
-        .history-item:last-child { border-bottom: none; }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
         .history-date {
             color: #888;
             font-weight: bold;
             min-width: 90px;
         }
-        .history-content { color: #555; }
+
+        .history-content {
+            color: #555;
+        }
+
         .history-tag {
             font-size: 0.7rem;
             background: #eee;
@@ -297,57 +338,121 @@
         }
 
         /* SVGカラー定義 */
-        .body-color { fill: #aebbc9; }
-        .head-color { fill: #1a2a44; }
-        .cheek-color { fill: #fff; }
-        .beak-color { fill: #e05a5a; }
-        .sakura-color { fill: #ffcae0; }
-        .pc-color { fill: #1a2a44; }
-        .screen-color { fill: #4facfe; }
-        .data-bar { fill: #fff; opacity: 0.9; }
-        .data-line { stroke: #feca57; stroke-width: 2; fill: none; }
-        .data-text { fill: #fff; opacity: 0.5; }
-        .sim-bg { fill: #eef2f5; }
-        .cube-face { fill: #aebbc9; stroke: #fff; stroke-width: 2; }
-        .cube-cut { stroke: #ff6b6b; stroke-width: 3; stroke-dasharray: 5,5; }
+        .body-color {
+            fill: #aebbc9;
+        }
 
-        footer { text-align: center; padding: 30px; font-size: 0.8rem; color: #aaa; }
+        .head-color {
+            fill: #1a2a44;
+        }
+
+        .cheek-color {
+            fill: #fff;
+        }
+
+        .beak-color {
+            fill: #e05a5a;
+        }
+
+        .sakura-color {
+            fill: #ffcae0;
+        }
+
+        .pc-color {
+            fill: #1a2a44;
+        }
+
+        .screen-color {
+            fill: #4facfe;
+        }
+
+        .data-bar {
+            fill: #fff;
+            opacity: 0.9;
+        }
+
+        .data-line {
+            stroke: #feca57;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .data-text {
+            fill: #fff;
+            opacity: 0.5;
+        }
+
+        .sim-bg {
+            fill: #eef2f5;
+        }
+
+        .cube-face {
+            fill: #aebbc9;
+            stroke: #fff;
+            stroke-width: 2;
+        }
+
+        .cube-cut {
+            stroke: #ff6b6b;
+            stroke-width: 3;
+            stroke-dasharray: 5, 5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
 
         @media (max-width: 600px) {
-            .header-top { flex-direction: column; text-align: center; }
-            .back-link { position: static; margin-bottom: 10px; }
-            .history-item { flex-direction: column; gap: 5px; }
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .back-link {
+                position: static;
+                margin-bottom: 10px;
+            }
+
+            .history-item {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <header>
         <a href="../index.html" class="back-link">◀ ホームに戻る</a>
-        
+
         <div class="header-top">
             <div class="header-logo-icon">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color"/>
-                    <path d="M 10 20 L 90 20 L 90 70 L 10 70 Z" class="pc-color"/>
-                    <rect x="15" y="25" width="70" height="40" class="screen-color"/>
+                    <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color" />
+                    <path d="M 10 20 L 90 20 L 90 70 L 10 70 Z" class="pc-color" />
+                    <rect x="15" y="25" width="70" height="40" class="screen-color" />
                     <g transform="translate(20, 30)">
-                        <rect x="0" y="0" width="30" height="2" class="data-text"/>
-                        <rect x="0" y="5" width="20" height="2" class="data-text"/>
-                        <rect x="40" y="10" width="5" height="20" class="data-bar"/>
-                        <rect x="48" y="5" width="5" height="25" class="data-bar"/>
-                        <path d="M 38 25 L 45 20 L 53 10 L 63 15" class="data-line"/>
+                        <rect x="0" y="0" width="30" height="2" class="data-text" />
+                        <rect x="0" y="5" width="20" height="2" class="data-text" />
+                        <rect x="40" y="10" width="5" height="20" class="data-bar" />
+                        <rect x="48" y="5" width="5" height="25" class="data-bar" />
+                        <path d="M 38 25 L 45 20 L 53 10 L 63 15" class="data-line" />
                     </g>
                     <g transform="translate(55, 45) scale(0.6)">
-                         <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z" class="body-color"/>
-                        <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color"/>
-                        <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color"/>
-                        <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color"/>
-                        <path d="M 40 55 Q 30 65 10 60" class="body-color" stroke="#1a2a44" stroke-width="3"/>
-                         <g transform="translate(35, 10) rotate(-10)">
+                        <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z"
+                            class="body-color" />
+                        <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color" />
+                        <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color" />
+                        <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color" />
+                        <path d="M 40 55 Q 30 65 10 60" class="body-color" stroke="#1a2a44" stroke-width="3" />
+                        <g transform="translate(35, 10) rotate(-10)">
                             <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
                             <rect x="15" y="18" width="20" height="8" class="head-color" />
-                            <circle cx="35" cy="30" r="3" class="sakura-color"/>
+                            <circle cx="35" cy="30" r="3" class="sakura-color" />
                         </g>
                     </g>
                 </svg>
@@ -367,18 +472,19 @@
         <div class="app-grid">
 
             <div class="app-card active">
-                <span class="status-badge ver">Ver 1.0</span>
+                <span class="status-badge ver">Ver 2.0</span>
                 <div class="app-icon-area">
                     <svg viewBox="0 0 100 100">
-                        <rect x="15" y="15" width="70" height="70" rx="10" class="sim-bg"/>
-                        <rect x="25" y="25" width="30" height="4" fill="#ccc"/>
-                        <rect x="25" y="35" width="40" height="4" fill="#ccc"/>
-                        <path d="M 60 70 L 60 40 L 70 30 L 80 50 L 85 20" fill="none" stroke="#4facfe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="85" cy="20" r="3" fill="#ff6b6b"/>
+                        <rect x="15" y="15" width="70" height="70" rx="10" class="sim-bg" />
+                        <rect x="25" y="25" width="30" height="4" fill="#ccc" />
+                        <rect x="25" y="35" width="40" height="4" fill="#ccc" />
+                        <path d="M 60 70 L 60 40 L 70 30 L 80 50 L 85 20" fill="none" stroke="#4facfe" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="85" cy="20" r="3" fill="#ff6b6b" />
                     </svg>
                 </div>
                 <div class="app-title">入試シミュレーター <small>(Basic版)</small></div>
-                
+
                 <div class="app-desc">
                     <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
                     学校パネルをドラッグ＆ドロップ。<br>
@@ -387,10 +493,11 @@
                 </div>
 
                 <div class="btn-group">
-                    <a href="https://sakura-academia-lab.github.io/sakura-plan/apps/basic/index.html" target="_blank" class="main-btn">
+                    <a href="https://sakura-academia-lab.github.io/sakura-plan/apps/basic/index.html" target="_blank"
+                        class="main-btn">
                         ブラウザで使う &rarr;
                     </a>
-                    
+
                     <div>
                         <a href="basic_simulator.zip" download class="sub-btn">
                             📥 オフライン版をDL (ZIP)
@@ -409,10 +516,10 @@
                 <div class="app-icon-area">
                     <svg viewBox="0 0 100 100">
                         <g transform="translate(50, 50) rotate(10) translate(-50, -50)">
-                            <path d="M 25 25 L 75 25 L 90 40 L 40 40 Z" class="cube-face" fill="#cbd5e1"/>
-                            <path d="M 25 25 L 40 40 L 40 90 L 25 75 Z" class="cube-face" fill="#94a3b8"/>
-                            <path d="M 40 90 L 90 90 L 90 40 L 40 40 Z" class="cube-face" fill="#e2e8f0"/>
-                            <line x1="15" y1="15" x2="95" y2="95" class="cube-cut"/>
+                            <path d="M 25 25 L 75 25 L 90 40 L 40 40 Z" class="cube-face" fill="#cbd5e1" />
+                            <path d="M 25 25 L 40 40 L 40 90 L 25 75 Z" class="cube-face" fill="#94a3b8" />
+                            <path d="M 40 90 L 90 90 L 90 40 L 40 40 Z" class="cube-face" fill="#e2e8f0" />
+                            <line x1="15" y1="15" x2="95" y2="95" class="cube-cut" />
                         </g>
                     </svg>
                 </div>
@@ -434,11 +541,17 @@
             <h3>📢 Update History</h3>
             <ul class="history-list">
                 <li class="history-item">
+                    <span class="history-date">2025.12.12</span>
+                    <span class="history-content">
+                        「入試シミュレーター (Basic版) Ver 2.0」に更新しました。
+                        <span class="history-tag">New</span>
+                    </span>
+                </li>
+                <li class="history-item">
                     <span class="history-date">2025.12.08</span>
                     <span class="history-content">
                         Webサイトを公開しました。<br>
                         「入試シミュレーター (Basic版) Ver 1.0」をリリースしました。
-                        <span class="history-tag">New</span>
                     </span>
                 </li>
             </ul>
@@ -451,4 +564,5 @@
     </footer>
 
 </body>
+
 </html>
