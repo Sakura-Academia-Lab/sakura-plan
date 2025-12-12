@@ -178,8 +178,8 @@
             text-align: center;
             display: inline-block;
             margin: 0;
-            max-width: 10.5em;
-            /* Limit to approx 10 characters per line */
+            max-width: 12.5em;
+            /* Limit to approx 11-12 characters per line */
         }
 
         .cover-title {
@@ -254,13 +254,16 @@
         /* Mobile Styles - Always Active (Landscape Optimized) */
         /* Revert to side controls (inherits from default) but adjust for mobile */
         #controls {
-            right: 10px;
+            right: 5px;
             /* Closer to edge */
-            padding: 15px 10px;
-            gap: 15px;
-            transform: translateY(-50%) scale(0.8);
-            /* Make smaller */
+            padding: 10px 8px;
+            /* Compact padding */
+            gap: 10px;
+            transform: translateY(-50%) scale(0.7);
+            /* Make even smaller */
             transform-origin: right center;
+            border-radius: 30px;
+            /* Tighter radius */
         }
 
         #book-stage {
@@ -287,7 +290,6 @@
     <div id="controls">
         <button onclick="location.href='../index.html'" class="control-btn">🏠 戻る</button>
         <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
-        <button onclick="window.print()" class="control-btn print-btn">PDF/印刷</button>
         <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
     </div>
 
