@@ -242,6 +242,55 @@
         }
 
         /* ============================
+           MOBILE LAYOUT STYLES
+           ============================ */
+        @media screen and (max-width: 768px) {
+            #controls {
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                flex-direction: row;
+                width: 90%;
+                max-width: 400px;
+                justify-content: space-between;
+                padding: 15px 15px;
+                gap: 10px;
+            }
+
+            .control-btn {
+                min-width: auto;
+                padding: 10px;
+                font-size: 13px;
+                flex: 1;
+                white-space: nowrap;
+            }
+
+            /* Specific adjustments for icons vs text to fit */
+            .control-btn:first-child {
+                flex: 0.8;
+            }
+
+            /* Home btn */
+
+            #book-stage {
+                width: auto;
+                height: calc(100vh - 130px);
+                /* Fit height leaving space for controls */
+                max-width: 95vw;
+                /* Prevent width overflow */
+                /* Aspect ratio is maintained by existing rule */
+            }
+
+            body {
+                /* Align to top to ensure space for bottom controls */
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+        }
+
+        /* ============================
            PRINT VIEW STYLES
            ============================ */
         @media print {
