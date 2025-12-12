@@ -39,6 +39,7 @@
         }
 
         @media print {
+
             #book-stage,
             #controls {
                 display: none !important;
@@ -87,7 +88,8 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             background-color: white;
             max-width: 95vw;
-            overflow: hidden; /* Hide slides outside */
+            overflow: hidden;
+            /* Hide slides outside */
         }
 
         .page {
@@ -102,7 +104,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            
+
             /* Slide Animation Logic */
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
@@ -236,6 +238,55 @@
 
         .print-btn:hover {
             background: #feb47b;
+        }
+
+        /* ============================
+           MOBILE LAYOUT STYLES
+           ============================ */
+        @media screen and (max-width: 768px) {
+            #controls {
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                flex-direction: row;
+                width: 90%;
+                max-width: 400px;
+                justify-content: space-between;
+                padding: 15px 15px;
+                gap: 10px;
+            }
+
+            .control-btn {
+                min-width: auto;
+                padding: 10px;
+                font-size: 13px;
+                flex: 1;
+                white-space: nowrap;
+            }
+
+            /* Specific adjustments for icons vs text to fit */
+            .control-btn:first-child {
+                flex: 0.8;
+            }
+
+            /* Home btn */
+
+            #book-stage {
+                width: auto;
+                height: calc(100vh - 130px);
+                /* Fit height leaving space for controls */
+                max-width: 95vw;
+                /* Prevent width overflow */
+                /* Aspect ratio is maintained by existing rule */
+            }
+
+            body {
+                /* Align to top to ensure space for bottom controls */
+                align-items: flex-start;
+                padding-top: 20px;
+            }
         }
 
         /* ============================
