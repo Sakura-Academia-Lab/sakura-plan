@@ -5,11 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>絵本 - 第1巻 (電子書籍版)</title>
-    <script>
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            location.href = "mobile_ebook.html";
-        }
-    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
 
@@ -251,6 +246,47 @@
         .print-btn:hover {
             background: #feb47b;
         }
+
+        /* ============================
+           MOBILE LAYOUT STYLES
+           ============================ */
+        /* Mobile Styles - Always Active */
+        #controls {
+            top: auto;
+            bottom: 20px;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            flex-direction: row;
+            width: 90%;
+            max-width: 400px;
+            justify-content: space-between;
+            padding: 15px 15px;
+            gap: 10px;
+        }
+
+        .control-btn {
+            min-width: auto;
+            padding: 10px;
+            font-size: 13px;
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        .control-btn:first-child {
+            flex: 0.8;
+        }
+
+        #book-stage {
+            width: auto;
+            height: calc(100vh - 130px);
+            max-width: 95vw;
+        }
+
+        body {
+            align-items: flex-start;
+            padding-top: 20px;
+        }
     </style>
 </head>
 
@@ -268,7 +304,7 @@
     <div id="book-stage">
         <!-- Leaf 1: P1(Cover) / P2(Img1) -->
         <div class="page" id="p1">
-            <div class="cover-title"><span class="girl-name"></span>とルル</div>
+            <div class="cover-title"><span class="boy-name"></span>とルル</div>
             <img src="images/cover_front.png" class="cover-image" alt="Front Cover">
         </div>
         <div class="page" id="p2"><img src="images/page1.png" class="image-content" alt="Page 1 Image"></div>
@@ -276,7 +312,7 @@
         <!-- Leaf 2: P3(Txt1) / P4(Img2) -->
         <div class="page" id="p3">
             <div class="text-content">
-                <p>おはよう、<span class="girl-name"></span></p>
+                <p>おはよう、<span class="boy-name"></span></p>
             </div>
         </div>
         <div class="page" id="p4"><img src="images/page2.png" class="image-content" alt="Page 2 Image"></div>
@@ -316,7 +352,7 @@
         <!-- Leaf 7 -->
         <div class="page" id="p13">
             <div class="text-content">
-                <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
+                <p>ルルは<span class="boy-name"></span>が<br>だいすき</p>
             </div>
         </div>
         <div class="page" id="p14"><img src="images/page7.png" class="image-content" alt="Page 7 Image"></div>
@@ -333,16 +369,15 @@
     <!-- PRINT VIEW AREA -->
     <!-- PRINT VIEW AREA -->
     <!-- PRINT VIEW AREA -->
-    <!-- PRINT VIEW AREA -->
     <div id="print-area">
         <div class="print-page cover">
-            <div class="cover-title"><span class="girl-name"></span>とルル</div>
+            <div class="cover-title"><span class="boy-name"></span>とルル</div>
             <img src="images/cover_front.png">
         </div>
         <div class="print-page"><img src="images/page1.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>おはよう、<span class="girl-name"></span></p>
+                <p>おはよう、<span class="boy-name"></span></p>
             </div>
         </div>
         <div class="print-page"><img src="images/page2.png"></div>
@@ -372,7 +407,7 @@
         <div class="print-page"><img src="images/page6.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
+                <p>ルルは<span class="boy-name"></span>が<br>だいすき</p>
             </div>
         </div>
         <div class="print-page"><img src="images/page7.png"></div>
@@ -406,11 +441,11 @@
         }
 
         function updateView() {
-            let currentName = "女の子";
-            if (typeof settings !== 'undefined') currentName = settings.girlName;
-            const storedName = localStorage.getItem('girlName');
+            let currentName = "男の子";
+            if (typeof settings !== 'undefined') currentName = settings.boyName;
+            const storedName = localStorage.getItem('boyName');
             if (storedName) currentName = storedName;
-            document.querySelectorAll('.girl-name').forEach(el => el.textContent = currentName);
+            document.querySelectorAll('.boy-name').forEach(el => el.textContent = currentName);
             document.title = `${currentName}とルル - 第1巻 (電子書籍)`;
 
             adjustTextSize();
@@ -439,7 +474,6 @@
                     // Even: 180 (Hidden behind Odd?)
                     // even (origin right) at 180 is folded RIGHT.
                     // odd (origin left) at 0 is open RIGHT.
-
                     oddPage.style.transform = "rotateY(0deg)";
                     evenPage.style.transform = "rotateY(180deg)";
 
