@@ -124,18 +124,64 @@
     <header>
         <h1>絵本の世界</h1>
         <div class="subtitle">心温まる物語をお届けします</div>
+
+        <!-- Name Input Section -->
+        <div class="name-settings" style="margin-top: 30px;">
+            <div style="margin-bottom: 10px;">
+                <label for="boyNameInput" style="font-weight: bold; color: #5d5d5d;">男の子の名前：</label>
+                <input type="text" id="boyNameInput" placeholder="名前を入力" maxlength="10"
+                    style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;">
+                <button onclick="saveName('boy')"
+                    style="padding: 8px 15px; background: #ff7e5f; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: inherit;">決定</button>
+            </div>
+            <div>
+                <label for="girlNameInput" style="font-weight: bold; color: #5d5d5d;">女の子の名前：</label>
+                <input type="text" id="girlNameInput" placeholder="名前を入力" maxlength="10"
+                    style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;">
+                <button onclick="saveName('girl')"
+                    style="padding: 8px 15px; background: #ff9a9e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: inherit;">決定</button>
+            </div>
+            <div id="saveMessage" style="color: #ff7e5f; font-size: 0.9em; margin-top: 5px; height: 1.2em;"></div>
+        </div>
     </header>
 
     <main>
         <!-- Volume 1 Card -->
-        <a href="自分用/1巻/ebook.html" class="book-card">
-            <img src="自分用/1巻/生成画像/cover_front.png" alt="第1巻 表紙" class="book-cover">
+        <!-- Volume 1 Card (Boy) -->
+        <div class="book-card">
+            <img src="vol1/images/cover_front.png" alt="第1巻 表紙" class="book-cover">
             <div class="book-info">
-                <span class="vol-badge">第1巻</span>
-                <div class="book-title" id="vol1-title">男の子と桜文鳥の物語</div>
-                <div class="read-btn">この本を読む</div>
+                <span class="vol-badge">第1巻 (男の子)</span>
+                <div class="book-title" id="vol1-title"><span class="current-name-boy">男の子</span>と桜文鳥の物語</div>
+                <div class="button-container"
+                    style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <a href="vol1/ebook.html" class="read-btn"
+                        style="text-decoration: none; margin-top: 10px; width: 100%;">通常版を読む<br><span
+                            style="font-size: 0.8em; font-weight: normal;">(見開き・本形式)</span></a>
+                    <a href="vol1/ebook_combined.html" class="read-btn"
+                        style="text-decoration: none; background: #5d5d5d; margin-top: 5px; width: 100%;">統合版を読む<br><span
+                            style="font-size: 0.8em; font-weight: normal;">(紙芝居・スライド形式)</span></a>
+                </div>
             </div>
-        </a>
+        </div>
+
+        <!-- Volume 1 Card (Girl) -->
+        <div class="book-card">
+            <img src="vol1_girl/images/cover_front.png" alt="第1巻 表紙(女の子)" class="book-cover">
+            <div class="book-info">
+                <span class="vol-badge" style="background: #ff9a9e;">第1巻 (女の子)</span>
+                <div class="book-title" id="vol1-girl-title"><span class="current-name-girl">女の子</span>と桜文鳥の物語</div>
+                <div class="button-container"
+                    style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <a href="vol1_girl/ebook.html" class="read-btn"
+                        style="text-decoration: none; margin-top: 10px; background: #ff9a9e; width: 100%;">通常版を読む<br><span
+                            style="font-size: 0.8em; font-weight: normal;">(見開き・本形式)</span></a>
+                    <a href="vol1_girl/ebook_combined.html" class="read-btn"
+                        style="text-decoration: none; background: #5d5d5d; margin-top: 5px; width: 100%;">統合版を読む<br><span
+                            style="font-size: 0.8em; font-weight: normal;">(紙芝居・スライド形式)</span></a>
+                </div>
+            </div>
+        </div>
 
         <!-- Placeholder for Volume 2 -->
         <!-- Future volumes can be added here -->
@@ -147,9 +193,50 @@
 
     <!-- Script to load dynamic title if needed, or keep static generic title -->
     <script>
-        // Optional: Load title from settings if we wanted perfect sync, 
-        // but settings.js is in a subdir. For now, keep generic or use relative path import.
-        // Simple fetch to get settings? No, keep it simple HTML for now.
+        const defaultBoyName = "男の子";
+        const defaultGirlName = "女の子";
+        const boyNameInput = document.getElementById('boyNameInput');
+        const girlNameInput = document.getElementById('girlNameInput');
+
+        // Load saved names
+        function loadNames() {
+            // Boy
+            const savedBoyName = localStorage.getItem('boyName');
+            const currentBoyName = savedBoyName || defaultBoyName;
+            if (savedBoyName) boyNameInput.value = savedBoyName;
+            document.querySelectorAll('.current-name-boy').forEach(el => el.textContent = currentBoyName);
+
+            // Girl
+            const savedGirlName = localStorage.getItem('girlName');
+            const currentGirlName = savedGirlName || defaultGirlName;
+            if (savedGirlName) girlNameInput.value = savedGirlName;
+            document.querySelectorAll('.current-name-girl').forEach(el => el.textContent = currentGirlName);
+        }
+
+        // Save name
+        function saveName(type) {
+            const input = type === 'boy' ? boyNameInput : girlNameInput;
+            const key = type === 'boy' ? 'boyName' : 'girlName';
+            const defaultVal = type === 'boy' ? defaultBoyName : defaultGirlName;
+            const newName = input.value.trim();
+            const msg = document.getElementById('saveMessage');
+
+            if (newName) {
+                localStorage.setItem(key, newName);
+                msg.textContent = `名前を「${newName}」に変更しました！`;
+                msg.style.color = type === 'boy' ? '#ff7e5f' : '#ff9a9e';
+            } else {
+                localStorage.removeItem(key);
+                msg.textContent = `名前を初期設定に戻しました`;
+                msg.style.color = '#888';
+            }
+
+            setTimeout(() => { msg.textContent = ''; }, 3000);
+            loadNames(); // Refresh display
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadNames);
     </script>
 
 </body>

@@ -39,6 +39,7 @@
         }
 
         @media print {
+
             #book-stage,
             #controls {
                 display: none !important;
@@ -87,7 +88,8 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             background-color: white;
             max-width: 95vw;
-            overflow: hidden; /* Hide slides outside */
+            overflow: hidden;
+            /* Hide slides */
         }
 
         .page {
@@ -102,7 +104,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            
+
             /* Slide Animation Logic */
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
@@ -160,6 +162,7 @@
             padding: 20px 40px;
             box-sizing: border-box;
             font-size: 20pt;
+            /* Screen Font Size */
             line-height: 1.4;
             text-align: center;
         }
@@ -322,7 +325,7 @@
     <div id="book-stage">
         <!-- P1 Cover -->
         <div class="page active" id="p1">
-            <div class="cover-title"><span class="boy-name"></span>とルル</div>
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
             <img src="images/cover_front.png" class="cover-image" alt="Front Cover">
         </div>
 
@@ -331,7 +334,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page1.png"></div>
                 <div class="text-area">
-                    <p>おはよう、<span class="boy-name"></span></p>
+                    <p>おはよう、<span class="girl-name"></span></p>
                 </div>
             </div>
         </div>
@@ -381,7 +384,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page6.png"></div>
                 <div class="text-area">
-                    <p>ルルは<span class="boy-name"></span>が<br>だいすき</p>
+                    <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
                 </div>
             </div>
         </div>
@@ -407,7 +410,7 @@
     <div id="print-area">
         <!-- Cover -->
         <div class="print-page cover">
-            <div class="cover-title"><span class="boy-name"></span>とルル</div>
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
             <img src="images/cover_front.png">
         </div>
 
@@ -417,7 +420,7 @@
             <div class="print-content-wrapper">
                 <div class="print-image-area"><img src="images/page1.png"></div>
                 <div class="print-text-area">
-                    <p>おはよう、<span class="boy-name"></span></p>
+                    <p>おはよう、<span class="girl-name"></span></p>
                 </div>
             </div>
         </div>
@@ -462,7 +465,7 @@
             <div class="print-content-wrapper">
                 <div class="print-image-area"><img src="images/page6.png"></div>
                 <div class="print-text-area">
-                    <p>ルルは<span class="boy-name"></span>が<br>だいすき</p>
+                    <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
                 </div>
             </div>
         </div>
@@ -508,17 +511,17 @@
         }
 
         function updateView() {
-            let currentName = "男の子";
+            let currentName = "女の子";
             if (typeof settings !== 'undefined') {
-                currentName = settings.boyName;
+                currentName = settings.girlName;
             }
 
-            const storedName = localStorage.getItem('boyName');
+            const storedName = localStorage.getItem('girlName');
             if (storedName) {
                 currentName = storedName;
             }
 
-            document.querySelectorAll('.boy-name').forEach(el => el.textContent = currentName);
+            document.querySelectorAll('.girl-name').forEach(el => el.textContent = currentName);
             document.title = `${currentName}とルル - 第1巻 (統合版)`;
 
             adjustTextSize();
@@ -562,10 +565,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Set Initial Classes
             for (let i = 1; i <= totalPages; i++) {
                 const p = document.getElementById(`p${i}`);
                 p.classList.remove('active', 'past', 'future');
-                // Ensure initial state
                 if (i < currentPage) p.classList.add('past');
                 else if (i === currentPage) p.classList.add('active');
                 else p.classList.add('future');

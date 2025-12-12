@@ -263,7 +263,7 @@
     <div id="book-stage">
         <!-- Leaf 1: P1(Cover) / P2(Img1) -->
         <div class="page" id="p1">
-            <div class="cover-title"><span class="boy-name"></span>とルル</div>
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
             <img src="images/cover_front.png" class="cover-image" alt="Front Cover">
         </div>
         <div class="page" id="p2"><img src="images/page1.png" class="image-content" alt="Page 1 Image"></div>
@@ -271,7 +271,7 @@
         <!-- Leaf 2: P3(Txt1) / P4(Img2) -->
         <div class="page" id="p3">
             <div class="text-content">
-                <p>おはよう、<span class="boy-name"></span></p>
+                <p>おはよう、<span class="girl-name"></span></p>
             </div>
         </div>
         <div class="page" id="p4"><img src="images/page2.png" class="image-content" alt="Page 2 Image"></div>
@@ -311,7 +311,7 @@
         <!-- Leaf 7 -->
         <div class="page" id="p13">
             <div class="text-content">
-                <p>ルルは<span class="boy-name"></span>が<br>だいすき</p>
+                <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
             </div>
         </div>
         <div class="page" id="p14"><img src="images/page7.png" class="image-content" alt="Page 7 Image"></div>
@@ -328,15 +328,16 @@
     <!-- PRINT VIEW AREA -->
     <!-- PRINT VIEW AREA -->
     <!-- PRINT VIEW AREA -->
+    <!-- PRINT VIEW AREA -->
     <div id="print-area">
         <div class="print-page cover">
-            <div class="cover-title"><span class="boy-name"></span>とルル</div>
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
             <img src="images/cover_front.png">
         </div>
         <div class="print-page"><img src="images/page1.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>おはよう、<span class="boy-name"></span></p>
+                <p>おはよう、<span class="girl-name"></span></p>
             </div>
         </div>
         <div class="print-page"><img src="images/page2.png"></div>
@@ -366,7 +367,7 @@
         <div class="print-page"><img src="images/page6.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>ルルは<span class="boy-name"></span>が<br>だいすき</p>
+                <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
             </div>
         </div>
         <div class="print-page"><img src="images/page7.png"></div>
@@ -400,11 +401,11 @@
         }
 
         function updateView() {
-            let currentName = "男の子";
-            if (typeof settings !== 'undefined') currentName = settings.boyName;
-            const storedName = localStorage.getItem('boyName');
+            let currentName = "女の子";
+            if (typeof settings !== 'undefined') currentName = settings.girlName;
+            const storedName = localStorage.getItem('girlName');
             if (storedName) currentName = storedName;
-            document.querySelectorAll('.boy-name').forEach(el => el.textContent = currentName);
+            document.querySelectorAll('.girl-name').forEach(el => el.textContent = currentName);
             document.title = `${currentName}とルル - 第1巻 (電子書籍)`;
 
             adjustTextSize();
@@ -433,6 +434,7 @@
                     // Even: 180 (Hidden behind Odd?)
                     // even (origin right) at 180 is folded RIGHT.
                     // odd (origin left) at 0 is open RIGHT.
+
                     oddPage.style.transform = "rotateY(0deg)";
                     evenPage.style.transform = "rotateY(180deg)";
 
