@@ -66,31 +66,61 @@
 
             img {
                 max-width: 100%;
-                max-height: 100%;
+                page-break-after: always;
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
 
-            .print-page.cover img {
+            .print-page.last {
+                page-break-after: auto;
+            }
+
+            .print-bg {
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                display: block;
-            }
-
-            .cover-title {
-                top: 5%;
-                font-size: 60pt;
+                z-index: -1;
             }
 
             .print-text {
+                position: absolute;
+                bottom: 10%;
+                left: 50%;
+                transform: translateX(-50%);
                 width: 80%;
-                font-size: 32pt;
-                line-height: 1.6;
-                color: #000;
+                font-size: 24pt;
+                font-weight: bold;
                 text-align: center;
+                color: #333;
+                text-shadow:
+                    2px 2px 0 #fff, -2px -2px 0 #fff,
+                    2px -2px 0 #fff, -2px 2px 0 #fff,
+                    0px 2px 0 #fff, 0px -2px 0 #fff,
+                    2px 0px 0 #fff, -2px 0px 0 #fff;
             }
 
-            .print-text p {
-                margin: 0;
+            .print-colophon {
+                text-align: center;
+                margin-top: auto;
+                margin-bottom: 20%;
+            }
+
+            .qr-box {
+                width: 100px;
+                height: 100px;
+                border: 2px dashed #ccc;
+                margin: 20px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ccc;
             }
         }
 
@@ -181,6 +211,13 @@
             margin: 0;
             max-width: 12.5em;
             /* Limit to approx 11-12 characters per line */
+            text-shadow:
+                2px 2px 0 #fff, -2px -2px 0 #fff,
+                2px -2px 0 #fff, -2px 2px 0 #fff,
+                0px 2px 0 #fff, 0px -2px 0 #fff,
+                2px 0px 0 #fff, -2px 0px 0 #fff;
+            /* White stroke effect */
+            font-weight: bold;
         }
 
         .cover-title {
@@ -249,6 +286,21 @@
             background: #feb47b;
         }
 
+        /* Premium PDF Button Style */
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            /* Pink to Gold */
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            font-weight: 800;
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
+        }
+
         /* ============================
            MOBILE LAYOUT STYLES
            ============================ */
@@ -286,11 +338,77 @@
 </head>
 
 <body>
+    <!-- PRINT AREA (Hidden on Screen) -->
+    <div id="print-area" style="display: none;">
+        <!-- P1: Cover -->
+        <div class="print-page">
+            <img src="images/cover_front.png" class="print-bg">
+        </div>
+
+        <!-- P2: Name Entry -->
+        <div class="print-page">
+            <div
+                style="font-size: 20pt; border-bottom: 2px solid #333; padding-bottom: 10px; width: 60%; text-align: center;">
+                おなまえ：____________________
+            </div>
+        </div>
+
+        <!-- P3: Title Page -->
+        <div class="print-page">
+            <h1 style="font-size: 32pt; color: #ff69b4;">ルルと <span class="girl-name"></span></h1>
+            <div style="margin-top: 50px; font-size: 16pt;">Sakura Academia</div>
+        </div>
+
+        <!-- P4-P10: Story -->
+        <div class="print-page">
+            <img src="images/page1.png" class="print-bg">
+            <p class="print-text">おはよう、<span class="girl-name"></span></p>
+        </div>
+        <div class="print-page">
+            <img src="images/page2.png" class="print-bg">
+            <p class="print-text">「チッ チッ」<br>……だあれ？</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page3.png" class="print-bg">
+            <p class="print-text">「こっちへ<br>おいで」</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page4.png" class="print-bg">
+            <p class="print-text">ピョン！<br>と<br>ピョン！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page5.png" class="print-bg">
+            <p class="print-text">ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page6.png" class="print-bg">
+            <p class="print-text">ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page7.png" class="print-bg">
+            <p class="print-text">おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+        </div>
+
+        <!-- P11: Colophon -->
+        <div class="print-page">
+            <div class="print-colophon">
+                <p>発行日：2025年12月12日</p>
+                <p>発行：Sakura Academia</p>
+                <div class="qr-box">QR Code</div>
+            </div>
+        </div>
+
+        <!-- P12: Back Cover -->
+        <div class="print-page last">
+            <img src="images/cover_back.png" class="print-bg">
+        </div>
+    </div>
 
     <!-- CONTROL BAR -->
     <div id="controls">
         <button class="control-btn" onclick="location.href='../index.html'">🏠 Home</button>
         <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
+        <button onclick="window.print()" class="control-btn premium-btn">🎁 無料でPDF保存</button>
         <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
     </div>
 
@@ -306,7 +424,7 @@
         <!-- Leaf 2: P3(Txt1) / P4(Img2) -->
         <div class="page" id="p3">
             <div class="text-content">
-                <p>おはよう、<span class="girl-name"></span></p>
+                <p>「チッ チッ」<br>……だあれ？</p>
             </div>
         </div>
         <div class="page" id="p4"><img src="images/page2.png" class="image-content" alt="Page 2 Image"></div>
@@ -314,7 +432,7 @@
         <!-- Leaf 3 -->
         <div class="page" id="p5">
             <div class="text-content">
-                <p>きみはだれ？</p>
+                <p>「こっちへ<br>おいで」</p>
             </div>
         </div>
         <div class="page" id="p6"><img src="images/page3.png" class="image-content" alt="Page 3 Image"></div>
@@ -322,7 +440,7 @@
         <!-- Leaf 4 -->
         <div class="page" id="p7">
             <div class="text-content">
-                <p>おいで…</p>
+                <p>ピョン！<br>と<br>ピョン！</p>
             </div>
         </div>
         <div class="page" id="p8"><img src="images/page4.png" class="image-content" alt="Page 4 Image"></div>
@@ -330,7 +448,7 @@
         <!-- Leaf 5 -->
         <div class="page" id="p9">
             <div class="text-content">
-                <p>ピョン ピョン！<br>うれしいダンス</p>
+                <p>ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
             </div>
         </div>
         <div class="page" id="p10"><img src="images/page5.png" class="image-content" alt="Page 5 Image"></div>
@@ -338,7 +456,7 @@
         <!-- Leaf 6 -->
         <div class="page" id="p11">
             <div class="text-content">
-                <p>てにのったね！<br>うん、きみのなまえは<br>ルルにしよう！</p>
+                <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
             </div>
         </div>
         <div class="page" id="p12"><img src="images/page6.png" class="image-content" alt="Page 6 Image"></div>
@@ -346,7 +464,7 @@
         <!-- Leaf 7 -->
         <div class="page" id="p13">
             <div class="text-content">
-                <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
+                <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
             </div>
         </div>
         <div class="page" id="p14"><img src="images/page7.png" class="image-content" alt="Page 7 Image"></div>
@@ -354,7 +472,7 @@
         <!-- Leaf 8 -->
         <div class="page" id="p15">
             <div class="text-content">
-                <p>おやすみ、ルル<br>またあした</p>
+                <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
             </div>
         </div>
         <div class="page" id="p16"><img src="images/cover_back.png" class="cover-image" alt="Back Cover"></div>

@@ -165,6 +165,13 @@
             /* Screen Font Size */
             line-height: 1.4;
             text-align: center;
+            text-shadow:
+                2px 2px 0 #fff, -2px -2px 0 #fff,
+                2px -2px 0 #fff, -2px 2px 0 #fff,
+                0px 2px 0 #fff, 0px -2px 0 #fff,
+                2px 0px 0 #fff, -2px 0px 0 #fff;
+            /* White stroke effect */
+            font-weight: bold;
         }
 
         .cover-image {
@@ -241,6 +248,21 @@
             background: #feb47b;
         }
 
+        /* Premium PDF Button Style */
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            /* Pink to Gold */
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            font-weight: 800;
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
+        }
+
         /* ============================
            MOBILE LAYOUT STYLES
            ============================ */
@@ -288,84 +310,155 @@
             align-items: flex-start;
             padding-top: 20px;
         }
-        }
+
 
         /* ============================
            PRINT VIEW STYLES
            ============================ */
         @media print {
-            .print-page {
-                position: relative;
-                width: 210mm;
-                height: 297mm;
-                page-break-after: always;
-                display: flex;
-                flex-direction: column;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
+            body>* {
+                display: none !important;
             }
 
-            .print-page:last-child {
+            #print-area {
+                display: block !important;
+            }
+
+            .print-page {
+                width: 100%;
+                height: 100vh;
+                page-break-after: always;
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .print-page.last {
                 page-break-after: auto;
             }
 
-            .print-page.cover img {
+            .print-bg {
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                display: block;
+                z-index: -1;
             }
 
-            .cover-title {
-                top: 5%;
-                font-size: 60pt;
-            }
-
-            .print-page .print-content-wrapper {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .print-page .print-image-area {
-                width: 100%;
-                height: 65%;
-                display: flex;
-                justify-content: center;
-                align-items: flex-end;
-                padding: 0;
-            }
-
-            .print-page .print-image-area img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-            }
-
-            .print-page .print-text-area {
-                width: 100%;
-                height: 35%;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                padding: 20px 40px;
-                box-sizing: border-box;
-                font-size: 32pt;
-                line-height: 1.4;
+            .print-text {
+                position: absolute;
+                bottom: 10%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80%;
+                font-size: 24pt;
+                font-weight: bold;
                 text-align: center;
+                color: #333;
+                text-shadow:
+                    2px 2px 0 #fff, -2px -2px 0 #fff,
+                    2px -2px 0 #fff, -2px 2px 0 #fff,
+                    0px 2px 0 #fff, 0px -2px 0 #fff,
+                    2px 0px 0 #fff, -2px 0px 0 #fff;
             }
+
+            .print-colophon {
+                text-align: center;
+                margin-top: auto;
+                margin-bottom: 20%;
+            }
+
+            .qr-box {
+                width: 100px;
+                height: 100px;
+                border: 2px dashed #ccc;
+                margin: 20px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ccc;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- PRINT AREA (Hidden on Screen) -->
+    <div id="print-area" style="display: none;">
+        <!-- P1: Cover -->
+        <div class="print-page">
+            <img src="images/cover_front.png" class="print-bg">
+        </div>
+
+        <!-- P2: Name Entry -->
+        <div class="print-page">
+            <div
+                style="font-size: 20pt; border-bottom: 2px solid #333; padding-bottom: 10px; width: 60%; text-align: center;">
+                おなまえ：____________________
+            </div>
+        </div>
+
+        <!-- P3: Title Page -->
+        <div class="print-page">
+            <h1 style="font-size: 32pt; color: #ff69b4;">ルルと <span class="girl-name"></span></h1>
+            <div style="margin-top: 50px; font-size: 16pt;">Sakura Academia</div>
+        </div>
+
+        <!-- P4-P10: Story -->
+        <div class="print-page">
+            <img src="images/page1.png" class="print-bg">
+            <p class="print-text">おはよう、<span class="girl-name"></span></p>
+        </div>
+        <div class="print-page">
+            <img src="images/page2.png" class="print-bg">
+            <p class="print-text">「チッ チッ」<br>……だあれ？</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page3.png" class="print-bg">
+            <p class="print-text">「こっちへ<br>おいで」</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page4.png" class="print-bg">
+            <p class="print-text">ピョン！<br>と<br>ピョン！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page5.png" class="print-bg">
+            <p class="print-text">ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page6.png" class="print-bg">
+            <p class="print-text">ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page7.png" class="print-bg">
+            <p class="print-text">おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+        </div>
+
+        <!-- P11: Colophon -->
+        <div class="print-page">
+            <div class="print-colophon">
+                <p>発行日：2025年12月12日</p>
+                <p>発行：Sakura Academia</p>
+                <div class="qr-box">QR Code</div>
+            </div>
+        </div>
+
+        <!-- P12: Back Cover -->
+        <div class="print-page last">
+            <img src="images/cover_back.png" class="print-bg">
+        </div>
+    </div>
 
     <!-- CONTROL BAR -->
     <div id="controls">
         <button onclick="location.href='../index.html'" class="control-btn">🏠 戻る</button>
         <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
-        <button onclick="window.print()" class="control-btn print-btn">PDF/印刷</button>
+        <button onclick="window.print()" class="control-btn premium-btn">🎁 無料でPDF保存</button>
         <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
     </div>
 
@@ -392,7 +485,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page2.png"></div>
                 <div class="text-area">
-                    <p>きみはだれ？</p>
+                    <p>「チッ チッ」<br>……だあれ？</p>
                 </div>
             </div>
         </div>
@@ -402,7 +495,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page3.png"></div>
                 <div class="text-area">
-                    <p>おいで…</p>
+                    <p>「こっちへ<br>おいで」</p>
                 </div>
             </div>
         </div>
@@ -412,7 +505,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page4.png"></div>
                 <div class="text-area">
-                    <p>ピョン ピョン！<br>うれしいダンス</p>
+                    <p>ピョン！<br>と<br>ピョン！</p>
                 </div>
             </div>
         </div>
@@ -422,7 +515,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page5.png"></div>
                 <div class="text-area">
-                    <p>てにのったね！<br>うん、きみのなまえは<br>ルルにしよう！</p>
+                    <p>ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
                 </div>
             </div>
         </div>
@@ -432,7 +525,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page6.png"></div>
                 <div class="text-area">
-                    <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
+                    <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
                 </div>
             </div>
         </div>
@@ -442,7 +535,7 @@
             <div class="page-content-wrapper">
                 <div class="image-area"><img src="images/page7.png"></div>
                 <div class="text-area">
-                    <p>おやすみ、ルル<br>またあした</p>
+                    <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
                 </div>
             </div>
         </div>
@@ -451,84 +544,6 @@
         <div class="page future" id="p9">
             <img src="images/cover_back.png" class="cover-image" alt="Back Cover">
         </div>
-    </div>
-
-
-    <!-- PRINT VIEW AREA (SHADOW DOM FOR PRINTING) -->
-    <div id="print-area">
-        <!-- Cover -->
-        <div class="print-page cover">
-            <div class="cover-title"><span class="girl-name"></span>とルル</div>
-            <img src="images/cover_front.png">
-        </div>
-
-        <!-- Pages -->
-        <!-- 1 -->
-        <div class="print-page">
-            <div class="print-content-wrapper">
-                <div class="print-image-area"><img src="images/page1.png"></div>
-                <div class="print-text-area">
-                    <p>おはよう、<span class="girl-name"></span></p>
-                </div>
-            </div>
-        </div>
-        <!-- 2 -->
-        <div class="print-page">
-            <div class="print-content-wrapper">
-                <div class="print-image-area"><img src="images/page2.png"></div>
-                <div class="print-text-area">
-                    <p>きみはだれ？</p>
-                </div>
-            </div>
-        </div>
-        <!-- 3 -->
-        <div class="print-page">
-            <div class="print-content-wrapper">
-                <div class="print-image-area"><img src="images/page3.png"></div>
-                <div class="print-text-area">
-                    <p>おいで…</p>
-                </div>
-            </div>
-        </div>
-        <!-- 4 -->
-        <div class="print-page">
-            <div class="print-content-wrapper">
-                <div class="print-image-area"><img src="images/page4.png"></div>
-                <div class="print-text-area">
-                    <p>ピョン ピョン！<br>うれしいダンス</p>
-                </div>
-            </div>
-        </div>
-        <!-- 5 -->
-        <div class="print-page">
-            <div class="print-content-wrapper">
-                <div class="print-image-area"><img src="images/page5.png"></div>
-                <div class="print-text-area">
-                    <p>てにのったね！<br>うん、きみのなまえは<br>ルルにしよう！</p>
-                </div>
-            </div>
-        </div>
-        <!-- 6 -->
-        <div class="print-page">
-            <div class="print-content-wrapper">
-                <div class="print-image-area"><img src="images/page6.png"></div>
-                <div class="print-text-area">
-                    <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
-                </div>
-            </div>
-        </div>
-        <!-- 7 -->
-        <div class="print-page">
-            <div class="print-content-wrapper">
-                <div class="print-image-area"><img src="images/page7.png"></div>
-                <div class="print-text-area">
-                    <p>おやすみ、ルル<br>またあした</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Back Cover -->
-        <div class="print-page cover"><img src="images/cover_back.png"></div>
     </div>
 
 
