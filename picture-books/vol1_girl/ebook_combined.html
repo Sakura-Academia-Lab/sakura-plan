@@ -305,19 +305,19 @@
 
             .print-text {
                 position: absolute;
-                bottom: 10%;
+                bottom: 15%;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 80%;
-                font-size: 20pt;
+                width: 90%;
+                font-size: 34pt;
                 font-weight: bold;
                 text-align: center;
                 color: #333;
                 text-shadow:
-                    2px 2px 0 #fff, -2px -2px 0 #fff,
-                    2px -2px 0 #fff, -2px 2px 0 #fff,
-                    0px 2px 0 #fff, 0px -2px 0 #fff,
-                    2px 0px 0 #fff, -2px 0px 0 #fff;
+                    3px 3px 0 #fff, -3px -3px 0 #fff,
+                    3px -3px 0 #fff, -3px 3px 0 #fff,
+                    0px 3px 0 #fff, 0px -3px 0 #fff,
+                    3px 0px 0 #fff, -3px 0px 0 #fff;
             }
 
             .print-colophon {
@@ -515,7 +515,7 @@
                 if (!paragraph) return;
 
                 const isPrintArea = container.classList.contains('print-text-area');
-                const defaultSize = isPrintArea ? 32 : 16;
+                const defaultSize = isPrintArea ? 34 : 16;
 
                 paragraph.style.fontSize = defaultSize + 'pt';
 

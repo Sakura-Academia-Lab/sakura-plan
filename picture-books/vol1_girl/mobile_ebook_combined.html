@@ -133,16 +133,21 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .image-area {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 65%;
+            height: 100%;
             display: flex;
             justify-content: center;
-            align-items: flex-end;
-            padding: 20px;
+            align-items: center;
+            padding: 0;
             box-sizing: border-box;
+            z-index: 1;
         }
 
         .image-area img {
@@ -150,17 +155,22 @@
             max-height: 100%;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
         }
 
         .text-area {
+            position: absolute;
+            bottom: 5%;
+            left: 0;
             width: 100%;
-            height: 35%;
+            height: auto;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             padding: 20px 40px;
             box-sizing: border-box;
+            z-index: 2;
+            pointer-events: none;
             font-size: 20pt;
             /* Screen Font Size */
             line-height: 1.4;
@@ -347,24 +357,24 @@
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                z-index: -1;
+                z-index: 0;
             }
 
             .print-text {
                 position: absolute;
-                bottom: 10%;
+                bottom: 15%;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 80%;
-                font-size: 24pt;
+                width: 90%;
+                font-size: 34pt;
                 font-weight: bold;
                 text-align: center;
                 color: #333;
                 text-shadow:
-                    2px 2px 0 #fff, -2px -2px 0 #fff,
-                    2px -2px 0 #fff, -2px 2px 0 #fff,
-                    0px 2px 0 #fff, 0px -2px 0 #fff,
-                    2px 0px 0 #fff, -2px 0px 0 #fff;
+                    3px 3px 0 #fff, -3px -3px 0 #fff,
+                    3px -3px 0 #fff, -3px 3px 0 #fff,
+                    0px 3px 0 #fff, 0px -3px 0 #fff,
+                    3px 0px 0 #fff, -3px 0px 0 #fff;
             }
 
             .print-colophon {
@@ -559,7 +569,7 @@
                 if (!paragraph) return;
 
                 const isPrintArea = container.classList.contains('print-text-area');
-                const defaultSize = isPrintArea ? 32 : 20;
+                const defaultSize = isPrintArea ? 34 : 20;
 
                 paragraph.style.fontSize = defaultSize + 'pt';
 
