@@ -320,6 +320,19 @@
                     3px 0px 0 #fff, -3px 0px 0 #fff;
             }
 
+            .print-page .cover-title {
+                position: absolute;
+                top: 5%;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 80pt;
+                font-weight: bold;
+                color: #5D4037;
+                text-shadow: 3px 3px 0px #ffffff;
+                z-index: 10;
+            }
+
             .print-colophon {
                 text-align: center;
                 margin-top: auto;
@@ -345,6 +358,7 @@
     <div id="print-area" style="display: none;">
         <!-- P1: Cover -->
         <div class="print-page">
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
             <img src="images/cover_front.png" class="print-bg">
         </div>
 

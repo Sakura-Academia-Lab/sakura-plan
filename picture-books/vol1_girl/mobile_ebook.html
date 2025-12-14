@@ -95,7 +95,7 @@
                 left: 50%;
                 transform: translateX(-50%);
                 width: 80%;
-                font-size: 24pt;
+                font-size: 48pt;
                 font-weight: bold;
                 text-align: center;
                 color: #333;
@@ -121,6 +121,19 @@
                 align-items: center;
                 justify-content: center;
                 color: #ccc;
+            }
+
+            .print-page .cover-title {
+                position: absolute;
+                top: 5%;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 80pt;
+                font-weight: bold;
+                color: #5D4037;
+                text-shadow: 3px 3px 0px #ffffff;
+                z-index: 10;
             }
         }
 
@@ -197,6 +210,10 @@
             padding: 15px;
             /* Reduced padding for mobile */
             font-size: 14pt;
+            /* Default Mobile */
+        }
+
+        .text-content {
             line-height: 1.6;
             height: 100%;
             display: flex;
@@ -424,49 +441,55 @@
         <!-- Leaf 2: P3(Txt1) / P4(Img2) -->
         <div class="page" id="p3">
             <div class="text-content">
-                <p>「チッ チッ」<br>……だあれ？</p>
+                <p>おはよう、<span class="girl-name"></span></p>
             </div>
         </div>
+
         <div class="page" id="p4"><img src="images/page2.png" class="image-content" alt="Page 2 Image"></div>
 
         <!-- Leaf 3 -->
         <div class="page" id="p5">
             <div class="text-content">
-                <p>「こっちへ<br>おいで」</p>
+                <p>「チッ チッ」<br>……だあれ？</p>
             </div>
         </div>
+
         <div class="page" id="p6"><img src="images/page3.png" class="image-content" alt="Page 3 Image"></div>
 
         <!-- Leaf 4 -->
         <div class="page" id="p7">
             <div class="text-content">
-                <p>ピョン！<br>と<br>ピョン！</p>
+                <p>「こっちへ<br>おいで」</p>
             </div>
         </div>
+
         <div class="page" id="p8"><img src="images/page4.png" class="image-content" alt="Page 4 Image"></div>
 
         <!-- Leaf 5 -->
         <div class="page" id="p9">
             <div class="text-content">
-                <p>ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+                <p>ピョン！<br>と<br>ピョン！</p>
             </div>
         </div>
+
         <div class="page" id="p10"><img src="images/page5.png" class="image-content" alt="Page 5 Image"></div>
 
         <!-- Leaf 6 -->
         <div class="page" id="p11">
             <div class="text-content">
-                <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+                <p>ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
             </div>
         </div>
+
         <div class="page" id="p12"><img src="images/page6.png" class="image-content" alt="Page 6 Image"></div>
 
         <!-- Leaf 7 -->
         <div class="page" id="p13">
             <div class="text-content">
-                <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+                <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
             </div>
         </div>
+
         <div class="page" id="p14"><img src="images/page7.png" class="image-content" alt="Page 7 Image"></div>
 
         <!-- Leaf 8 -->
@@ -496,37 +519,37 @@
         <div class="print-page"><img src="images/page2.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>きみはだれ？</p>
+                <p>「チッ チッ」<br>……だあれ？</p>
             </div>
         </div>
         <div class="print-page"><img src="images/page3.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>おいで…</p>
+                <p>「こっちへ<br>おいで」</p>
             </div>
         </div>
         <div class="print-page"><img src="images/page4.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>ピョン ピョン！<br>うれしいダンス</p>
+                <p>ピョン！<br>と<br>ピョン！</p>
             </div>
         </div>
         <div class="print-page"><img src="images/page5.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>てにのった！<br>きみのなまえは<br>ルル だね！</p>
+                <p>手に乗った、<br>君の名前は<br>ルルにしよう！</p>
             </div>
         </div>
         <div class="print-page"><img src="images/page6.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>ルルは<span class="girl-name"></span>が<br>だいすき</p>
+                <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
             </div>
         </div>
         <div class="print-page"><img src="images/page7.png"></div>
         <div class="print-page">
             <div class="print-text">
-                <p>おやすみ、ルル<br>またあした</p>
+                <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
             </div>
         </div>
         <div class="print-page cover"><img src="images/cover_back.png"></div>
@@ -542,9 +565,19 @@
             textContainers.forEach(container => {
                 const paragraph = container.querySelector('p');
                 if (!paragraph) return;
-                paragraph.style.fontSize = '14pt';
+
+                const isPrintArea = container.closest('#print-area') !== null;
+
+                let startSize = 14;
+                if (isPrintArea) {
+                    startSize = 48; // Print (Large)
+                }
+                // Else Mobile/PC Default (14pt)
+                // Else Mobile Screen (14pt)
+                paragraph.style.fontSize = startSize + 'pt';
+
                 if (container.offsetParent !== null) {
-                    let size = 14;
+                    let size = startSize;
                     while (paragraph.scrollHeight > container.clientHeight && size > 10) {
                         size--;
                         paragraph.style.fontSize = `${size}pt`;
@@ -630,6 +663,11 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextPage();
             if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevPage();
+        });
+
+        // Resize Support
+        window.addEventListener('resize', () => {
+            updateView();
         });
 
         // Swipe Support
