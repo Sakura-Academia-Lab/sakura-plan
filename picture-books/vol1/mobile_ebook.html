@@ -1,476 +1,707 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>男の子と桜文鳥の物語 - 第1巻 (電子書籍)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本 - 第1巻 (電子書籍版)</title>
     <style>
-        /* 日本語フォント：丸ゴシック体を読み込み */
         @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
 
         :root {
+            --page-width: 210mm;
+            --page-height: 297mm;
             --bg-color: #f0f0f0;
             --text-color: #4a4a4a;
-            --book-width: 90vw;  /* 本の幅 */
-            --book-height: 60vw; /* 本の高さ */
-            --accent-color: #ff7e5f; /* index.htmlのテーマカラーに合わせました */
         }
 
-        /* PC画面用調整 */
-        @media (min-width: 1024px) {
-            :root {
-                --book-width: 800px;
-                --book-height: 565px;
-            }
+        /* Global Print Settings */
+        @page {
+            size: A4 portrait;
+            margin: 0;
         }
 
+        html,
         body {
+            height: 100%;
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             font-family: 'Zen Maru Gothic', sans-serif;
             color: var(--text-color);
-            height: 100vh;
+        }
+
+        /* ============================
+           SCREEN VIEW STYLES - SPREAD LAYOUT
+           ============================ */
+        #print-area {
+            display: none;
+        }
+
+        @media print {
+
+            #book-stage,
+            #controls {
+                display: none !important;
+            }
+
+            #print-area {
+                display: block !important;
+            }
+
+            body {
+                overflow: visible !important;
+                display: block !important;
+                background: white !important;
+            }
+
+            .print-page {
+                page-break-after: always;
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            img {
+                max-width: 100%;
+                page-break-after: always;
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .print-page.last {
+                page-break-after: auto;
+            }
+
+            .print-bg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                z-index: -1;
+            }
+
+            .print-text {
+                position: absolute;
+                bottom: 10%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                font-size: 32pt;
+                font-weight: bold;
+                text-align: center;
+                color: #333;
+                text-shadow:
+                    2px 2px 0 #fff, -2px -2px 0 #fff,
+                    2px -2px 0 #fff, -2px 2px 0 #fff,
+                    0px 2px 0 #fff, 0px -2px 0 #fff,
+                    2px 0px 0 #fff, -2px 0px 0 #fff;
+            }
+
+            .print-colophon {
+                text-align: center;
+                margin-top: auto;
+                margin-bottom: 20%;
+            }
+
+            .qr-box {
+                width: 100px;
+                height: 100px;
+                border: 2px dashed #ccc;
+                margin: 20px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ccc;
+            }
+
+            .print-page .cover-title {
+                position: absolute;
+                top: 5%;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 80pt;
+                font-weight: bold;
+                color: #5D4037;
+                text-shadow: 3px 3px 0px #ffffff;
+                z-index: 10;
+            }
+        }
+
+        body {
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            perspective: 2000px;
         }
 
-        /* ============================
-           舞台装置 (3D Stage)
-           ============================ */
         #book-stage {
             position: relative;
-            width: var(--book-width);
-            height: var(--book-height);
-            perspective: 2000px;
+            width: auto;
+            height: 90vh;
+            /* Spread Ratio: 2 x A4 width (420mm) / A4 height (297mm) */
+            aspect-ratio: 420/297;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background-color: transparent;
+            max-width: 95vw;
             transform-style: preserve-3d;
         }
 
-        /* ============================
-           紙（Leaf）の構造
-           ============================ */
-        .leaf {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 50%;
-            height: 100%;
-            transform-origin: left center;
-            transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
-            z-index: 1;
-        }
-
+        /* Common Page Styles */
         .page {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
+            width: 50%;
+            /* Half spread */
             height: 100%;
             background-color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            backface-visibility: hidden;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
-            border: 1px solid #ddd;
-            box-sizing: border-box; /* パディングを含める */
+            backface-visibility: hidden;
+            /* Hide backface so 0deg covers -180deg */
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), z-index 0s 0.2s;
         }
 
-        .page.front { z-index: 2; transform: rotateY(0deg); }
-        .page.back { z-index: 1; transform: rotateY(180deg); background-color: #fdfdfd; }
+        /* ODD PAGES (Right Side) */
+        /* Pivot on Left Edge (Spine) */
+        .page:nth-child(odd) {
+            left: 50%;
+            transform-origin: left center;
+        }
 
-        /* ============================
-           中身のデザイン
-           ============================ */
+        /* EVEN PAGES (Left Side) */
+        /* Pivot on Right Edge (Spine) */
+        /* Positioned on Left, but initially folded to Right (180deg) */
+        .page:nth-child(even) {
+            left: 0;
+            transform-origin: right center;
+            background-color: #fcfcfc;
+        }
+
+        /* Content Styles */
         .image-content {
             width: 90%;
             height: 90%;
             object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .text-content {
-            padding: 20px;
-            font-size: clamp(14px, 2vw, 24px);
-            line-height: 1.8;
-            text-align: center;
-            font-weight: bold;
-            color: #5D4037;
             width: 100%;
+            padding: 15px;
+            /* Reduced padding for mobile */
+            font-size: 11px;
+            /* Default Mobile (11px) */
+        }
+
+        .text-content {
+            line-height: 1.6;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+            box-sizing: border-box;
         }
 
-        .boy-name {
-            color: #ff7e5f;
-            border-bottom: 2px dashed #ff7e5f;
-            margin: 0 4px;
+        .text-content p {
+            text-align: center;
+            display: inline-block;
+            margin: 0;
+            max-width: 12.5em;
+            /* Limit to approx 11-12 characters per line */
+            text-shadow:
+                2px 2px 0 #fff, -2px -2px 0 #fff,
+                2px -2px 0 #fff, -2px 2px 0 #fff,
+                0px 2px 0 #fff, 0px -2px 0 #fff,
+                2px 0px 0 #fff, -2px 0px 0 #fff;
+            /* White stroke effect */
+            font-weight: bold;
         }
 
-        /* ============================
-           操作ボタン (Controls)
-           ============================ */
+        .cover-title {
+            position: absolute;
+            top: 5%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 32pt;
+            font-weight: bold;
+            color: #5D4037;
+            text-shadow: 3px 3px 0px #ffffff;
+            z-index: 10;
+        }
+
+        /* Controls */
         #controls {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
             display: flex;
-            gap: 10px;
-            z-index: 9999;
-            background: rgba(255,255,255,0.95);
-            padding: 10px 20px;
-            border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            flex-wrap: nowrap;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .control-btn {
-            background: var(--accent-color);
-            color: white;
+            background: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-family: inherit;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-family: 'Zen Maru Gothic', sans-serif;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 16px;
             cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
-            text-decoration: none; /* リンクボタン用 */
+            transition: transform 0.2s, background 0.2s;
             display: flex;
             align-items: center;
+            justify-content: center;
+            min-width: 120px;
         }
 
-        .control-btn:active { transform: scale(0.95); }
-        
-        .control-btn.home {
-            background: #5d5d5d; /* index.htmlのヘッダー色に合わせる */
+        .control-btn:hover {
+            transform: scale(1.05);
+            background: #f8f9fa;
         }
-        
-        .control-btn.secondary {
-            background: #88cec2;
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .print-btn {
+            background: #ff7e5f;
+            color: white;
+        }
+
+        .print-btn:hover {
+            background: #feb47b;
+        }
+
+        /* Premium PDF Button Style */
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            /* Pink to Gold */
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            font-weight: 800;
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
         }
 
         /* ============================
-           名前入力モーダル
+           MOBILE LAYOUT STYLES
            ============================ */
-        #name-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 10000;
-            justify-content: center;
+        /* Mobile Styles - Always Active (Landscape Optimized) */
+        /* Revert to side controls (inherits from default) but adjust for mobile */
+        #controls {
+            right: 5px;
+            /* Closer to edge */
+            padding: 10px 8px;
+            /* Compact padding */
+            gap: 10px;
+            transform: translateY(-50%) scale(0.7);
+            /* Make even smaller */
+            transform-origin: right center;
+            border-radius: 30px;
+            /* Tighter radius */
+        }
+
+        #book-stage {
+            /* Maximize height for landscape reading */
+            width: auto;
+            height: 98vh;
+            max-width: 95vw;
+            /* Allow full width */
+            aspect-ratio: 16/9;
+            /* Widescreen layout */
+        }
+
+        body {
+            /* Center perfectly */
             align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            width: 80%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 4px solid var(--accent-color);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #5D4037;
-        }
-
-        #name-input {
-            width: 80%;
-            padding: 10px;
-            font-size: 1.2rem;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-family: inherit;
-        }
-        
-        #name-input:focus {
-             outline: none;
-             border-color: var(--accent-color);
-        }
-
-        /* 印刷用設定（非表示） */
-        #print-area { display: none; }
-        @media print {
-            body, #book-stage, #controls, #name-modal { display: none !important; }
-            #print-area { display: block !important; }
+            padding-top: 0;
         }
     </style>
 </head>
+
 <body>
+    <!-- PRINT AREA (Hidden on Screen) -->
+    <div id="print-area" style="display: none;">
+        <!-- P1: Cover -->
+        <div class="print-page">
+            <img src="images/cover_front.png" class="print-bg">
+        </div>
 
-    <div id="name-modal">
-        <div class="modal-content">
-            <div class="modal-title">おなまえをおしえてね</div>
-            <input type="text" id="name-input" placeholder="ここになまえをかいてね" maxlength="10">
-            <br>
-            <button class="control-btn" style="margin: 0 auto;" onclick="saveNameAndClose()">これにする！</button>
+        <!-- P2: Name Entry -->
+        <div class="print-page">
+            <div
+                style="font-size: 20pt; border-bottom: 2px solid #333; padding-bottom: 10px; width: 60%; text-align: center;">
+                おなまえ：____________________
+            </div>
+        </div>
+
+        <!-- P3: Title Page -->
+        <div class="print-page">
+            <h1 style="font-size: 32pt; color: #ff69b4;">ルルと <span class="girl-name"></span></h1>
+            <div style="margin-top: 50px; font-size: 16pt;">Sakura Academia</div>
+        </div>
+
+        <!-- P4-P10: Story -->
+        <div class="print-page">
+            <img src="images/page1.png" class="print-bg">
+            <p class="print-text">おはよう、<span class="girl-name"></span></p>
+        </div>
+        <div class="print-page">
+            <img src="images/page2.png" class="print-bg">
+            <p class="print-text">「チッ チッ」<br>……だあれ？</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page3.png" class="print-bg">
+            <p class="print-text">「こっちへ<br>おいで」</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page4.png" class="print-bg">
+            <p class="print-text">ピョン！<br>と<br>ピョン！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page5.png" class="print-bg">
+            <p class="print-text">ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page6.png" class="print-bg">
+            <p class="print-text">ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page7.png" class="print-bg">
+            <p class="print-text">おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+        </div>
+
+        <!-- P11: Colophon -->
+        <div class="print-page">
+            <div class="print-colophon">
+                <p>発行日：2025年12月12日</p>
+                <p>発行：Sakura Academia</p>
+                <div class="qr-box">
+                    <img id="qr-code-img" src="" alt="QR" style="width:100%; height:100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+
+        <!-- P12: Back Cover -->
+        <div class="print-page last">
+            <img src="images/cover_back.png" class="print-bg">
         </div>
     </div>
 
-    <div id="book-stage">
-        
-        <div class="leaf" id="leaf-1" style="z-index: 10;">
-            <div class="page front">
-                <div class="text-content">
-                    <h1 style="font-size: 2.5em; margin:0;"><span class="boy-name">〇〇</span><br><span style="font-size:0.5em">と</span><br>桜文鳥の物語</h1>
-                    <img src="images/cover_front.png" class="image-content" style="position:absolute; z-index:-1; width:100%; height:100%; object-fit:cover; opacity:1;" onerror="this.style.opacity='0'">
-                </div>
-            </div>
-            <div class="page back">
-                <img src="images/page1.png" class="image-content" alt="P1" onerror="this.style.display='none'">
-            </div>
-        </div>
-
-        <div class="leaf" id="leaf-2" style="z-index: 9;">
-            <div class="page front">
-                <div class="text-content">
-                    <p>おはよう、<br><span class="boy-name">〇〇</span>くん</p>
-                </div>
-            </div>
-            <div class="page back">
-                <img src="images/page2.png" class="image-content" alt="P2" onerror="this.style.display='none'">
-            </div>
-        </div>
-
-        <div class="leaf" id="leaf-3" style="z-index: 8;">
-            <div class="page front">
-                <div class="text-content">
-                    <p>「チッ チッ」<br>……だあれ？</p>
-                </div>
-            </div>
-            <div class="page back">
-                <img src="images/page3.png" class="image-content" alt="P3" onerror="this.style.display='none'">
-            </div>
-        </div>
-
-        <div class="leaf" id="leaf-4" style="z-index: 7;">
-            <div class="page front">
-                <div class="text-content">
-                    <p>「こっちへ<br>おいで」</p>
-                </div>
-            </div>
-            <div class="page back">
-                <img src="images/page4.png" class="image-content" alt="P4" onerror="this.style.display='none'">
-            </div>
-        </div>
-
-        <div class="leaf" id="leaf-5" style="z-index: 6;">
-             <div class="page front">
-                 <div class="text-content">
-                     <p>ピョン！<br>と<br>ピョン！</p>
-                 </div>
-             </div>
-             <div class="page back">
-                 <img src="images/page5.png" class="image-content" alt="P5" onerror="this.style.display='none'">
-             </div>
-        </div>
-
-        <div class="leaf" id="leaf-6" style="z-index: 5;">
-            <div class="page front">
-                <div class="text-content">
-                    <p>ふわっ。<br>てに のった！<br>きみの なまえは……<br>「ルル」！</p>
-                </div>
-            </div>
-            <div class="page back">
-                <img src="images/page6.png" class="image-content" alt="P6" onerror="this.style.display='none'">
-            </div>
-       </div>
-
-       <div class="leaf" id="leaf-7" style="z-index: 4;">
-           <div class="page front">
-               <div class="text-content">
-                   <p>ルルは<br><span class="boy-name">〇〇</span>が<br>だーいすき</p>
-               </div>
-           </div>
-           <div class="page back">
-               <img src="images/page7.png" class="image-content" alt="P7" onerror="this.style.display='none'">
-           </div>
-      </div>
-
-        <div class="leaf" id="leaf-8" style="z-index: 3;">
-            <div class="page front">
-                <div class="text-content">
-                    <p>おやすみ、ルル。<br>いい ゆめ みてね。</p>
-                </div>
-            </div>
-            <div class="page back">
-                <div class="text-content" style="position: relative;">
-                    <h2>おしまい</h2>
-                    <p>Sakura Academia</p>
-                    <div style="margin-top:20px;">
-                        <img id="qr-code-img" src="" style="width:100px; height:100px; object-fit:contain; display:none;">
-                    </div>
-                </div>
-                <img src="images/cover_back.png" class="image-content" style="position:absolute; z-index:-1; width:100%; height:100%; object-fit:cover; opacity:1;" onerror="this.style.opacity='0'">
-            </div>
-        </div>
-
-    </div>
-
+    <!-- CONTROL BAR -->
     <div id="controls">
-        <button class="control-btn home" onclick="location.href='index.html'">🏠 Home</button>
-        
-        <button class="control-btn secondary" onclick="openNameModal()">✐ 変更</button>
-        <button class="control-btn" onclick="prevLeaf()">◀</button>
-        <button class="control-btn" onclick="nextLeaf()">▶</button>
+        <button class="control-btn" onclick="location.href='../index.html'">🏠 Home</button>
+        <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
+        <button onclick="window.print()" class="control-btn premium-btn">🎁 無料でPDF保存</button>
+        <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
+    </div>
+
+    <!-- SCREEN VIEW AREA -->
+    <div id="book-stage">
+        <!-- Leaf 1: P1(Cover) / P2(Img1) -->
+        <div class="page" id="p1">
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
+            <img src="images/cover_front.png" class="cover-image" alt="Front Cover">
+        </div>
+        <div class="page" id="p2"><img src="images/page1.png" class="image-content" alt="Page 1 Image"></div>
+
+        <!-- Leaf 2: P3(Txt1) / P4(Img2) -->
+        <div class="page" id="p3">
+            <div class="text-content">
+                <p>おはよう、<span class="girl-name"></span></p>
+            </div>
+        </div>
+
+        <div class="page" id="p4"><img src="images/page2.png" class="image-content" alt="Page 2 Image"></div>
+
+        <!-- Leaf 3 -->
+        <div class="page" id="p5">
+            <div class="text-content">
+                <p>「チッ チッ」<br>……だあれ？</p>
+            </div>
+        </div>
+
+        <div class="page" id="p6"><img src="images/page3.png" class="image-content" alt="Page 3 Image"></div>
+
+        <!-- Leaf 4 -->
+        <div class="page" id="p7">
+            <div class="text-content">
+                <p>「こっちへ<br>おいで」</p>
+            </div>
+        </div>
+
+        <div class="page" id="p8"><img src="images/page4.png" class="image-content" alt="Page 4 Image"></div>
+
+        <!-- Leaf 5 -->
+        <div class="page" id="p9">
+            <div class="text-content">
+                <p>ピョン！<br>と<br>ピョン！</p>
+            </div>
+        </div>
+
+        <div class="page" id="p10"><img src="images/page5.png" class="image-content" alt="Page 5 Image"></div>
+
+        <!-- Leaf 6 -->
+        <div class="page" id="p11">
+            <div class="text-content">
+                <p>ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+            </div>
+        </div>
+
+        <div class="page" id="p12"><img src="images/page6.png" class="image-content" alt="Page 6 Image"></div>
+
+        <!-- Leaf 7 -->
+        <div class="page" id="p13">
+            <div class="text-content">
+                <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+            </div>
+        </div>
+
+        <div class="page" id="p14"><img src="images/page7.png" class="image-content" alt="Page 7 Image"></div>
+
+        <!-- Leaf 8 -->
+        <div class="page" id="p15">
+            <div class="text-content">
+                <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+            </div>
+        </div>
+        <div class="page" id="p16"><img src="images/cover_back.png" class="cover-image" alt="Back Cover"></div>
+    </div>
+
+    <!-- PRINT VIEW AREA -->
+    <!-- PRINT VIEW AREA -->
+    <!-- PRINT VIEW AREA -->
+    <!-- PRINT VIEW AREA -->
+    <div id="print-area">
+        <div class="print-page cover">
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
+            <img src="images/cover_front.png">
+        </div>
+        <div class="print-page"><img src="images/page1.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>おはよう、<span class="girl-name"></span></p>
+            </div>
+        </div>
+        <div class="print-page"><img src="images/page2.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>「チッ チッ」<br>……だあれ？</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="images/page3.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>「こっちへ<br>おいで」</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="images/page4.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>ピョン！<br>と<br>ピョン！</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="images/page5.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>手に乗った、<br>君の名前は<br>ルルにしよう！</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="images/page6.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+            </div>
+        </div>
+        <div class="print-page"><img src="images/page7.png"></div>
+        <div class="print-page">
+            <div class="print-text">
+                <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+            </div>
+        </div>
+        <div class="print-page cover"><img src="images/cover_back.png"></div>
     </div>
 
     <script src="settings.js"></script>
-
     <script>
-        // === 1. 連携機能付き・名前管理システム ===
-        const STORAGE_KEY = 'boyName'; // index.htmlと同じキーを使う
+        let currentLeaf = 1;
+        const totalLeaves = 8;
 
-        function openNameModal() {
-            // 現在保存されている名前を取得して表示
-            const currentName = localStorage.getItem(STORAGE_KEY) || getSettingsDefaultName();
-            document.getElementById('name-input').value = currentName;
-            document.getElementById('name-modal').style.display = 'flex';
-            setTimeout(() => document.getElementById('name-input').focus(), 100);
-        }
+        function adjustTextSize() {
+            const textContainers = document.querySelectorAll('.text-content');
+            textContainers.forEach(container => {
+                const paragraph = container.querySelector('p');
+                if (!paragraph) return;
 
-        function saveNameAndClose() {
-            const inputVal = document.getElementById('name-input').value;
-            // 空白ならデフォルト
-            const newName = inputVal.trim() === '' ? getSettingsDefaultName() : inputVal;
-            
-            // ★重要: localStorageに保存することで、index.htmlに戻っても名前が維持される
-            localStorage.setItem(STORAGE_KEY, newName);
-            
-            applyName(newName);
-            document.getElementById('name-modal').style.display = 'none';
-        }
+                const isPrintArea = container.closest('#print-area') !== null;
 
-        function applyName(name) {
-            // 安全対策: textContentで文字として埋め込む
-            document.querySelectorAll('.boy-name').forEach(el => {
-                el.textContent = name;
-            });
-            document.title = `${name}と桜文鳥の物語 - 第1巻`;
-        }
+                let startSize = 11;
+                let unit = 'px';
 
-        // settings.js からデフォルト名を取得するヘルパー関数
-        function getSettingsDefaultName() {
-            if (typeof window.bookSettings !== 'undefined' && window.bookSettings.boyName) {
-                return window.bookSettings.boyName;
-            }
-            return '男の子'; // 最終手段
-        }
-
-        function initData() {
-            // 優先順位:
-            // 1. URLパラメータ (?name=...) ※共有用
-            // 2. localStorage (index.htmlで設定した値)
-            // 3. settings.js (デフォルト設定)
-            // 4. ハードコードされた "男の子"
-
-            let targetName = null;
-
-            // 1. URL Check
-            const urlParams = new URLSearchParams(window.location.search);
-            if(urlParams.has('name')) {
-                targetName = urlParams.get('name');
-            }
-
-            // 2. localStorage Check
-            if (!targetName) {
-                targetName = localStorage.getItem(STORAGE_KEY);
-            }
-
-            // 3. settings.js Check
-            if (!targetName) {
-                targetName = getSettingsDefaultName();
-            }
-
-            applyName(targetName);
-
-            // QRコードの生成 (settings.jsがある場合)
-            if (typeof window.bookSettings !== 'undefined' && window.bookSettings.updateQR) {
-                // imgタグを表示状態にしてから更新
-                const qrImg = document.getElementById('qr-code-img');
-                if(qrImg) {
-                    qrImg.style.display = 'block';
-                    window.bookSettings.updateQR(); 
+                if (isPrintArea) {
+                    startSize = 48; // Print (Large)
+                    unit = 'pt';
                 }
-            }
-        }
+                // Else Mobile/PC Default (16px)
 
-        // === 2. ページめくりシステム (3D) ===
-        let currentLeafIndex = 0;
-        const leaves = document.querySelectorAll('.leaf');
-        const totalLeaves = leaves.length;
+                paragraph.style.fontSize = startSize + unit;
 
-        function updateBook() {
-            leaves.forEach((leaf, index) => {
-                if (index < currentLeafIndex) {
-                    leaf.style.transform = "rotateY(-180deg)";
-                    leaf.style.zIndex = index;
-                } else {
-                    leaf.style.transform = "rotateY(0deg)";
-                    leaf.style.zIndex = totalLeaves - index;
+                if (container.offsetParent !== null) {
+                    let size = startSize;
+                    while (paragraph.scrollHeight > container.clientHeight && size > 10) {
+                        size--;
+                        paragraph.style.fontSize = size + unit;
+                    }
                 }
             });
-            
-            // ボタンの有効・無効切り替え（視覚的補助）
-            // 必要に応じてここに opacity 変更などの処理を追加可能
         }
 
-        function nextLeaf() {
-            if (currentLeafIndex < totalLeaves) {
-                currentLeafIndex++;
-                updateBook();
+        function updateView() {
+            let currentName = "女の子";
+            if (typeof settings !== 'undefined') currentName = settings.girlName;
+            const storedName = localStorage.getItem('girlName');
+            if (storedName) currentName = storedName;
+            document.querySelectorAll('.girl-name').forEach(el => el.textContent = currentName);
+            document.title = `${currentName}とルル - 第1巻 (電子書籍)`;
+
+            if (settings.updateQR) settings.updateQR();
+
+            setTimeout(adjustTextSize, 100);
+            adjustTextSize();
+
+            for (let i = 1; i <= totalLeaves; i++) {
+                const oddPage = document.getElementById(`p${i * 2 - 1}`); // Right (Front)
+                const evenPage = document.getElementById(`p${i * 2}`);     // Left (Back)
+
+                if (!oddPage || !evenPage) continue;
+
+                if (i < currentLeaf) {
+                    // TURNED: Left Stack
+                    // Odd pivots Left: 0 -> -180
+                    // Even pivots Left: 180 -> 0 (Visible)
+                    oddPage.style.transform = "rotateY(-180deg)";
+                    evenPage.style.transform = "rotateY(0deg)";
+
+                    // Z-Index: Bottom of Left Stack.
+                    // The first turned leaf (1) is at the bottom.
+                    oddPage.style.zIndex = i;
+                    evenPage.style.zIndex = i + 1; // Even on top of Odd
+                }
+                else if (i === currentLeaf) {
+                    // ACTIVE: Right Stack
+                    // Odd: 0 (Visible)
+                    // Even: 180 (Hidden behind Odd?)
+                    // even (origin right) at 180 is folded RIGHT.
+                    // odd (origin left) at 0 is open RIGHT.
+
+                    oddPage.style.transform = "rotateY(0deg)";
+                    evenPage.style.transform = "rotateY(180deg)";
+
+                    // Z-Index: Top of Right Stack.
+                    oddPage.style.zIndex = 1000 - i + 1;
+                    evenPage.style.zIndex = 1000 - i;
+                }
+                else {
+                    // FUTURE: Right Stack
+                    oddPage.style.transform = "rotateY(0deg)";
+                    evenPage.style.transform = "rotateY(180deg)";
+
+                    oddPage.style.zIndex = 1000 - i + 1;
+                    evenPage.style.zIndex = 1000 - i;
+                }
+            }
+
+            document.getElementById('btn-prev').disabled = currentLeaf === 1;
+            document.getElementById('btn-next').disabled = currentLeaf === totalLeaves + 1;
+
+            document.getElementById('btn-prev').style.opacity = currentLeaf === 1 ? '0.5' : '1';
+            document.getElementById('btn-next').style.opacity = currentLeaf === totalLeaves + 1 ? '0.5' : '1';
+        }
+
+        function nextPage() {
+            if (currentLeaf <= totalLeaves) { // Allow going to "End" (Back Cover shown Left)
+                currentLeaf++;
+                updateView();
             }
         }
 
-        function prevLeaf() {
-            if (currentLeafIndex > 0) {
-                currentLeafIndex--;
-                updateBook();
+        function prevPage() {
+            if (currentLeaf > 1) {
+                currentLeaf--;
+                updateView();
             }
         }
 
-        // === 3. イベントリスナー ===
+        document.addEventListener('DOMContentLoaded', updateView);
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') nextLeaf();
-            if (e.key === 'ArrowLeft') prevLeaf();
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextPage();
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevPage();
         });
 
-        // スマホスワイプ
+        // Resize Support
+        window.addEventListener('resize', () => {
+            updateView();
+        });
+
+        // Swipe Support
         let touchStartX = 0;
+        let touchEndX = 0;
+
         document.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
-        
+
         document.addEventListener('touchend', e => {
-            const touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) nextLeaf();
-            if (touchEndX - touchStartX > 50) prevLeaf();
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
         }, { passive: true });
 
-        // 初期化実行
-        initData();
-        updateBook();
-
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swiped Left -> Next Page (Right to Left)
+                nextPage();
+            }
+            if (touchEndX > touchStartX + 50) {
+                // Swiped Right -> Prev Page (Left to Right)
+                prevPage();
+            }
+        }
     </script>
 </body>
+
 </html>
