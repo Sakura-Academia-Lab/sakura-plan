@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>絵本ギャラリー</title>
+    <title>絵本ギャラリー - Sakura Academia</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
 
@@ -14,21 +14,22 @@
             background-color: #fdfbf7;
             color: #4a4a4a;
             font-family: 'Zen Maru Gothic', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 20px 40px;
             background: linear-gradient(to bottom, #fff, #fdfbf7);
             position: relative;
-            /* For absolute positioning of back link */
         }
 
         .back-link {
             position: absolute;
             top: 20px;
             left: 20px;
-            /* Left side usually feels more like "Back" */
             text-decoration: none;
             color: #888;
             font-size: 0.9em;
@@ -50,17 +51,19 @@
         .subtitle {
             font-size: 1.2em;
             color: #888;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         main {
-            max-width: 1200px;
+            flex: 1;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 60px;
             place-items: center;
+            align-items: stretch;
         }
 
         .book-card {
@@ -69,14 +72,13 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             width: 100%;
-            max-width: 350px;
+            max-width: 380px;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
             position: relative;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: block;
         }
 
         .book-card:hover {
@@ -84,20 +86,88 @@
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
         }
 
-        .book-cover {
+        /* Slideshow Container */
+        .book-cover-container {
             width: 100%;
+            position: relative;
+            background: #f9f9f9;
+            height: 320px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slideshow-image {
+            position: absolute;
+            width: 70%;
+            height: auto;
             aspect-ratio: 210/297;
             object-fit: cover;
-            border-bottom: 1px solid #eee;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Animation for fading */
+        .fade-img-1 {
+            animation: fade1 6s infinite;
+        }
+
+        .fade-img-2 {
+            animation: fade2 6s infinite;
+        }
+
+        @keyframes fade1 {
+
+            0%,
+            45% {
+                opacity: 1;
+                z-index: 2;
+            }
+
+            50%,
+            95% {
+                opacity: 0;
+                z-index: 1;
+            }
+
+            100% {
+                opacity: 1;
+                z-index: 2;
+            }
+        }
+
+        @keyframes fade2 {
+
+            0%,
+            45% {
+                opacity: 0;
+                z-index: 1;
+            }
+
+            50%,
+            95% {
+                opacity: 1;
+                z-index: 2;
+            }
+
+            100% {
+                opacity: 0;
+                z-index: 1;
+            }
         }
 
         .book-info {
-            padding: 25px;
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .vol-badge {
             display: inline-block;
-            background: #ff7e5f;
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
@@ -106,25 +176,70 @@
             margin-bottom: 10px;
         }
 
+        .vol-badge.vol1 {
+            background: #4a4a4a;
+        }
+
+        .vol-badge.vol2 {
+            background: #88c8ff;
+        }
+
         .book-title {
             font-size: 1.5em;
-            margin: 10px 0;
+            margin: 5px 0 15px 0;
             font-weight: bold;
+            color: #5d5d5d;
         }
 
-        .read-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 30px;
-            background: #4a4a4a;
+        .book-desc {
+            font-size: 0.95em;
+            color: #777;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .ver-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .ver-btn {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
             color: white;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: background 0.2s;
+            font-size: 0.9em;
+            transition: opacity 0.2s, transform 0.2s;
         }
 
-        .book-card:hover .read-btn {
+        .ver-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .boy-btn {
             background: #ff7e5f;
+        }
+
+        .girl-btn {
+            background: #ff9a9e;
+        }
+
+        .disabled-card {
+            opacity: 0.8;
+            cursor: default;
+        }
+
+        .disabled-card:hover {
+            transform: none;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .disabled-card .book-cover-container {
+            height: 300px;
         }
 
         footer {
@@ -132,7 +247,7 @@
             padding: 40px;
             color: #aaa;
             font-size: 0.9em;
-            margin-top: 60px;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
@@ -143,124 +258,58 @@
         <a href="../index.html" class="back-link">◀ ホームに戻る</a>
         <h1>絵本の世界</h1>
         <div class="subtitle">心温まる物語をお届けします</div>
-
-        <!-- Name Input Section -->
-        <div class="name-settings" style="margin-top: 30px;">
-            <div style="margin-bottom: 10px;">
-                <label for="boyNameInput" style="font-weight: bold; color: #5d5d5d;">男の子の名前：</label>
-                <input type="text" id="boyNameInput" placeholder="名前を入力" maxlength="10"
-                    style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;">
-                <button onclick="saveName('boy')"
-                    style="padding: 8px 15px; background: #ff7e5f; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: inherit;">決定</button>
-            </div>
-            <div>
-                <label for="girlNameInput" style="font-weight: bold; color: #5d5d5d;">女の子の名前：</label>
-                <input type="text" id="girlNameInput" placeholder="名前を入力" maxlength="10"
-                    style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;">
-                <button onclick="saveName('girl')"
-                    style="padding: 8px 15px; background: #ff9a9e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: inherit;">決定</button>
-            </div>
-            <div id="saveMessage" style="color: #ff7e5f; font-size: 0.9em; margin-top: 5px; height: 1.2em;"></div>
-        </div>
     </header>
 
     <main>
         <!-- Volume 1 Card -->
-        <!-- Volume 1 Card (Boy) -->
         <div class="book-card">
-            <img src="vol1/images/cover_front.png" alt="第1巻 表紙" class="book-cover">
+            <div class="book-cover-container">
+                <img src="vol1/images/cover_front.png" class="slideshow-image fade-img-1" alt="男の子版 表紙">
+                <img src="vol1_girl/images/cover_front.png" class="slideshow-image fade-img-2" alt="女の子版 表紙">
+            </div>
+
             <div class="book-info">
-                <span class="vol-badge">第1巻 (男の子)</span>
-                <div class="book-title" id="vol1-title"><span class="current-name-boy">男の子</span>と桜文鳥の物語</div>
-                <div class="button-container"
-                    style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <a href="vol1/ebook.html" class="read-btn"
-                        style="text-decoration: none; margin-top: 10px; width: 100%;">通常版を読む<br><span
-                            style="font-size: 0.8em; font-weight: normal;">(見開き・本形式)</span><br><span
-                            style="font-size: 0.75em; font-weight: normal; color: #ffeb3b;">※スマホは横向き推奨</span></a>
-                    <a href="vol1/ebook_combined.html" class="read-btn"
-                        style="text-decoration: none; background: #5d5d5d; margin-top: 5px; width: 100%;">統合版を読む<br><span
-                            style="font-size: 0.8em; font-weight: normal;">(紙芝居・スライド形式)</span><br><span
-                            style="font-size: 0.75em; font-weight: normal; color: #ffeb3b;">※スマホは縦向き推奨</span></a>
+                <div>
+                    <span class="vol-badge vol1">第1巻</span>
+                    <div class="book-title">桜文鳥との出会い</div>
+                    <p class="book-desc">
+                        ある日、迷い込んだ不思議な小鳥。<br>
+                        「ルル」との心温まる出会いと、<br>
+                        秘密の友情を描いた物語です。
+                    </p>
+                </div>
+
+                <div class="ver-buttons">
+                    <a href="vol1/index.html" class="ver-btn boy-btn">男の子ver</a>
+                    <a href="vol1_girl/index.html" class="ver-btn girl-btn">女の子ver</a>
                 </div>
             </div>
         </div>
 
-        <!-- Volume 1 Card (Girl) -->
-        <div class="book-card">
-            <img src="vol1_girl/images/cover_front.png" alt="第1巻 表紙(女の子)" class="book-cover">
+        <!-- Volume 2 (Preview) -->
+        <div class="book-card disabled-card">
+            <div class="book-cover-container" style="background: #eee;">
+                <span style="font-size: 3em; color: #ccc;">?</span>
+            </div>
             <div class="book-info">
-                <span class="vol-badge" style="background: #ff9a9e;">第1巻 (女の子)</span>
-                <div class="book-title" id="vol1-girl-title"><span class="current-name-girl">女の子</span>と桜文鳥の物語</div>
-                <div class="button-container"
-                    style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <a href="vol1_girl/ebook.html" class="read-btn"
-                        style="text-decoration: none; margin-top: 10px; background: #ff9a9e; width: 100%;">通常版を読む<br><span
-                            style="font-size: 0.8em; font-weight: normal;">(見開き・本形式)</span><br><span
-                            style="font-size: 0.75em; font-weight: normal;">※スマホは横向き推奨</span></a>
-                    <a href="vol1_girl/ebook_combined.html" class="read-btn"
-                        style="text-decoration: none; background: #5d5d5d; margin-top: 5px; width: 100%;">統合版を読む<br><span
-                            style="font-size: 0.8em; font-weight: normal;">(紙芝居・スライド形式)</span><br><span
-                            style="font-size: 0.75em; font-weight: normal; color: #ffeb3b;">※スマホは縦向き推奨</span></a>
+                <div>
+                    <span class="vol-badge vol2">第2巻</span>
+                    <div class="book-title">（制作中）</div>
+                    <p class="book-desc">
+                        ルルとの冒険はまだまだ続きます。<br>
+                        次の物語を楽しみにお待ちください！
+                    </p>
+                </div>
+                <div class="ver-buttons">
+                    <span class="ver-btn" style="background: #ccc; cursor: default;">Coming Soon</span>
                 </div>
             </div>
         </div>
-
-        <!-- Placeholder for Volume 2 -->
-        <!-- Future volumes can be added here -->
     </main>
 
     <footer>
         &copy; 2025 Picture Book Project. All rights reserved.
     </footer>
-
-    <!-- Script to load dynamic title if needed, or keep static generic title -->
-    <script>
-        const defaultBoyName = "男の子";
-        const defaultGirlName = "女の子";
-        const boyNameInput = document.getElementById('boyNameInput');
-        const girlNameInput = document.getElementById('girlNameInput');
-
-        // Load saved names
-        function loadNames() {
-            // Boy
-            const savedBoyName = localStorage.getItem('boyName');
-            const currentBoyName = savedBoyName || defaultBoyName;
-            if (savedBoyName) boyNameInput.value = savedBoyName;
-            document.querySelectorAll('.current-name-boy').forEach(el => el.textContent = currentBoyName);
-
-            // Girl
-            const savedGirlName = localStorage.getItem('girlName');
-            const currentGirlName = savedGirlName || defaultGirlName;
-            if (savedGirlName) girlNameInput.value = savedGirlName;
-            document.querySelectorAll('.current-name-girl').forEach(el => el.textContent = currentGirlName);
-        }
-
-        // Save name
-        function saveName(type) {
-            const input = type === 'boy' ? boyNameInput : girlNameInput;
-            const key = type === 'boy' ? 'boyName' : 'girlName';
-            const defaultVal = type === 'boy' ? defaultBoyName : defaultGirlName;
-            const newName = input.value.trim();
-            const msg = document.getElementById('saveMessage');
-
-            if (newName) {
-                localStorage.setItem(key, newName);
-                msg.textContent = `名前を「${newName}」に変更しました！`;
-                msg.style.color = type === 'boy' ? '#ff7e5f' : '#ff9a9e';
-            } else {
-                localStorage.removeItem(key);
-                msg.textContent = `名前を初期設定に戻しました`;
-                msg.style.color = '#888';
-            }
-
-            setTimeout(() => { msg.textContent = ''; }, 3000);
-            loadNames(); // Refresh display
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', loadNames);
-    </script>
 
 </body>
 

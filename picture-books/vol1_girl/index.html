@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>女の子と桜文鳥の物語 - 第1巻</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fdfbf7;
+            color: #4a4a4a;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            color: #888;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #5d5d5d;
+        }
+
+        main {
+            flex: 1;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #5d5d5d;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+        }
+
+        .book-cover-large {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+        }
+
+        .name-input-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        input[type="text"] {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            border: 2px solid #eee;
+            border-radius: 30px;
+            width: 200px;
+            text-align: center;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff9a9e;
+        }
+
+        .save-btn {
+            background: #ff9a9e;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
+            margin-left: 10px;
+        }
+
+        .save-btn:hover {
+            background: #ff7e8e;
+            transform: scale(1.05);
+        }
+
+        .read-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .read-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+
+        .read-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff9a9e;
+        }
+
+        .read-card h3 {
+            margin: 0 0 10px 0;
+            color: #5d5d5d;
+        }
+
+        .read-card p {
+            color: #888;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .preview-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .current-name-display {
+            color: #ff9a9e;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #ccc;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="../index.html" class="back-link">◀ 絵本一覧に戻る</a>
+        <h1>女の子と桜文鳥の物語</h1>
+    </header>
+
+    <main>
+        <img src="images/cover_front.png" alt="表紙" class="book-cover-large">
+
+        <div class="name-input-section">
+            <h2>主人公の名前を決めよう！</h2>
+            <p>この物語の主人公は、あなたの決めた名前になります。</p>
+            <p>現在は「<span class="current-name-display">女の子</span>」になっています。</p>
+
+            <div class="input-group">
+                <input type="text" id="nameInput" placeholder="名前を入力してね" maxlength="10">
+                <button onclick="saveName()" class="save-btn">決定</button>
+            </div>
+            <div id="message" style="height: 20px; color: #ff9a9e; font-weight: bold;"></div>
+        </div>
+
+        <div class="read-options">
+            <a href="ebook.html" class="read-card">
+                <span class="preview-icon">📖</span>
+                <h3>絵本版 (通常版)</h3>
+                <p>ページをめくって読む、<br>本のような形式です。</p>
+                <p style="margin-top: 10px; font-size: 0.85em; color: #ff9a9e; font-weight: bold;">※スマホは横向き推奨</p>
+            </a>
+
+            <a href="ebook_combined.html" class="read-card">
+                <span class="preview-icon">🎭</span>
+                <h3>紙芝居版 (統合版)</h3>
+                <p>スクロールして読む、<br>スライドのような形式です。</p>
+                <p style="margin-top: 10px; font-size: 0.85em; color: #ff9a9e; font-weight: bold;">※スマホは縦向き推奨</p>
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 Sakura Academia.
+    </footer>
+
+    <script>
+        const STORAGE_KEY = 'girlName';
+        const DEFAULT_NAME = '女の子';
+        const nameInput = document.getElementById('nameInput');
+        const messageDisplay = document.getElementById('message');
+        const nameDisplays = document.querySelectorAll('.current-name-display');
+
+        function updateDisplay() {
+            const savedName = localStorage.getItem(STORAGE_KEY) || DEFAULT_NAME;
+            nameDisplays.forEach(el => el.textContent = savedName);
+            nameInput.value = savedName === DEFAULT_NAME ? '' : savedName;
+        }
+
+        function saveName() {
+            const newName = nameInput.value.trim();
+            if (newName) {
+                localStorage.setItem(STORAGE_KEY, newName);
+                messageDisplay.textContent = `「${newName}」に決まりました！`;
+                messageDisplay.style.color = '#ff9a9e';
+            } else {
+                localStorage.removeItem(STORAGE_KEY);
+                messageDisplay.textContent = '名前をリセットしました';
+                messageDisplay.style.color = '#888';
+            }
+            updateDisplay();
+            setTimeout(() => {
+                messageDisplay.textContent = '';
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', updateDisplay);
+    </script>
+</body>
+
+</html>

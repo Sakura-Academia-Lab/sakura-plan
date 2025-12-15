@@ -176,7 +176,7 @@
             box-sizing: border-box;
             z-index: 2;
             pointer-events: none;
-            font-size: 20pt;
+            font-size: 26px;
             line-height: 1.4;
             text-align: center;
             text-shadow:
@@ -528,15 +528,21 @@
                 if (!paragraph) return;
 
                 const isPrintArea = container.classList.contains('print-text-area');
-                const defaultSize = isPrintArea ? 34 : 16;
+                let defaultSize = 26;
+                let unit = 'px';
 
-                paragraph.style.fontSize = defaultSize + 'pt';
+                if (isPrintArea) {
+                    defaultSize = 34;
+                    unit = 'pt';
+                }
+
+                paragraph.style.fontSize = defaultSize + unit;
 
                 if (container.offsetParent !== null) {
                     let size = defaultSize;
                     while (paragraph.scrollHeight > container.clientHeight && size > 10) {
                         size--;
-                        paragraph.style.fontSize = `${size}pt`;
+                        paragraph.style.fontSize = size + unit;
                     }
                 }
             });

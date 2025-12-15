@@ -209,8 +209,8 @@
             width: 100%;
             padding: 15px;
             /* Reduced padding for mobile */
-            font-size: 14pt;
-            /* Default Mobile */
+            font-size: 14px;
+            /* Default Mobile (14px) */
         }
 
         .text-content {
@@ -572,19 +572,21 @@
                 const isPrintArea = container.closest('#print-area') !== null;
 
                 let startSize = 14;
+                let unit = 'px';
+
                 if (isPrintArea) {
                     startSize = 48; // Print (Large)
+                    unit = 'pt';
                 }
-                // Else Mobile/PC Default (14pt)
-                // Else Mobile Screen (14pt)
-                // Else Mobile Screen (14pt)
-                paragraph.style.fontSize = startSize + 'pt';
+                // Else Mobile/PC Default (16px)
+
+                paragraph.style.fontSize = startSize + unit;
 
                 if (container.offsetParent !== null) {
                     let size = startSize;
                     while (paragraph.scrollHeight > container.clientHeight && size > 10) {
                         size--;
-                        paragraph.style.fontSize = `${size}pt`;
+                        paragraph.style.fontSize = size + unit;
                     }
                 }
             });
