@@ -262,6 +262,20 @@
             background: #feb47b;
         }
 
+        /* Premium PDF Button Style */
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            font-weight: 800;
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
+        }
+
 
 
         /* ============================
@@ -410,7 +424,9 @@
             <div class="print-colophon">
                 <p>発行日：2025年12月12日</p>
                 <p>発行：Sakura Academia</p>
-                <div class="qr-box">QR Code</div>
+                <div class="qr-box">
+                    <img id="qr-code-img" src="" alt="QR" style="width:100%; height:100%; object-fit: contain;">
+                </div>
             </div>
         </div>
 
@@ -424,7 +440,7 @@
     <div id="controls">
         <button onclick="location.href='../index.html'" class="control-btn">🏠 戻る</button>
         <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
-        <button onclick="window.print()" class="control-btn print-btn">PDF/印刷</button>
+        <button onclick="window.print()" class="control-btn premium-btn">🎁 無料でPDF保存</button>
         <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
     </div>
 
@@ -561,6 +577,8 @@
 
             document.querySelectorAll('.boy-name').forEach(el => el.textContent = currentName);
             document.title = `${currentName}とルル - 第1巻 (統合版)`;
+
+            if (settings.updateQR) settings.updateQR();
 
             adjustTextSize();
 

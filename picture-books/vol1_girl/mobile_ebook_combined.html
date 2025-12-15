@@ -342,45 +342,66 @@
                 overflow: hidden;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-start;
                 align-items: center;
+                background: white;
             }
 
             .print-page.last {
                 page-break-after: auto;
             }
 
+            /* Image at Top */
             .print-bg {
-                position: absolute;
-                top: 0;
-                left: 0;
+                position: relative;
                 width: 100%;
-                height: 100%;
-                object-fit: cover;
+                height: 60%;
+                object-fit: contain;
                 z-index: 0;
+                margin-top: 5%;
             }
 
+            /* Text at Bottom */
             .print-text {
-                position: absolute;
-                bottom: 15%;
-                left: 50%;
-                transform: translateX(-50%);
+                position: relative;
                 width: 90%;
-                font-size: 34pt;
+                height: 30%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24pt;
+                /* Slightly smaller for mobile print */
                 font-weight: bold;
                 text-align: center;
                 color: #333;
-                text-shadow:
-                    3px 3px 0 #fff, -3px -3px 0 #fff,
-                    3px -3px 0 #fff, -3px 3px 0 #fff,
-                    0px 3px 0 #fff, 0px -3px 0 #fff,
-                    3px 0px 0 #fff, -3px 0px 0 #fff;
+                text-shadow: none;
+                margin-top: 20px;
+                bottom: auto;
+                left: auto;
+                transform: none;
             }
 
             .print-colophon {
                 text-align: center;
                 margin-top: auto;
                 margin-bottom: 20%;
+            }
+
+            /* Cover specific adjustments */
+            .print-page.cover {
+                justify-content: center;
+            }
+
+            .print-page.cover .print-bg {
+                height: 80%;
+                margin: 0;
+            }
+
+            .print-page.cover .cover-title {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
 
             .qr-box {
@@ -454,7 +475,9 @@
             <div class="print-colophon">
                 <p>発行日：2025年12月12日</p>
                 <p>発行：Sakura Academia</p>
-                <div class="qr-box">QR Code</div>
+                <div class="qr-box">
+                    <img id="qr-code-img" src="" alt="QR" style="width:100%; height:100%; object-fit: contain;">
+                </div>
             </div>
         </div>
 
@@ -596,6 +619,8 @@
 
             document.querySelectorAll('.girl-name').forEach(el => el.textContent = currentName);
             document.title = `${currentName}とルル - 第1巻 (統合版)`;
+
+            if (settings.updateQR) settings.updateQR();
 
             adjustTextSize();
 

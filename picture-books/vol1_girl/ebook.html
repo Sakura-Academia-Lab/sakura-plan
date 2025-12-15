@@ -99,7 +99,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            align-items: center;
+            font-size: 36px;
+            line-height: 1.8;
             line-height: 1.8;
             text-align: center;
         }
@@ -156,6 +158,20 @@
         .print-btn {
             background: #ff7e5f;
             color: white;
+        }
+
+        /* Premium PDF Button Style */
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            font-weight: 800;
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
         }
 
         /* PRINT STYLES */
@@ -235,7 +251,7 @@
     <div id="controls">
         <button onclick="location.href='../index.html'" class="control-btn">🏠 戻る</button>
         <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
-        <button onclick="window.print()" class="control-btn print-btn">🖨️ PDF/印刷</button>
+        <button onclick="window.print()" class="control-btn premium-btn">🎁 無料でPDF保存</button>
         <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
     </div>
 
