@@ -3,33 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>男の子と桜文鳥の物語 - 第1巻 (電子書籍)</title>
+    <title>絵本 - 第1巻 (スマホ版)</title>
     <style>
-        /* 日本語フォント：丸ゴシック体を読み込み */
         @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
 
         :root {
-            /* === ▼ デザイン調整エリア ▼ === */
             --bg-color: #f0f0f0;
             --text-color: #4a4a4a;
             --accent-color: #ff7e5f;
             
-            /* 本のサイズ設定 */
             --book-width: 90vw;
             --book-height: 60vw;
 
-            /* ★文字サイズの調整はここ！★ */
-            /* clamp(最小サイズ, 画面幅に応じたサイズ, 最大サイズ) */
-            
-            /* 本文: スマホでは13px、PCでは最大18pxまでなめらかに変化 */
-            --font-size-body: clamp(13px, 1.5vw, 18px);
-            
-            /* タイトル: スマホでは20px、PCでは最大32px */
-            --font-size-title: clamp(20px, 3vw, 32px);
-            /* ============================ */
+            /* 文字サイズ調整: PC/スマホ両対応で少し大きめに */
+            --font-size-body: clamp(16px, 2.5vw, 24px);
+            --font-size-title: clamp(24px, 4vw, 42px);
         }
 
-        /* PC画面用調整 */
         @media (min-width: 1024px) {
             :root {
                 --book-width: 800px;
@@ -51,7 +41,7 @@
         }
 
         /* ============================
-           舞台装置 (3D Stage)
+           画面表示用 (3D Book)
            ============================ */
         #book-stage {
             position: relative;
@@ -61,9 +51,6 @@
             transform-style: preserve-3d;
         }
 
-        /* ============================
-           紙（Leaf）の構造
-           ============================ */
         .leaf {
             position: absolute;
             top: 0;
@@ -97,9 +84,7 @@
         .page.front { z-index: 2; transform: rotateY(0deg); }
         .page.back { z-index: 1; transform: rotateY(180deg); background-color: #fdfdfd; }
 
-        /* ============================
-           中身のデザイン
-           ============================ */
+        /* 画像とテキスト */
         .image-content {
             width: 90%;
             height: 90%;
@@ -108,9 +93,8 @@
 
         .text-content {
             padding: 20px;
-            /* ここで変数を適用 */
             font-size: var(--font-size-body);
-            line-height: 1.8; /* 行間は少し広めで読みやすく */
+            line-height: 1.6;
             text-align: center;
             font-weight: bold;
             color: #5D4037;
@@ -120,20 +104,31 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            box-sizing: border-box;
         }
 
-        /* タイトル専用のサイズ設定 */
-        .text-content h1 {
+        /* タイトル専用スタイル（上部に配置） */
+        .cover-title {
+            position: absolute;
+            top: 8%; /* かなり上へ */
+            left: 0;
+            width: 100%;
+            text-align: center;
             font-size: var(--font-size-title);
-            margin: 0 0 15px 0;
-            line-height: 1.4;
+            font-weight: bold;
+            color: #5D4037;
+            text-shadow: 3px 3px 0px #ffffff;
+            z-index: 10;
+            line-height: 1.2;
         }
 
+        /* 名前表示（下線なし） */
         .boy-name {
             color: #ff7e5f;
-            border-bottom: 2px dashed #ff7e5f;
-            margin: 0 2px;
-            display: inline-block; /* 名前が改行で切れないように */
+            /* 下線削除 */
+            text-decoration: none; 
+            border: none;
+            font-weight: 800; /* 強調のため少し太く */
         }
 
         /* ============================
@@ -147,7 +142,7 @@
             display: flex;
             gap: 10px;
             z-index: 9999;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.9);
             padding: 10px 20px;
             border-radius: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -155,114 +150,147 @@
         }
 
         .control-btn {
-            background: var(--accent-color);
-            color: white;
+            background: white;
+            color: #555;
             border: none;
-            padding: 8px 16px; /* ボタンも少しスリムに */
+            padding: 10px 15px;
             border-radius: 20px;
             font-family: inherit;
             font-weight: bold;
-            font-size: 0.85rem; /* ボタン文字サイズも控えめに */
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
             white-space: nowrap;
-            text-decoration: none;
             display: flex;
             align-items: center;
         }
 
+        .control-btn:hover { background: #f0f0f0; }
         .control-btn:active { transform: scale(0.95); }
         
-        .control-btn.home { background: #5d5d5d; }
-        .control-btn.secondary { background: #88cec2; }
+        /* プレミアムボタン (PDF保存) */
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+        }
+        .premium-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
+        }
 
         /* ============================
-           名前入力モーダル
+           印刷エリア (Print Area)
+           ★ここを「12ページ構成」にします★
            ============================ */
-        #name-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            width: 80%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 4px solid var(--accent-color);
-        }
-
-        .modal-title {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #5D4037;
-        }
-
-        #name-input {
-            width: 80%;
-            padding: 10px;
-            font-size: 1.1rem;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-family: inherit;
-        }
-        
-        #name-input:focus { outline: none; border-color: var(--accent-color); }
-
-        /* 印刷用設定（非表示） */
         #print-area { display: none; }
+
         @media print {
-            body, #book-stage, #controls, #name-modal { display: none !important; }
+            /* 画面用要素をすべて消す */
+            body > *:not(#print-area) { display: none !important; }
+            #book-stage, #controls { display: none !important; }
+
+            /* 印刷設定 */
+            body { 
+                background: white; 
+                display: block; 
+                height: auto; 
+                overflow: visible;
+            }
+
             #print-area { display: block !important; }
+
+            .print-page {
+                page-break-after: always; /* 改ページ */
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+            }
+            
+            .print-page.last { page-break-after: auto; }
+
+            /* 印刷用の画像 */
+            .print-bg {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+                z-index: 0;
+            }
+
+            /* 印刷用のテキスト */
+            .print-text {
+                position: absolute;
+                bottom: 10%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                font-size: 32pt;
+                font-weight: bold;
+                text-align: center;
+                color: #333;
+                text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 0px 2px 0 #fff;
+            }
+
+            /* 表紙タイトル */
+            .print-cover-title {
+                position: absolute;
+                top: 10%;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 60pt;
+                font-weight: bold;
+                color: #5D4037;
+                text-shadow: 3px 3px 0 #fff;
+                z-index: 10;
+            }
+
+            /* 奥付 */
+            .print-colophon {
+                text-align: center;
+                margin-top: auto;
+                margin-bottom: 30%;
+                font-size: 14pt;
+            }
+            .qr-box {
+                width: 120px;
+                height: 120px;
+                margin: 20px auto;
+                border: 2px dashed #ccc;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div id="name-modal">
-        <div class="modal-content">
-            <div class="modal-title">おなまえをおしえてね</div>
-            <input type="text" id="name-input" placeholder="ここになまえをかいてね" maxlength="10">
-            <br>
-            <button class="control-btn" style="margin: 0 auto;" onclick="saveNameAndClose()">これにする！</button>
-        </div>
-    </div>
-
     <div id="book-stage">
         
         <div class="leaf" id="leaf-1" style="z-index: 10;">
             <div class="page front">
-                <div class="text-content">
-                    <h1><span class="boy-name">〇〇</span><br><span style="font-size:0.6em">と</span><br>桜文鳥の物語</h1>
-                    <img src="images/cover_front.png" class="image-content" style="position:absolute; z-index:-1; width:100%; height:100%; object-fit:cover; opacity:1;" onerror="this.style.opacity='0'">
-                </div>
+                <div class="cover-title"><span class="boy-name">〇〇</span>とルル</div>
+                <img src="images/cover_front.png" class="image-content" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.opacity='0'">
             </div>
             <div class="page back">
-                <img src="images/page1.png" class="image-content" alt="P1" onerror="this.style.display='none'">
+                <img src="images/page1.png" class="image-content" onerror="this.style.display='none'">
             </div>
         </div>
 
         <div class="leaf" id="leaf-2" style="z-index: 9;">
             <div class="page front">
                 <div class="text-content">
-                    <p>おはよう、<br><span class="boy-name">〇〇</span>くん</p>
+                    <p>おはよう、<span class="boy-name">〇〇</span></p>
                 </div>
             </div>
             <div class="page back">
-                <img src="images/page2.png" class="image-content" alt="P2" onerror="this.style.display='none'">
+                <img src="images/page2.png" class="image-content" onerror="this.style.display='none'">
             </div>
         </div>
 
@@ -273,7 +301,7 @@
                 </div>
             </div>
             <div class="page back">
-                <img src="images/page3.png" class="image-content" alt="P3" onerror="this.style.display='none'">
+                <img src="images/page3.png" class="image-content" onerror="this.style.display='none'">
             </div>
         </div>
 
@@ -284,7 +312,7 @@
                 </div>
             </div>
             <div class="page back">
-                <img src="images/page4.png" class="image-content" alt="P4" onerror="this.style.display='none'">
+                <img src="images/page4.png" class="image-content" onerror="this.style.display='none'">
             </div>
         </div>
 
@@ -295,7 +323,7 @@
                  </div>
              </div>
              <div class="page back">
-                 <img src="images/page5.png" class="image-content" alt="P5" onerror="this.style.display='none'">
+                 <img src="images/page5.png" class="image-content" onerror="this.style.display='none'">
              </div>
         </div>
 
@@ -306,7 +334,7 @@
                 </div>
             </div>
             <div class="page back">
-                <img src="images/page6.png" class="image-content" alt="P6" onerror="this.style.display='none'">
+                <img src="images/page6.png" class="image-content" onerror="this.style.display='none'">
             </div>
        </div>
 
@@ -317,7 +345,7 @@
                </div>
            </div>
            <div class="page back">
-               <img src="images/page7.png" class="image-content" alt="P7" onerror="this.style.display='none'">
+               <img src="images/page7.png" class="image-content" onerror="this.style.display='none'">
            </div>
       </div>
 
@@ -331,9 +359,6 @@
                 <div class="text-content" style="position: relative;">
                     <h2>おしまい</h2>
                     <p>Sakura Academia</p>
-                    <div style="margin-top:20px;">
-                        <img id="qr-code-img" src="" style="width:100px; height:100px; object-fit:contain; display:none;">
-                    </div>
                 </div>
                 <img src="images/cover_back.png" class="image-content" style="position:absolute; z-index:-1; width:100%; height:100%; object-fit:cover; opacity:1;" onerror="this.style.opacity='0'">
             </div>
@@ -341,39 +366,84 @@
 
     </div>
 
+    <div id="print-area">
+        <div class="print-page">
+            <div class="print-cover-title"><span class="boy-name">〇〇</span>とルル</div>
+            <img src="images/cover_front.png" class="print-bg">
+        </div>
+
+        <div class="print-page">
+            <div style="font-size: 20pt; border-bottom: 2px solid #333; padding-bottom: 10px; width: 60%; text-align: center;">
+                おなまえ：____________________
+            </div>
+        </div>
+
+        <div class="print-page">
+            <h1 style="font-size: 32pt; color: #4169e1;">ルルと <span class="boy-name"></span></h1>
+            <div style="margin-top: 50px; font-size: 16pt;">Sakura Academia</div>
+        </div>
+
+        <div class="print-page">
+            <img src="images/page1.png" class="print-bg">
+            <p class="print-text">おはよう、<span class="boy-name"></span></p>
+        </div>
+        <div class="print-page">
+            <img src="images/page2.png" class="print-bg">
+            <p class="print-text">「チッ チッ」<br>……だあれ？</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page3.png" class="print-bg">
+            <p class="print-text">「こっちへ<br>おいで」</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page4.png" class="print-bg">
+            <p class="print-text">ピョン！<br>と<br>ピョン！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page5.png" class="print-bg">
+            <p class="print-text">ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page6.png" class="print-bg">
+            <p class="print-text">ルルは<br><span class="boy-name"></span>が<br>だーいすき</p>
+        </div>
+        <div class="print-page">
+            <img src="images/page7.png" class="print-bg">
+            <p class="print-text">おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+        </div>
+
+        <div class="print-page">
+            <div class="print-colophon">
+                <p>発行：Sakura Academia</p>
+                <div class="qr-box">
+                    <img id="qr-code-img" src="" alt="QR" style="width:100%; height:100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+
+        <div class="print-page last">
+            <img src="images/cover_back.png" class="print-bg">
+        </div>
+    </div>
+
     <div id="controls">
-        <button class="control-btn home" onclick="location.href='index.html'">🏠 Home</button>
-        <button class="control-btn secondary" onclick="openNameModal()">✐ 変更</button>
+        <button class="control-btn" onclick="location.href='index.html'">🏠 Home</button>
         <button class="control-btn" onclick="prevLeaf()">◀</button>
+        <button class="control-btn premium-btn" onclick="window.print()">🎁 PDF保存</button>
         <button class="control-btn" onclick="nextLeaf()">▶</button>
     </div>
 
     <script src="settings.js"></script>
 
     <script>
-        // === 1. 連携機能付き・名前管理システム ===
+        // === 1. データ読み込み ===
         const STORAGE_KEY = 'boyName';
-
-        function openNameModal() {
-            const currentName = localStorage.getItem(STORAGE_KEY) || getSettingsDefaultName();
-            document.getElementById('name-input').value = currentName;
-            document.getElementById('name-modal').style.display = 'flex';
-            setTimeout(() => document.getElementById('name-input').focus(), 100);
-        }
-
-        function saveNameAndClose() {
-            const inputVal = document.getElementById('name-input').value;
-            const newName = inputVal.trim() === '' ? getSettingsDefaultName() : inputVal;
-            localStorage.setItem(STORAGE_KEY, newName);
-            applyName(newName);
-            document.getElementById('name-modal').style.display = 'none';
-        }
 
         function applyName(name) {
             document.querySelectorAll('.boy-name').forEach(el => {
                 el.textContent = name;
             });
-            document.title = `${name}と桜文鳥の物語 - 第1巻`;
+            document.title = `${name}とルル - 第1巻`;
         }
 
         function getSettingsDefaultName() {
@@ -392,10 +462,10 @@
 
             applyName(targetName);
 
+            // QRコード生成 (settings.jsがある場合)
             if (typeof window.bookSettings !== 'undefined' && window.bookSettings.updateQR) {
                 const qrImg = document.getElementById('qr-code-img');
                 if(qrImg) {
-                    qrImg.style.display = 'block';
                     window.bookSettings.updateQR(); 
                 }
             }
@@ -432,11 +502,13 @@
             }
         }
 
+        // キーボード操作
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') nextLeaf();
             if (e.key === 'ArrowLeft') prevLeaf();
         });
 
+        // スマホスワイプ
         let touchStartX = 0;
         document.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
