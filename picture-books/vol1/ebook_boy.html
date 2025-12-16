@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本 - 第1巻 (電子書籍版)</title>
+    <script>
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // location.href = "mobile_ebook_boy.html";
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
+
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #4a4a4a;
+        }
+
+        /* Global Print Settings */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Zen Maru Gothic', sans-serif;
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        /* ============================
+           WEB STAGE - 3D SPREAD
+           ============================ */
+        #book-stage {
+            position: relative;
+            width: auto;
+            height: 90vh;
+            /* Maximize height */
+            aspect-ratio: 420/297;
+            margin: auto;
+            transform-style: preserve-3d;
+            perspective: 2000px;
+        }
+
+        /* Common Page Styles */
+        .page {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            backface-visibility: hidden;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), z-index 0s 0.2s;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ODD PAGES (Right Side) */
+        .page:nth-child(odd) {
+            left: 50%;
+            transform-origin: left center;
+            border-left: 1px solid #eee;
+        }
+
+        /* EVEN PAGES (Left Side) */
+        .page:nth-child(even) {
+            left: 0;
+            transform-origin: right center;
+            border-right: 1px solid #eee;
+        }
+
+        /* CONTENT STYLES */
+        .page.image-page {
+            padding: 0;
+        }
+
+        .full-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-content {
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Font size adjustment: Responsive and smaller than before */
+            font-size: clamp(18px, 2.5vw, 26px);
+            line-height: 2.0;
+            text-align: center;
+            word-break: keep-all;
+            /* Prevent awkward breaks */
+        }
+
+        /* COVER OVERLAY */
+        .cover-title-overlay {
+            position: absolute;
+            top: 5%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: clamp(24px, 4vw, 42px);
+            font-weight: bold;
+            color: #5D4037;
+            text-shadow: 3px 3px 0px #ffffff, 0 0 10px rgba(255, 255, 255, 0.8);
+            z-index: 10;
+        }
+
+        /* CONTROLS */
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 2000;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            background: #fff;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .print-btn {
+            background: #ff7e5f;
+            color: white;
+        }
+
+        /* Premium PDF Button Style */
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            font-weight: 800;
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
+        }
+
+        /* ============================
+           PRINT STYLES
+           ============================ */
+        @media print {
+            body {
+                overflow: visible !important;
+                background: white !important;
+            }
+
+            #controls,
+            #book-stage {
+                display: none !important;
+            }
+
+            #print-container {
+                display: block !important;
+            }
+
+            .print-page {
+                width: 100%;
+                height: 100vh;
+                page-break-after: always;
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: white;
+            }
+
+            .print-page.last {
+                page-break-after: auto;
+            }
+
+            .print-full-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 0;
+            }
+
+            /* Print Cover Title */
+            .print-title-overlay {
+                position: absolute;
+                top: 5%;
+                width: 100%;
+                text-align: center;
+                font-size: 60pt;
+                font-weight: bold;
+                color: #5D4037;
+                text-shadow: 3px 3px 0 #fff;
+                z-index: 10;
+            }
+
+            /* Print Text Page */
+            .print-text-wrap {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 32pt;
+                /* Adjusted for A4 print */
+                font-weight: bold;
+                text-align: center;
+                padding: 40px;
+                box-sizing: border-box;
+                z-index: 1;
+            }
+
+            /* Extra Pages Styles */
+            .name-entry-box {
+                font-size: 24pt;
+                border-bottom: 3px solid #333;
+                padding-bottom: 10px;
+                width: 70%;
+                text-align: center;
+                margin-top: -100px;
+            }
+
+            .title-page-main {
+                text-align: center;
+            }
+
+            .title-page-h1 {
+                font-size: 40pt;
+                color: #4169e1;
+                margin-bottom: 40px;
+            }
+
+            .title-page-sub {
+                font-size: 20pt;
+                color: #666;
+            }
+
+            .memo-area {
+                width: 80%;
+                height: 70%;
+                border: 2px dashed #ccc;
+                border-radius: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #ccc;
+                font-size: 20pt;
+            }
+
+            .print-colophon {
+                text-align: center;
+                width: 100%;
+                margin-top: 20%;
+            }
+
+            .qr-box {
+                width: 120px;
+                height: 120px;
+                border: 2px dashed #ccc;
+                margin: 30px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        #print-container {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="controls">
+        <button onclick="location.href='../index.html'" class="control-btn">🏠 戻る</button>
+        <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
+        <button onclick="window.print()" class="control-btn premium-btn">🎁 無料でPDF保存</button>
+        <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
+    </div>
+
+    <div id="book-stage">
+        <div class="page image-page" id="p1">
+            <div class="cover-title-overlay"><span class="boy-name"></span>とルル</div>
+            <img src="images/cover_front.png" class="full-image" alt="Cover">
+        </div>
+        <div class="page image-page" id="p2">
+            <img src="images/page1.png" class="full-image">
+        </div>
+
+        <div class="page" id="p3">
+            <div class="text-content">
+                <p>おはよう、<span class="boy-name"></span></p>
+            </div>
+        </div>
+        <div class="page image-page" id="p4">
+            <img src="images/page2.png" class="full-image">
+        </div>
+
+        <div class="page" id="p5">
+            <div class="text-content">
+                <p>「チッ チッ」<br>……だあれ？</p>
+            </div>
+        </div>
+        <div class="page image-page" id="p6">
+            <img src="images/page3.png" class="full-image">
+        </div>
+
+        <div class="page" id="p7">
+            <div class="text-content">
+                <p>「こっちへ<br>おいで」</p>
+            </div>
+        </div>
+        <div class="page image-page" id="p8">
+            <img src="images/page4.png" class="full-image">
+        </div>
+
+        <div class="page" id="p9">
+            <div class="text-content">
+                <p>ピョン！<br>と<br>ピョン！</p>
+            </div>
+        </div>
+        <div class="page image-page" id="p10">
+            <img src="images/page5.png" class="full-image">
+        </div>
+
+        <div class="page" id="p11">
+            <div class="text-content">
+                <p>ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+            </div>
+        </div>
+        <div class="page image-page" id="p12">
+            <img src="images/page6.png" class="full-image">
+        </div>
+
+        <div class="page" id="p13">
+            <div class="text-content">
+                <p>ルルは<br><span class="boy-name"></span>が<br>だーいすき</p>
+            </div>
+        </div>
+        <div class="page image-page" id="p14">
+            <img src="images/page7.png" class="full-image">
+        </div>
+
+        <div class="page" id="p15">
+            <div class="text-content">
+                <p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p>
+            </div>
+        </div>
+        <div class="page image-page" id="p16">
+            <img src="images/cover_back.png" class="full-image">
+        </div>
+    </div>
+
+    <div id="print-container">
+        <div class="print-page">
+            <div class="print-title-overlay"><span class="boy-name"></span>とルル</div>
+            <img src="images/cover_front.png" class="print-full-img">
+        </div>
+
+        <div class="print-page">
+            <div class="name-entry-box">おなまえ：____________________</div>
+        </div>
+
+        <div class="print-page">
+            <div class="title-page-main">
+                <div class="title-page-h1">ルルと <span class="boy-name"></span></div>
+                <div class="title-page-sub">Sakura Academia</div>
+            </div>
+        </div>
+
+        <div class="print-page"><img src="images/page1.png" class="print-full-img"></div>
+        <div class="print-page">
+            <div class="print-text-wrap">おはよう、<span class="boy-name"></span></div>
+        </div>
+
+        <div class="print-page"><img src="images/page2.png" class="print-full-img"></div>
+        <div class="print-page">
+            <div class="print-text-wrap">「チッ チッ」<br>……だあれ？</div>
+        </div>
+
+        <div class="print-page"><img src="images/page3.png" class="print-full-img"></div>
+        <div class="print-page">
+            <div class="print-text-wrap">「こっちへ<br>おいで」</div>
+        </div>
+
+        <div class="print-page"><img src="images/page4.png" class="print-full-img"></div>
+        <div class="print-page">
+            <div class="print-text-wrap">ピョン！<br>と<br>ピョン！</div>
+        </div>
+
+        <div class="print-page"><img src="images/page5.png" class="print-full-img"></div>
+        <div class="print-page">
+            <div class="print-text-wrap">ふわっ。<br>てに　のった！<br>きみの　なまえは……<br>「ルル」！</div>
+        </div>
+
+        <div class="print-page"><img src="images/page6.png" class="print-full-img"></div>
+        <div class="print-page">
+            <div class="print-text-wrap">
+                <p>ルルは<br><span class="boy-name"></span>が<br>だーいすき</p>
+            </div>
+        </div>
+
+        <div class="print-page"><img src="images/page7.png" class="print-full-img"></div>
+        <div class="print-page">
+            <div class="print-text-wrap">おやすみ、ルル。<br>いい　ゆめ　みてね。</div>
+        </div>
+
+        <div class="print-page">
+            <div class="memo-area">おもいで・メモ</div>
+        </div>
+
+        <div class="print-page">
+            <div class="print-colophon">
+                <p style="font-size: 14pt;">発行日：2025年12月12日</p>
+                <p style="font-size: 14pt;">発行：Sakura Academia</p>
+                <div class="qr-box">
+                    <img id="qr-code-img" src="" alt="QR" style="width:100%; height:100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+
+        <div class="print-page last">
+            <img src="images/cover_back.png" class="print-full-img">
+        </div>
+    </div>
+
+
+    <script src="settings.js"></script>
+    <script>
+        let currentLeaf = 1;
+        const totalLeaves = 8;
+
+        function updateView() {
+            // Name Logic
+            let currentName = "男の子";
+            if (typeof settings !== 'undefined') currentName = settings.boyName;
+            const storedName = localStorage.getItem('boyName');
+            if (storedName) currentName = storedName;
+
+            // Update all name placeholders (Web & Print)
+            document.querySelectorAll('.boy-name').forEach(el => el.textContent = currentName);
+            document.title = `${currentName}とルル - 第1巻 (電子書籍)`;
+
+            // --- QR Logic Added ---
+            if (typeof settings !== 'undefined' && settings.updateQR) {
+                settings.updateQR();
+            }
+
+            // 3D Flip Logic
+            for (let i = 1; i <= totalLeaves; i++) {
+                const oddPage = document.getElementById(`p${i * 2 - 1}`);
+                const evenPage = document.getElementById(`p${i * 2}`);
+
+                if (!oddPage || !evenPage) continue;
+
+                if (i < currentLeaf) {
+                    oddPage.style.transform = "rotateY(-180deg)";
+                    evenPage.style.transform = "rotateY(0deg)";
+                    oddPage.style.zIndex = i;
+                    evenPage.style.zIndex = i + 1;
+                } else if (i === currentLeaf) {
+                    oddPage.style.transform = "rotateY(0deg)";
+                    evenPage.style.transform = "rotateY(180deg)";
+                    oddPage.style.zIndex = 1000 - i + 1;
+                    evenPage.style.zIndex = 1000 - i;
+                } else {
+                    oddPage.style.transform = "rotateY(0deg)";
+                    evenPage.style.transform = "rotateY(180deg)";
+                    oddPage.style.zIndex = 1000 - i + 1;
+                    evenPage.style.zIndex = 1000 - i;
+                }
+            }
+
+            document.getElementById('btn-prev').disabled = currentLeaf === 1;
+            document.getElementById('btn-next').disabled = currentLeaf === totalLeaves + 1;
+            document.getElementById('btn-prev').style.opacity = currentLeaf === 1 ? '0.5' : '1';
+            document.getElementById('btn-next').style.opacity = currentLeaf === totalLeaves + 1 ? '0.5' : '1';
+        }
+
+        function nextPage() {
+            if (currentLeaf <= totalLeaves) {
+                currentLeaf++;
+                updateView();
+            }
+        }
+
+        function prevPage() {
+            if (currentLeaf > 1) {
+                currentLeaf--;
+                updateView();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateView);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextPage();
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevPage();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本 - 第1巻 (統合版・女の子)</title>
+    <script>
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // location.href = "mobile_ebook_combined_girl.html";
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap');
+
+        :root {
+            --page-width: 210mm;
+            --page-height: 297mm;
+            --bg-color: #f0f0f0;
+            --text-color: #4a4a4a;
+        }
+
+        /* Global Print Settings */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Zen Maru Gothic', sans-serif;
+            color: var(--text-color);
+        }
+
+        /* ============================
+           SCREEN VIEW STYLES - KAMISHIBAI
+           ============================ */
+        #print-area {
+            display: none;
+        }
+
+        @media print {
+
+            #book-stage,
+            #controls {
+                display: none !important;
+            }
+
+            #print-area {
+                display: block !important;
+            }
+
+            body {
+                overflow: visible !important;
+                display: block !important;
+                background: white !important;
+                /* Force background graphics */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .print-page {
+                page-break-after: always;
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+            }
+
+            .print-page.last {
+                page-break-after: auto;
+            }
+
+            .print-bg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                z-index: 0;
+            }
+
+            .print-text {
+                position: absolute;
+                bottom: 15%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                font-size: 34pt;
+                font-weight: bold;
+                text-align: center;
+                color: #333;
+                text-shadow:
+                    3px 3px 0 #fff, -3px -3px 0 #fff,
+                    3px -3px 0 #fff, -3px 3px 0 #fff,
+                    0px 3px 0 #fff, 0px -3px 0 #fff,
+                    3px 0px 0 #fff, -3px 0px 0 #fff;
+            }
+
+            .print-page .cover-title {
+                position: absolute;
+                top: 5%;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 80pt;
+                font-weight: bold;
+                color: #5D4037;
+                text-shadow: 3px 3px 0px #ffffff;
+                z-index: 10;
+            }
+
+            .print-colophon {
+                text-align: center;
+                margin-top: auto;
+                margin-bottom: 20%;
+                position: relative;
+                z-index: 10;
+            }
+
+            .qr-box {
+                width: 100px;
+                height: 100px;
+                border: 2px dashed #ccc;
+                margin: 20px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ccc;
+            }
+        }
+
+        body {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #book-stage {
+            position: relative;
+            width: auto;
+            height: 90vh;
+            /* Fit to screen */
+            aspect-ratio: 210/297;
+            /* A4 Ratio */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            max-width: 95vw;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+
+            /* Slide Animation Logic */
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Active: Centered */
+        .page.active {
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        /* Prev: Moved to Left */
+        .page.past {
+            transform: translateX(-100%);
+            z-index: 5;
+        }
+
+        /* Next: Moved to Right */
+        .page.future {
+            transform: translateX(100%);
+            z-index: 5;
+        }
+
+        /* Combined Layout Styles (Screen) */
+        .page-content-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .image-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        .image-area img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-area {
+            position: absolute;
+            bottom: 5%;
+            left: 0;
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            z-index: 2;
+            pointer-events: none;
+            /* Responsive Font Size */
+            font-size: clamp(18px, 3vw, 28px);
+            line-height: 1.6;
+            text-align: center;
+            color: #333;
+            text-shadow:
+                2px 2px 0 #fff, -2px -2px 0 #fff,
+                2px -2px 0 #fff, -2px 2px 0 #fff,
+                0px 2px 0 #fff, 0px -2px 0 #fff,
+                2px 0px 0 #fff, -2px 0px 0 #fff,
+                0 0 15px rgba(255, 255, 255, 0.9);
+            font-weight: bold;
+            word-break: keep-all;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cover-title {
+            position: absolute;
+            top: 5%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: clamp(24px, 5vw, 42px);
+            font-weight: bold;
+            color: #5D4037;
+            text-shadow: 3px 3px 0px #ffffff;
+            z-index: 10;
+        }
+
+        /* Controls */
+        #controls {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            left: auto;
+            bottom: auto;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 30px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .control-btn {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .premium-btn {
+            background: linear-gradient(135deg, #FF69B4, #FFD700);
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            font-weight: 800;
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="print-area" style="display: none;">
+        <div class="print-page">
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
+            <img src="images/cover_front.png" class="print-bg">
+        </div>
+
+        <div class="print-page">
+            <div
+                style="font-size: 20pt; border-bottom: 2px solid #333; padding-bottom: 10px; width: 60%; text-align: center;">
+                おなまえ：____________________
+            </div>
+        </div>
+
+        <div class="print-page">
+            <h1 style="font-size: 32pt; color: #ff69b4;">ルルと <span class="girl-name"></span></h1>
+            <div style="margin-top: 50px; font-size: 16pt;">Sakura Academia</div>
+        </div>
+
+        <div class="print-page"><img src="images/page1.png" class="print-bg"><p class="print-text">おはよう、<span class="girl-name"></span></p></div>
+        <div class="print-page"><img src="images/page2.png" class="print-bg"><p class="print-text">「チッ チッ」<br>……だあれ？</p></div>
+        <div class="print-page"><img src="images/page3.png" class="print-bg"><p class="print-text">「こっちへ<br>おいで」</p></div>
+        <div class="print-page"><img src="images/page4.png" class="print-bg"><p class="print-text">ピョン！<br>と<br>ピョン！</p></div>
+        
+        <div class="print-page">
+            <img src="images/page5.png" class="print-bg">
+            <p class="print-text">ふわっ。てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+        </div>
+
+        <div class="print-page">
+            <img src="images/page6.png" class="print-bg">
+            <p class="print-text" style="bottom: auto; top: 3%; font-size: 44pt;">ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+        </div>
+
+        <div class="print-page"><img src="images/page7.png" class="print-bg"><p class="print-text">おやすみ、ルル。<br>いい　ゆめ　みてね。</p></div>
+        
+        <div class="print-page">
+            <div class="print-colophon">
+                <p>発行日：2025年12月12日</p>
+                <p>発行：Sakura Academia</p>
+                <div class="qr-box"><img id="qr-code-img" src="" alt="QR" style="width:100%; height:100%; object-fit: contain;"></div>
+            </div>
+        </div>
+
+        <div class="print-page last"><img src="images/cover_back.png" class="print-bg"></div>
+    </div>
+
+    <div id="controls">
+        <button onclick="location.href='../index.html'" class="control-btn">🏠 戻る</button>
+        <button onclick="prevPage()" id="btn-prev" class="control-btn">▲ 前へ</button>
+        <button onclick="window.print()" class="control-btn premium-btn">🎁 無料でPDF保存</button>
+        <button onclick="nextPage()" id="btn-next" class="control-btn">▼ 次へ</button>
+    </div>
+
+    <div id="book-stage">
+        <div class="page active" id="p1">
+            <div class="cover-title"><span class="girl-name"></span>とルル</div>
+            <img src="images/cover_front.png" class="cover-image" alt="Front Cover">
+        </div>
+
+        <div class="page future" id="p2"><div class="page-content-wrapper"><div class="image-area"><img src="images/page1.png"></div><div class="text-area"><p>おはよう、<span class="girl-name"></span></p></div></div></div>
+        <div class="page future" id="p3"><div class="page-content-wrapper"><div class="image-area"><img src="images/page2.png"></div><div class="text-area"><p>「チッ チッ」<br>……だあれ？</p></div></div></div>
+        <div class="page future" id="p4"><div class="page-content-wrapper"><div class="image-area"><img src="images/page3.png"></div><div class="text-area"><p>「こっちへ<br>おいで」</p></div></div></div>
+        <div class="page future" id="p5"><div class="page-content-wrapper"><div class="image-area"><img src="images/page4.png"></div><div class="text-area"><p>ピョン！<br>と<br>ピョン！</p></div></div></div>
+        
+        <div class="page future" id="p6">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="images/page5.png"></div>
+                <div class="text-area" style="bottom: 0; font-size: 22px; padding-bottom: 20px;">
+                    <p>ふわっ。てに　のった！<br>きみの　なまえは……<br>「ルル」！</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page future" id="p7">
+            <div class="page-content-wrapper">
+                <div class="image-area"><img src="images/page6.png"></div>
+                <div class="text-area" style="bottom: auto; top: 3%;">
+                    <p>ルルは<br><span class="girl-name"></span>が<br>だーいすき</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page future" id="p8"><div class="page-content-wrapper"><div class="image-area"><img src="images/page7.png"></div><div class="text-area"><p>おやすみ、ルル。<br>いい　ゆめ　みてね。</p></div></div></div>
+        <div class="page future" id="p9"><img src="images/cover_back.png" class="cover-image" alt="Back Cover"></div>
+    </div>
+
+    <script src="settings.js"></script>
+    <script>
+        let currentPage = 1;
+        const totalPages = 9;
+
+        function adjustTextSize() {
+            const textContainers = document.querySelectorAll('.text-area, .print-text-area');
+            textContainers.forEach(container => {
+                const paragraph = container.querySelector('p');
+                if (!paragraph) return;
+
+                const isPrintArea = container.closest('#print-area') !== null;
+                // Base size logic is now handled by CSS clamp(), 
+                // this JS acts as a safety fallback for overflow.
+                
+                let defaultSize = isPrintArea ? 34 : 26;
+                let unit = isPrintArea ? 'pt' : 'px';
+                
+                if (paragraph.scrollHeight > container.clientHeight) {
+                     let size = defaultSize;
+                     while (paragraph.scrollHeight > container.clientHeight && size > 10) {
+                        size--;
+                        paragraph.style.fontSize = size + unit;
+                    }
+                }
+            });
+        }
+
+        function updateView() {
+            let currentName = "女の子";
+            if (typeof settings !== 'undefined') {
+                currentName = settings.girlName;
+            }
+
+            const storedName = localStorage.getItem('girlName');
+            if (storedName) {
+                currentName = storedName;
+            }
+
+            document.querySelectorAll('.girl-name').forEach(el => el.textContent = currentName);
+            document.title = `${currentName}とルル - 第1巻 (統合版)`;
+
+            if (typeof settings !== 'undefined' && settings.updateQR) {
+                settings.updateQR();
+            }
+
+            adjustTextSize();
+
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === totalPages;
+            document.getElementById('btn-prev').style.opacity = currentPage === 1 ? '0.5' : '1';
+            document.getElementById('btn-next').style.opacity = currentPage === totalPages ? '0.5' : '1';
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                const currentEl = document.getElementById(`p${currentPage}`);
+                const nextEl = document.getElementById(`p${currentPage + 1}`);
+
+                currentEl.classList.remove('active');
+                currentEl.classList.add('past');
+
+                nextEl.classList.remove('future');
+                nextEl.classList.add('active');
+
+                currentPage++;
+                updateView();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                const currentEl = document.getElementById(`p${currentPage}`);
+                const prevEl = document.getElementById(`p${currentPage - 1}`);
+
+                currentEl.classList.remove('active');
+                currentEl.classList.add('future');
+
+                prevEl.classList.remove('past');
+                prevEl.classList.add('active');
+
+                currentPage--;
+                updateView();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            for (let i = 1; i <= totalPages; i++) {
+                const p = document.getElementById(`p${i}`);
+                p.classList.remove('active', 'past', 'future');
+                // Ensure initial state
+                if (i < currentPage) p.classList.add('past');
+                else if (i === currentPage) p.classList.add('active');
+                else p.classList.add('future');
+            }
+            updateView();
+        });
+
+        // Add resize listener for robustness
+        window.addEventListener('resize', adjustTextSize);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextPage();
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevPage();
+        });
+    </script>
+</body>
+
+</html>
