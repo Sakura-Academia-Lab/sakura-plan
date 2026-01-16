@@ -3,6 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PRPCBPS2');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>絵本ギャラリー - Sakura Academia</title>
     <style>
@@ -213,6 +218,7 @@
             color: white;
             font-size: 0.9em;
             transition: opacity 0.2s, transform 0.2s;
+            text-align: center;
         }
 
         .ver-btn:hover {
@@ -253,17 +259,18 @@
 </head>
 
 <body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <header>
-        <a href="../index.html" class="back-link">◀ ホームに戻る</a>
+        <a href="../index.html" class="back-link" aria-label="トップページに戻る">◀ ホームに戻る</a>
         <h1>絵本の世界</h1>
         <div class="subtitle">心温まる物語をお届けします</div>
     </header>
 
     <main>
-        <!-- Volume 1 Card -->
-        <div class="book-card">
-            <div class="book-cover-container">
+        <article class="book-card">
+            <div class="book-cover-container" aria-label="第1巻 桜文鳥との出会い 表紙スライドショー">
                 <img src="vol1/images/cover_front.png" class="slideshow-image fade-img-1" alt="男の子版 表紙">
                 <img src="vol1_girl/images/cover_front.png" class="slideshow-image fade-img-2" alt="女の子版 表紙">
             </div>
@@ -271,7 +278,7 @@
             <div class="book-info">
                 <div>
                     <span class="vol-badge vol1">第1巻</span>
-                    <div class="book-title">桜文鳥との出会い</div>
+                    <h2 class="book-title">桜文鳥との出会い</h2>
                     <p class="book-desc">
                         ある日、迷い込んだ不思議な小鳥。<br>
                         「ルル」との心温まる出会いと、<br>
@@ -284,17 +291,16 @@
                     <a href="vol1_girl/index.html" class="ver-btn girl-btn">女の子ver</a>
                 </div>
             </div>
-        </div>
+        </article>
 
-        <!-- Volume 2 (Preview) -->
-        <div class="book-card disabled-card">
+        <article class="book-card disabled-card">
             <div class="book-cover-container" style="background: #eee;">
-                <span style="font-size: 3em; color: #ccc;">?</span>
+                <span style="font-size: 3em; color: #ccc;" aria-hidden="true">?</span>
             </div>
             <div class="book-info">
                 <div>
                     <span class="vol-badge vol2">第2巻</span>
-                    <div class="book-title">（制作中）</div>
+                    <h2 class="book-title">（制作中）</h2>
                     <p class="book-desc">
                         ルルとの冒険はまだまだ続きます。<br>
                         次の物語を楽しみにお待ちください！
@@ -304,7 +310,7 @@
                     <span class="ver-btn" style="background: #ccc; cursor: default;">Coming Soon</span>
                 </div>
             </div>
-        </div>
+        </article>
     </main>
 
     <footer>
