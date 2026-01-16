@@ -2,11 +2,20 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YV5WWWG39Z');
+    </script>
+
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-PRPCBPS2');</script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>入試スケジュール・シミュレーター | 桜アカデミア</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
@@ -160,6 +169,7 @@
 <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
     <div id="print-title">
         入試スケジュール表 <span id="print-ss-display" style="font-size:16px; margin-left:20px; font-weight:normal;"></span>
     </div>
@@ -279,12 +289,10 @@ const App = {
     },
 
     init: function() {
-        // school_data.js が正しく読み込まれているかチェック
         if (window.SCHOOL_DATA && Array.isArray(window.SCHOOL_DATA)) { 
             this.data = window.SCHOOL_DATA; 
         } 
         else { 
-            // ユーザーに解決策を提示する具体的なエラーメッセージ
             const errorMsg = "【システムエラー】\nschool_data.jsが見つからないか、中身が正しくありません。\n\n1. index.htmlと同じフォルダに school_data.js があるか確認してください。\n2. school_data.jsの1行目が window.SCHOOL_DATA = [...]; で始まっているか確認してください。";
             alert(errorMsg); 
             console.error("SCHOOL_DATA is not defined. Please check school_data.js path and content.");
