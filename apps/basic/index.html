@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>入試スケジュール・シミュレーター</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-<script src="school_data.js"></script>
+    <meta charset="UTF-8">
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PRPCBPS2');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>入試スケジュール・シミュレーター | 桜アカデミア</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="school_data.js"></script>
 
 <style>
     :root { --primary-color: #37474f; --accent-blue: #0288d1; --bg-color: #f0f2f5; --panel-bg: #ffffff; --border-color: #e0e0e0; }
@@ -50,7 +55,6 @@
     }
     .close-modal { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #888; }
     
-    /* ガイド内のスタイル */
     .help-section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #eee; }
     .help-section:last-child { border-bottom: none; }
     .help-h3 { color: #0277bd; font-size: 16px; margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px; }
@@ -74,7 +78,6 @@
     .stock-column:last-child { border-right: none; }
     .idx-header { font-size: 10px; font-weight: bold; color: #999; margin: 8px 0 2px 0; border-bottom: 1px solid #eee; }
 
-    /* 白紙カード（ストック内） */
     .blank-card-source { 
         border: 2px dashed #ccc; background: #fff; color: #777; font-weight: bold; 
         text-align: center; padding: 8px; cursor: grab; margin-bottom: 10px; font-size: 12px;
@@ -103,13 +106,11 @@
     .slot.mid { background: rgba(250,250,250,0.5); }
     .slot.low { background: rgba(245,245,245,0.5); }
 
-    /* === カードスタイル === */
     .card { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 6px 8px; font-size: 12px; font-weight: bold; cursor: grab; box-shadow: 0 1px 2px rgba(0,0,0,0.1); border-left-width: 5px; color: #333; user-select: none; }
     .type-boy { border-left-color: #2196f3; }
     .type-girl { border-left-color: #e91e63; }
     .type-coed { border-left-color: #4caf50; }
     
-    /* カレンダー内カード */
     .card.in-calendar { border-left-width: 1px; display: flex; flex-direction: column; justify-content: center; padding: 6px; min-height: 85px; gap: 4px; position: relative; width: 100%; box-sizing: border-box; }
     .card.in-calendar.type-boy { border-top: 4px solid #2196f3; }
     .card.in-calendar.type-girl { border-top: 4px solid #e91e63; }
@@ -125,7 +126,6 @@
     .free-input:focus, .input-ss:focus, .input-subj:focus { background: #fff; border-color: var(--accent-blue); outline: none; }
     .name-input { width: 100%; font-size: 13px; font-weight: bold; border: 1px solid #ccc; border-radius: 3px; padding: 2px; margin-bottom: 2px;}
 
-    /* 判定バッジ */
     .judgment-badge { position: absolute; top: 6px; right: 6px; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; color: #fff; display: none; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
     .badge-challenge { background: #ff5722; display: inline-block; }
     .badge-safe { background: #2196f3; display: inline-block; }
@@ -158,13 +158,15 @@
 </style>
 </head>
 <body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="print-title">
         入試スケジュール表 <span id="print-ss-display" style="font-size:16px; margin-left:20px; font-weight:normal;"></span>
     </div>
 
-    <div id="help-modal" onclick="if(event.target == this) App.toggleHelp()">
+    <div id="help-modal" role="dialog" aria-modal="true" onclick="if(event.target == this) App.toggleHelp()">
         <div class="modal-content">
-            <span class="close-modal" onclick="App.toggleHelp()">×</span>
+            <button type="button" class="close-modal" aria-label="ガイドを閉じる" onclick="App.toggleHelp()">×</button>
             <h2 style="margin-top:0; border-bottom:2px solid #ddd; padding-bottom:10px;">🔰 使い方ガイド</h2>
             
             <div class="help-section">
@@ -187,39 +189,39 @@
                 <h3 class="help-h3"><span class="help-icon">💾</span> データの保存について</h3>
                 <p class="help-p"><b>① 自動保存（ブラウザ）</b><br>操作するたびに、お使いのブラウザに自動で保存されます。画面を閉じても続きから再開できます。</p>
                 <p class="help-p"><b>② ファイルに保存（バックアップ）</b><br>「💾 保存」ボタンを押すと、作成したプランを <code>入試スケジュール.json</code> というファイルとしてパソコンに保存できます。</p>
-                <p class="help-p"><b>③ データの読込</b><br>「📂 読込」ボタンで保存したファイルを選ぶと、以前のプランを復元できます。別のパソコンにデータを移したい時などに便利です。</p>
+                <p class="help-p"><b>③ データの読込</b><br>「📂 読込」ボタンで保存したファイルを選ぶと、以前のプランを復元できます。</p>
             </div>
 
             <div style="text-align:center; margin-top:20px;">
-                <button class="btn btn-print" onclick="App.toggleHelp()">閉じる</button>
+                <button type="button" class="btn btn-print" onclick="App.toggleHelp()">閉じる</button>
             </div>
         </div>
     </div>
 
     <div id="header-area">
         <div class="header-left">
-            <a href="../index.html" class="home-link">🏠</a>
+            <a href="../index.html" class="home-link" aria-label="ホームへ戻る">🏠</a>
             <div class="app-title">📅 入試シミュレーター</div>
             <div class="my-ss-area">
-                <span class="my-ss-label">持ち偏差値:</span>
+                <label for="header-ss-input" class="my-ss-label">持ち偏差値:</label>
                 <input type="number" id="header-ss-input" class="my-ss-input" placeholder="--" 
                        oninput="App.updateAllJudgments(); App.saveData();" 
-                       onchange="document.getElementById('print-ss-display').innerText = '(持ち偏差値: ' + this.value + ')'">
+                       onchange="document.getElementById('print-ss-display').innerText = this.value ? '(持ち偏差値: ' + this.value + ')' : ''">
             </div>
         </div>
         <div class="header-actions">
-            <button class="btn btn-help" onclick="App.toggleHelp()">❓ 使い方</button>
+            <button type="button" class="btn btn-help" onclick="App.toggleHelp()">❓ 使い方</button>
             <a href="https://x.com/Sakura_Academia" target="_blank" class="btn-x">𝕏 リクエスト</a>
             
             <div class="btn-group" style="margin-left:10px; border-left:1px solid #ccc; padding-left:10px;">
-                <button class="btn btn-save" onclick="App.downloadJSON()">💾 保存</button>
-                <input type="file" id="file-input" style="display:none" onchange="App.uploadJSON(this)">
-                <button class="btn btn-load" onclick="document.getElementById('file-input').click()">📂 読込</button>
+                <button type="button" class="btn btn-save" onclick="App.downloadJSON()">💾 保存</button>
+                <input type="file" id="file-input" style="display:none" accept=".json" onchange="App.uploadJSON(this)">
+                <button type="button" class="btn btn-load" onclick="document.getElementById('file-input').click()">📂 読込</button>
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-reset" onclick="App.resetCalendar()">全消去</button>
-                <button class="btn btn-print" onclick="window.print()">🖨️ 印刷</button>
+                <button type="button" class="btn btn-reset" onclick="App.resetCalendar()">全消去</button>
+                <button type="button" class="btn btn-print" onclick="window.print()">🖨️ 印刷</button>
             </div>
         </div>
     </div>
@@ -228,8 +230,18 @@
         <div id="stock-panel">
             <div id="stock-controls">
                 <div class="control-row">
-                    <div class="select-wrapper"><select id="gender-select"><option value="boy">👦 男子受験</option><option value="girl">👧 女子受験</option></select></div>
-                    <div class="select-wrapper"><select id="region-select"><option value="feb" selected>🗼 2月校</option><option value="jan">🎍 1月校</option></select></div>
+                    <div class="select-wrapper">
+                        <select id="gender-select" aria-label="受験性別選択">
+                            <option value="boy">👦 男子受験</option>
+                            <option value="girl">👧 女子受験</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper">
+                        <select id="region-select" aria-label="受験地域・時期選択">
+                            <option value="feb" selected>🗼 2月校</option>
+                            <option value="jan">🎍 1月校</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
@@ -259,9 +271,25 @@ const CALENDAR_DEF = [
 
 const App = {
     data: [],
+    escapeHTML: function(str) {
+        if (!str) return "";
+        return str.replace(/[&<>"']/g, function(m) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+        });
+    },
+
     init: function() {
-        if (window.SCHOOL_DATA) { this.data = window.SCHOOL_DATA; } 
-        else { alert("エラー: 'school_data.js' が読み込めませんでした。"); return; }
+        // school_data.js が正しく読み込まれているかチェック
+        if (window.SCHOOL_DATA && Array.isArray(window.SCHOOL_DATA)) { 
+            this.data = window.SCHOOL_DATA; 
+        } 
+        else { 
+            // ユーザーに解決策を提示する具体的なエラーメッセージ
+            const errorMsg = "【システムエラー】\nschool_data.jsが見つからないか、中身が正しくありません。\n\n1. index.htmlと同じフォルダに school_data.js があるか確認してください。\n2. school_data.jsの1行目が window.SCHOOL_DATA = [...]; で始まっているか確認してください。";
+            alert(errorMsg); 
+            console.error("SCHOOL_DATA is not defined. Please check school_data.js path and content.");
+            return; 
+        }
         this.renderCalendar(); this.bindEvents(); this.refreshStock();
         setTimeout(() => { this.loadData(); }, 100);
     },
@@ -366,27 +394,26 @@ const App = {
         
         el.className = `card in-calendar ${typeClass}`;
         
-        let nameVal = restoreData ? restoreData.name : "";
-        let ssVal = restoreData ? restoreData.ss : "";
-        let subjVal = restoreData ? restoreData.subj : "";
-        let memoVal = restoreData ? restoreData.memo : "";
+        let nameVal = restoreData ? this.escapeHTML(restoreData.name) : "";
+        let ssVal = restoreData ? this.escapeHTML(restoreData.ss) : "";
+        let subjVal = restoreData ? this.escapeHTML(restoreData.subj) : "";
+        let memoVal = restoreData ? this.escapeHTML(restoreData.memo) : "";
 
-        if (!restoreData && !isCustom) { nameVal = schoolName; }
+        if (!restoreData && !isCustom) { nameVal = this.escapeHTML(schoolName); }
 
         let nameHtml = isCustom 
-            ? `<input type="text" class="name-input" placeholder="学校名" value="${nameVal}" onmousedown="event.stopPropagation()" oninput="App.saveData()">`
-            : `<div><span class="school-name-large">${schoolName}</span></div>`;
+            ? `<input type="text" class="name-input" aria-label="学校名入力" placeholder="学校名" value="${nameVal}" onmousedown="event.stopPropagation()" oninput="App.saveData()">`
+            : `<div><span class="school-name-large">${this.escapeHTML(schoolName)}</span></div>`;
 
         el.innerHTML = `
             ${nameHtml}
             <span class="judgment-badge"></span>
             <div class="card-data-row">
-                <input type="number" class="input-ss" placeholder="SS" value="${ssVal}" onmousedown="event.stopPropagation()" oninput="App.updateJudgment(this.closest('.card')); App.saveData();">
-                <input type="text" class="input-subj" list="subj-list" placeholder="科目" value="${subjVal}" onmousedown="event.stopPropagation()" oninput="App.saveData()">
+                <input type="number" class="input-ss" aria-label="偏差値" placeholder="SS" value="${ssVal}" onmousedown="event.stopPropagation()" oninput="App.updateJudgment(this.closest('.card')); App.saveData();">
+                <input type="text" class="input-subj" aria-label="入試科目" list="subj-list" placeholder="科目" value="${subjVal}" onmousedown="event.stopPropagation()" oninput="App.saveData()">
             </div>
-            <input type="text" class="free-input" placeholder="備考" value="${memoVal}" onmousedown="event.stopPropagation()" oninput="App.saveData()">
+            <input type="text" class="free-input" aria-label="備考・メモ" placeholder="備考" value="${memoVal}" onmousedown="event.stopPropagation()" oninput="App.saveData()">
         `;
-        el.setAttribute('data-ss', 0);
         
         if(ssVal) this.updateJudgment(el);
     },
@@ -464,18 +491,21 @@ const App = {
     loadData: function() {
         const json = localStorage.getItem('sakura_plan_data');
         if (!json) return;
-        this.restoreFromJSON(JSON.parse(json));
+        try {
+            this.restoreFromJSON(JSON.parse(json));
+        } catch(e) { console.error("Data load failed", e); }
     },
 
     restoreFromJSON: function(data) {
         if (!data) return;
-        document.getElementById('header-ss-input').value = data.mySS || "";
-        document.getElementById('print-ss-display').innerText = data.mySS ? '(持ち偏差値: ' + data.mySS + ')' : "";
+        document.getElementById('header-ss-input').value = this.escapeHTML(data.mySS) || "";
+        document.getElementById('print-ss-display').innerText = data.mySS ? '(持ち偏差値: ' + this.escapeHTML(data.mySS) + ')' : "";
 
         document.querySelectorAll('.slot').forEach(s => s.innerHTML = "");
 
         for (const [uniqueId, cards] of Object.entries(data.slots)) {
             const parts = uniqueId.lastIndexOf('_');
+            if(parts === -1) continue;
             const slotId = uniqueId.substring(0, parts);
             const pos = uniqueId.substring(parts + 1);
             
@@ -483,7 +513,7 @@ const App = {
             if (targetSlot) {
                 cards.forEach(cData => {
                     const div = document.createElement('div');
-                    div.setAttribute('data-id', cData.id);
+                    div.setAttribute('data-id', this.escapeHTML(cData.id));
                     targetSlot.appendChild(div);
                     this.transformToCalendarCard(div, cData);
                 });
@@ -499,7 +529,7 @@ const App = {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = '入試スケジュール.json'; // ★ファイル名を日本語に変更
+        a.download = '入試スケジュール.json'; 
         a.click();
         URL.revokeObjectURL(url);
     },
@@ -515,7 +545,7 @@ const App = {
                 this.saveData(); 
                 alert("データを読み込みました");
             } catch(e) {
-                alert("ファイルの読み込みに失敗しました");
+                alert("ファイルの読み込みに失敗しました。正しいJSONファイルを選択してください。");
             }
         };
         reader.readAsText(file);
