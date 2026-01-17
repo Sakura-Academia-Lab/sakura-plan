@@ -299,7 +299,7 @@
       gap: 6px;
       transition: 0.2s;
       white-space: nowrap;
-      margin-left: auto;
+      position: relative;
     }
 
     .help-btn:hover {
@@ -380,25 +380,6 @@
 
   <nav id="top-nav">
     <div class="nav-tab" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
-    <div class="help-btn" onclick="toggleDropdown('panel-help')">❓ 操作ガイド</div>
-    <div class="help-panel" id="panel-help">
-      <div class="help-item">
-        <span class="help-icon">☝️</span>
-        <div class="help-text"><strong>1本指でドラッグ</strong><br>立体を回転させる</div>
-      </div>
-      <div class="help-item">
-        <span class="help-icon">✌️</span>
-        <div class="help-text"><strong>2本指でドラッグ</strong><br>立体を上下左右に移動させる</div>
-      </div>
-      <div class="help-item">
-        <span class="help-icon">🤏</span>
-        <div class="help-text"><strong>ピンチイン/アウト</strong><br>拡大・縮小する</div>
-      </div>
-      <div class="help-item">
-        <span class="help-icon">👆</span>
-        <div class="help-text"><strong>点をタップ</strong><br>切断点を選択（3点で切断）</div>
-      </div>
-    </div>
     <div class="dropdown-panel" id="panel-shape">
       <div class="section-title">基本図形</div>
       <div class="btn-grid">
@@ -476,6 +457,47 @@
         <span id="status-box">0 / 3</span>
         <button id="btn-flip" onclick="flipCurrentCut()">🔁 逆側</button>
         <button class="btn-all-reset" onclick="resetAll()">🗑 全リセット</button>
+        <div class="help-btn" onclick="toggleDropdown('panel-help')">❓ 操作ガイド</div>
+        <div class="help-panel" id="panel-help">
+          <!-- PC版ガイド -->
+          <div id="help-pc">
+            <div class="help-item">
+              <span class="help-icon">🖱️</span>
+              <div class="help-text"><strong>左ドラッグ</strong><br>立体を回転させる</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">🖱️</span>
+              <div class="help-text"><strong>右ドラッグ</strong><br>立体を上下左右に移動させる</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">🔘</span>
+              <div class="help-text"><strong>ホイール</strong><br>拡大・縮小する</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">👆</span>
+              <div class="help-text"><strong>点をクリック</strong><br>切断点を選択（3点で切断）</div>
+            </div>
+          </div>
+          <!-- スマホ版ガイド -->
+          <div id="help-mobile" style="display:none;">
+            <div class="help-item">
+              <span class="help-icon">☝️</span>
+              <div class="help-text"><strong>1本指でドラッグ</strong><br>立体を回転させる</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">✌️</span>
+              <div class="help-text"><strong>2本指でドラッグ</strong><br>立体を上下左右に移動させる</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">🤏</span>
+              <div class="help-text"><strong>ピンチイン/アウト</strong><br>拡大・縮小する</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">👆</span>
+              <div class="help-text"><strong>点をタップ</strong><br>切断点を選択（3点で切断）</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
@@ -564,13 +586,17 @@
       resetAll();
     }
 
+    // タッチデバイス判定
+    const isTouchDevice = () => ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
     function setDivision(div) {
       snapGroup.clear(); const attr = currentEdgesGeo.attributes.position;
       const stepLimit = (currentMesh.geometry.type === "SphereGeometry") ? 1 : div; // 球体は等分点をエッジ中央に作らない
+      const snapSize = isTouchDevice() ? 0.35 : 0.2; // スマホは大きめ
       for (let i = 0; i < attr.count; i += 2) {
         const v1 = new THREE.Vector3().fromBufferAttribute(attr, i), v2 = new THREE.Vector3().fromBufferAttribute(attr, i + 1);
         for (let j = 0; j <= stepLimit; j++) {
-          const dot = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0x555555, opacity: 0.4, transparent: true }));
+          const dot = new THREE.Mesh(new THREE.SphereGeometry(snapSize), new THREE.MeshBasicMaterial({ color: 0x555555, opacity: 0.4, transparent: true }));
           dot.position.lerpVectors(v1, v2, j / stepLimit); snapGroup.add(dot);
         }
       }
@@ -597,6 +623,11 @@
     }
 
     const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
+    // スマホではRaycasterの閾値を広げてタップしやすくする
+    if (isTouchDevice()) {
+      raycaster.params.Points = { threshold: 0.5 };
+      raycaster.params.Line = { threshold: 0.5 };
+    }
     window.addEventListener('pointerdown', (e) => {
       if (e.target.closest('#top-nav')) return;
       mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -619,7 +650,14 @@
     window.flipCurrentCut = () => { planes[currentCutIndex].normal.negate(); planes[currentCutIndex].constant *= -1; calculateIntersectionPointsAndCreateCap(planes[currentCutIndex], currentCutIndex); };
     window.resetAll = () => { cutPoints.forEach((_, i) => { cutPoints[i] = []; cutMarkers[i].forEach(m => scene.remove(m)); cutMarkers[i] = []; planes[i].setComponents(0, -1, 0, 10000); if (capMeshes[i]) scene.remove(capMeshes[i]); capMeshes[i] = null; }); setDivision(1); updateUI(); };
     function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
-    window.onload = init;
+    window.onload = () => {
+      // PC/スマホでガイドを切り替え
+      if (isTouchDevice()) {
+        document.getElementById('help-pc').style.display = 'none';
+        document.getElementById('help-mobile').style.display = 'block';
+      }
+      init();
+    };
     window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
   </script>
 </body>
