@@ -282,6 +282,7 @@
       cursor: pointer;
       font-weight: bold;
       font-size: 12px;
+      white-space: nowrap; /* スマホで縦にならないように */
     }
 
     /* ===== ヘルプパネル ===== */
@@ -304,10 +305,6 @@
 
     .help-btn:hover {
       background: #7e57c2;
-    }
-
-    .help-btn::after {
-      content: '';
     }
 
     .help-panel {
@@ -357,13 +354,75 @@
       color: #333;
     }
 
+    /* ===== スマホ版UI調整 ===== */
     @media (max-width: 950px) {
+      #top-nav {
+        padding: 6px;
+        gap: 4px;
+        justify-content: flex-start;
+      }
+
+      /* 1段目：図形・等分点・ガイドを並べる */
+      .nav-tab, .help-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+        flex: 1; /* 均等に並べる */
+        justify-content: center;
+      }
+
+      /* 2段目：切断セクション */
       .cut-section {
         width: 100%;
         margin-left: 0;
         border-top: 1px solid #eee;
-        padding-top: 6px;
+        padding: 8px 0;
         order: 3;
+        flex-direction: column; /* タブとリセットを縦に並べる */
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      /* 切断タブを4段（2x4）で全表示 */
+      .cut-tabs-wrapper {
+        max-width: 100%;
+        background: transparent;
+        padding: 0;
+      }
+
+      .cut-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2列にする */
+        gap: 4px;
+        width: 100%;
+      }
+
+      .cut-tab {
+        background: #eee;
+        text-align: center;
+        padding: 10px 5px;
+        width: 100%;
+      }
+
+      /* 下段：ステータス・逆側・リセット */
+      .controls-right {
+        width: 100%;
+        margin-left: 0;
+        justify-content: space-between;
+        padding-top: 4px;
+        border-top: 1px dashed #eee;
+      }
+
+      #status-box {
+        min-width: 40px;
+        font-size: 14px;
+      }
+
+      .btn-all-reset {
+        padding: 10px 15px;
+        font-size: 13px;
+        flex-grow: 1;
+        margin-left: 10px;
+        text-align: center;
       }
 
       .dropdown-panel {
@@ -380,6 +439,9 @@
 
   <nav id="top-nav">
     <div class="nav-tab" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
+    <div class="nav-tab" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
+    <div class="help-btn" onclick="toggleDropdown('panel-help')">❓ 操作ガイド</div>
+
     <div class="dropdown-panel" id="panel-shape">
       <div class="section-title">基本図形</div>
       <div class="btn-grid">
@@ -425,7 +487,6 @@
       </div>
     </div>
 
-    <div class="nav-tab" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
     <div class="dropdown-panel" id="panel-snap">
       <div class="section-title">エッジの分割数</div>
       <div class="btn-grid">
@@ -437,6 +498,45 @@
         <button class="grid-btn snap-ui" onclick="setDivisionUI(6)">6等分</button>
         <button class="grid-btn snap-ui" onclick="setDivisionUI(8)">8等分</button>
         <button class="grid-btn snap-ui" onclick="setDivisionUI(10)">10等分</button>
+      </div>
+    </div>
+
+    <div class="help-panel" id="panel-help">
+      <div id="help-pc">
+        <div class="help-item">
+          <span class="help-icon">🖱️</span>
+          <div class="help-text"><strong>左ドラッグ</strong><br>立体を回転させる</div>
+        </div>
+        <div class="help-item">
+          <span class="help-icon">🖱️</span>
+          <div class="help-text"><strong>右ドラッグ</strong><br>立体を上下左右に移動させる</div>
+        </div>
+        <div class="help-item">
+          <span class="help-icon">🔘</span>
+          <div class="help-text"><strong>ホイール</strong><br>拡大・縮小する</div>
+        </div>
+        <div class="help-item">
+          <span class="help-icon">👆</span>
+          <div class="help-text"><strong>点をクリック</strong><br>切断点を選択（3点で切断）</div>
+        </div>
+      </div>
+      <div id="help-mobile" style="display:none;">
+        <div class="help-item">
+          <span class="help-icon">☝️</span>
+          <div class="help-text"><strong>1本指でドラッグ</strong><br>立体を回転させる</div>
+        </div>
+        <div class="help-item">
+          <span class="help-icon">✌️</span>
+          <div class="help-text"><strong>2本指でドラッグ</strong><br>立体を上下左右に移動させる</div>
+        </div>
+        <div class="help-item">
+          <span class="help-icon">🤏</span>
+          <div class="help-text"><strong>ピンチイン/アウト</strong><br>拡大・縮小する</div>
+        </div>
+        <div class="help-item">
+          <span class="help-icon">👆</span>
+          <div class="help-text"><strong>点をタップ</strong><br>切断点を選択（3点で切断）</div>
+        </div>
       </div>
     </div>
 
@@ -457,47 +557,6 @@
         <span id="status-box">0 / 3</span>
         <button id="btn-flip" onclick="flipCurrentCut()">🔁 逆側</button>
         <button class="btn-all-reset" onclick="resetAll()">🗑 全リセット</button>
-        <div class="help-btn" onclick="toggleDropdown('panel-help')">❓ 操作ガイド</div>
-        <div class="help-panel" id="panel-help">
-          <!-- PC版ガイド -->
-          <div id="help-pc">
-            <div class="help-item">
-              <span class="help-icon">🖱️</span>
-              <div class="help-text"><strong>左ドラッグ</strong><br>立体を回転させる</div>
-            </div>
-            <div class="help-item">
-              <span class="help-icon">🖱️</span>
-              <div class="help-text"><strong>右ドラッグ</strong><br>立体を上下左右に移動させる</div>
-            </div>
-            <div class="help-item">
-              <span class="help-icon">🔘</span>
-              <div class="help-text"><strong>ホイール</strong><br>拡大・縮小する</div>
-            </div>
-            <div class="help-item">
-              <span class="help-icon">👆</span>
-              <div class="help-text"><strong>点をクリック</strong><br>切断点を選択（3点で切断）</div>
-            </div>
-          </div>
-          <!-- スマホ版ガイド -->
-          <div id="help-mobile" style="display:none;">
-            <div class="help-item">
-              <span class="help-icon">☝️</span>
-              <div class="help-text"><strong>1本指でドラッグ</strong><br>立体を回転させる</div>
-            </div>
-            <div class="help-item">
-              <span class="help-icon">✌️</span>
-              <div class="help-text"><strong>2本指でドラッグ</strong><br>立体を上下左右に移動させる</div>
-            </div>
-            <div class="help-item">
-              <span class="help-icon">🤏</span>
-              <div class="help-text"><strong>ピンチイン/アウト</strong><br>拡大・縮小する</div>
-            </div>
-            <div class="help-item">
-              <span class="help-icon">👆</span>
-              <div class="help-text"><strong>点をタップ</strong><br>切断点を選択（3点で切断）</div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </nav>
@@ -558,8 +617,8 @@
         geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-w').value), parseFloat(document.getElementById('inp-h').value), parseFloat(document.getElementById('inp-d').value));
         edgeGeo = new THREE.EdgesGeometry(geo);
       } else if (type === 'sphere') {
-        geo = new THREE.SphereGeometry(6, 48, 48); // 表示用は滑らか
-        edgeGeo = new THREE.EdgesGeometry(new THREE.SphereGeometry(6, 6, 4)); // スナップ用は極限まで低密度に
+        geo = new THREE.SphereGeometry(6, 48, 48);
+        edgeGeo = new THREE.EdgesGeometry(new THREE.SphereGeometry(6, 6, 4));
       } else if (type.includes('prism')) {
         const seg = parseInt(type.split('-')[1]) || 32;
         geo = new THREE.CylinderGeometry(5, 5, 9, seg);
@@ -569,11 +628,11 @@
         geo = new THREE.ConeGeometry(6, 9, seg);
         edgeGeo = new THREE.EdgesGeometry(geo, 15);
       } else if (type === 'cylinder') {
-        geo = new THREE.CylinderGeometry(4, 4, 9, 32); // 表示用は滑らか
-        edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 8), 15); // スナップ用は低密度
+        geo = new THREE.CylinderGeometry(4, 4, 9, 32);
+        edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 8), 15);
       } else if (type === 'cone') {
-        geo = new THREE.ConeGeometry(6, 9, 32); // 表示用は滑らか
-        edgeGeo = new THREE.EdgesGeometry(new THREE.ConeGeometry(6, 9, 8), 15); // スナップ用は低密度
+        geo = new THREE.ConeGeometry(6, 9, 32);
+        edgeGeo = new THREE.EdgesGeometry(new THREE.ConeGeometry(6, 9, 8), 15);
       } else {
         geo = new THREE.CylinderGeometry(4, 4, 9, 32);
         edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 8), 15);
@@ -586,13 +645,13 @@
       resetAll();
     }
 
-    // タッチデバイス判定
     const isTouchDevice = () => ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     function setDivision(div) {
       snapGroup.clear(); const attr = currentEdgesGeo.attributes.position;
-      const stepLimit = (currentMesh.geometry.type === "SphereGeometry") ? 1 : div; // 球体は等分点をエッジ中央に作らない
-      const snapSize = isTouchDevice() ? 0.35 : 0.2; // スマホは大きめ
+      const stepLimit = (currentMesh.geometry.type === "SphereGeometry") ? 1 : div;
+      // スマホ版ではドット自体も大きく、判定も甘くする
+      const snapSize = isTouchDevice() ? 0.45 : 0.2;
       for (let i = 0; i < attr.count; i += 2) {
         const v1 = new THREE.Vector3().fromBufferAttribute(attr, i), v2 = new THREE.Vector3().fromBufferAttribute(attr, i + 1);
         for (let j = 0; j <= stepLimit; j++) {
@@ -623,10 +682,10 @@
     }
 
     const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
-    // スマホではRaycasterの閾値を広げてタップしやすくする
     if (isTouchDevice()) {
-      raycaster.params.Points = { threshold: 0.5 };
-      raycaster.params.Line = { threshold: 0.5 };
+      // スマホではタップ判定の閾値を大幅に広げる（判定を甘くする）
+      raycaster.params.Points.threshold = 0.75;
+      raycaster.params.Line.threshold = 0.75;
     }
     window.addEventListener('pointerdown', (e) => {
       if (e.target.closest('#top-nav')) return;
@@ -651,7 +710,6 @@
     window.resetAll = () => { cutPoints.forEach((_, i) => { cutPoints[i] = []; cutMarkers[i].forEach(m => scene.remove(m)); cutMarkers[i] = []; planes[i].setComponents(0, -1, 0, 10000); if (capMeshes[i]) scene.remove(capMeshes[i]); capMeshes[i] = null; }); setDivision(1); updateUI(); };
     function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
     window.onload = () => {
-      // PC/スマホでガイドを切り替え
       if (isTouchDevice()) {
         document.getElementById('help-pc').style.display = 'none';
         document.getElementById('help-mobile').style.display = 'block';
