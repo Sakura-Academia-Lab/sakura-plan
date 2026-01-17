@@ -90,21 +90,15 @@
     .help-item:last-child { border-bottom: none; }
     .help-icon { font-size: 20px; min-width: 30px; text-align: center; }
     .help-text { font-size: 13px; color: #555; line-height: 1.5; }
+    .help-text strong { color: #333; }
 
-    /* ===== スマホ最適化 (1段に全表示) ===== */
     @media (max-width: 950px) {
       #top-nav { padding: 4px; gap: 4px; }
       .nav-tab, .help-btn { padding: 8px 5px; font-size: 11px; flex: 1; justify-content: center; }
-      
       .cut-section { width: 100%; margin: 0; border-top: 1px solid #eee; padding: 6px 0; order: 3; flex-direction: column; gap: 8px; }
-      
       .cut-tabs-wrapper { max-width: 100%; width: 100%; background: #f0f0f0; border-radius: 8px; padding: 2px; }
       .cut-tabs { display: flex; justify-content: space-between; width: 100%; gap: 1px; }
-      .cut-tab { 
-        flex: 1; padding: 8px 0; font-size: 9px; 
-        border-radius: 4px; text-align: center; min-width: 0;
-      }
-      
+      .cut-tab { flex: 1; padding: 8px 0; font-size: 9px; border-radius: 4px; text-align: center; min-width: 0; }
       .controls-right { width: 100%; margin: 0; border-top: 1px dashed #eee; padding-top: 4px; justify-content: space-between; }
       .btn-all-reset { flex-grow: 1; margin-left: 10px; text-align: center; }
       .dropdown-panel { width: 95vw; left: 2.5vw; }
@@ -177,24 +171,16 @@
 
     <div class="help-panel" id="panel-help">
       <div id="help-pc">
-        <div class="help-item">
-          <span class="help-icon">🖱️</span>
-          <div class="help-text"><strong>左ドラッグ</strong><br>立体を回転させる</div>
-        </div>
-        <div class="help-item">
-          <span class="help-icon">👆</span>
-          <div class="help-text"><strong>点をクリック</strong><br>切断点を選択（3点で切断）</div>
-        </div>
+        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>左ドラッグ</strong><br>立体を回転させる</div></div>
+        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>右ドラッグ</strong><br>立体を上下左右に移動</div></div>
+        <div class="help-item"><span class="help-icon">🔘</span><div class="help-text"><strong>ホイール</strong><br>拡大・縮小（ズーム）</div></div>
+        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>点をクリック</strong><br>3点選んで切断を実行</div></div>
       </div>
       <div id="help-mobile" style="display:none;">
-        <div class="help-item">
-          <span class="help-icon">☝️</span>
-          <div class="help-text"><strong>1本指ドラッグ</strong><br>立体を回転</div>
-        </div>
-        <div class="help-item">
-          <span class="help-icon">👆</span>
-          <div class="help-text"><strong>点をタップ</strong><br>3点で切断</div>
-        </div>
+        <div class="help-item"><span class="help-icon">☝️</span><div class="help-text"><strong>1本指ドラッグ</strong><br>立体を回転させる</div></div>
+        <div class="help-item"><span class="help-icon">✌️</span><div class="help-text"><strong>2本指ドラッグ</strong><br>立体を上下左右に移動</div></div>
+        <div class="help-item"><span class="help-icon">🤏</span><div class="help-text"><strong>ピンチイン/アウト</strong><br>拡大・縮小（ズーム）</div></div>
+        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>点をタップ</strong><br>3点選んで切断を実行</div></div>
       </div>
     </div>
 
@@ -226,6 +212,9 @@
     let currentMesh, wireMesh, currentGeo, currentEdgesGeo;
     let snapGroup = new THREE.Group(), intersectGroup = new THREE.Group();
     let openDropdown = null;
+
+    // 切断ごとの色設定（①～⑧）
+    const CUT_COLORS = [0xff0000, 0x00ff00, 0x0000ff, 0xffa500, 0x800080, 0x00ffff, 0xff00ff, 0xffff00];
 
     function toggleDropdown(id) {
       const panel = document.getElementById(id);
@@ -269,31 +258,18 @@
       let geo, edgeGeo;
       if (type === 'cube') {
         const s = parseFloat(document.getElementById('inp-cube-s').value);
-        geo = new THREE.BoxGeometry(s, s, s);
-        edgeGeo = new THREE.EdgesGeometry(geo);
+        geo = new THREE.BoxGeometry(s, s, s); edgeGeo = new THREE.EdgesGeometry(geo);
       } else if (type === 'box') {
         geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-w').value), parseFloat(document.getElementById('inp-h').value), parseFloat(document.getElementById('inp-d').value));
         edgeGeo = new THREE.EdgesGeometry(geo);
       } else if (type === 'sphere') {
-        geo = new THREE.SphereGeometry(6, 48, 48);
-        edgeGeo = new THREE.EdgesGeometry(new THREE.SphereGeometry(6, 6, 4));
+        geo = new THREE.SphereGeometry(6, 48, 48); edgeGeo = new THREE.EdgesGeometry(new THREE.SphereGeometry(6, 6, 4));
       } else if (type.includes('prism')) {
-        const seg = parseInt(type.split('-')[1]) || 32;
-        geo = new THREE.CylinderGeometry(5, 5, 9, seg);
-        edgeGeo = new THREE.EdgesGeometry(geo, 15);
+        const seg = parseInt(type.split('-')[1]) || 32; geo = new THREE.CylinderGeometry(5, 5, 9, seg); edgeGeo = new THREE.EdgesGeometry(geo, 15);
       } else if (type.includes('pyramid')) {
-        const seg = parseInt(type.split('-')[1]) || 32;
-        geo = new THREE.ConeGeometry(6, 9, seg);
-        edgeGeo = new THREE.EdgesGeometry(geo, 15);
-      } else if (type === 'cylinder') {
-        geo = new THREE.CylinderGeometry(4, 4, 9, 32);
-        edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 8), 15);
-      } else if (type === 'cone') {
-        geo = new THREE.ConeGeometry(6, 9, 32);
-        edgeGeo = new THREE.EdgesGeometry(new THREE.ConeGeometry(6, 9, 8), 15);
+        const seg = parseInt(type.split('-')[1]) || 32; geo = new THREE.ConeGeometry(6, 9, seg); edgeGeo = new THREE.EdgesGeometry(geo, 15);
       } else {
-        geo = new THREE.CylinderGeometry(4, 4, 9, 32);
-        edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 8), 15);
+        geo = new THREE.CylinderGeometry(4, 4, 9, 32); edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 8), 15);
       }
       geo.translate(3, 0, 0); edgeGeo.translate(3, 0, 0);
       currentGeo = geo; currentEdgesGeo = edgeGeo;
@@ -339,10 +315,7 @@
     }
 
     const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
-    if (isTouchDevice()) {
-      raycaster.params.Points.threshold = 0.8;
-      raycaster.params.Line.threshold = 0.8;
-    }
+    if (isTouchDevice()) { raycaster.params.Points.threshold = 0.8; raycaster.params.Line.threshold = 0.8; }
     window.addEventListener('pointerdown', (e) => {
       if (e.target.closest('#top-nav')) return;
       mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -350,12 +323,10 @@
       if (hits.length > 0) {
         const p = hits[0].object.position.clone(); if (cutPoints[currentCutIndex].length >= 3) return;
         cutPoints[currentCutIndex].push(p);
-        // スマホ版での選択済みポイントの視認性を強化（サイズ拡大 + 純赤 0xff0000）
         const markerSize = isTouchDevice() ? 0.5 : 0.35;
-        const m = new THREE.Mesh(new THREE.SphereGeometry(markerSize, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff0000 })); 
-        m.position.copy(p);
-        m.renderOrder = 999; // 常に最前面に表示
-        scene.add(m); cutMarkers[currentCutIndex].push(m);
+        // マーカーの色を現在の切断インデックスに合わせて設定
+        const m = new THREE.Mesh(new THREE.SphereGeometry(markerSize, 12, 10), new THREE.MeshBasicMaterial({ color: CUT_COLORS[currentCutIndex] })); 
+        m.position.copy(p); m.renderOrder = 999; scene.add(m); cutMarkers[currentCutIndex].push(m);
         updateUI(); if (cutPoints[currentCutIndex].length === 3) applyCut();
       }
     });
@@ -371,10 +342,7 @@
     window.resetAll = () => { cutPoints.forEach((_, i) => { cutPoints[i] = []; cutMarkers[i].forEach(m => scene.remove(m)); cutMarkers[i] = []; planes[i].setComponents(0, -1, 0, 10000); if (capMeshes[i]) scene.remove(capMeshes[i]); capMeshes[i] = null; }); setDivision(1); updateUI(); };
     function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
     window.onload = () => {
-      if (isTouchDevice()) {
-        document.getElementById('help-pc').style.display = 'none';
-        document.getElementById('help-mobile').style.display = 'block';
-      }
+      if (isTouchDevice()) { document.getElementById('help-pc').style.display = 'none'; document.getElementById('help-mobile').style.display = 'block'; }
       init();
     };
     window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
