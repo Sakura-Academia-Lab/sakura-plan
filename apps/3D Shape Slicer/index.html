@@ -27,12 +27,30 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
+    :root {
+      --primary-navy: #1a2a44;
+      --accent-sakura: #ffcae0;
+    }
     * { box-sizing: border-box; }
     body { margin: 0; overflow: hidden; background-color: #fdfcf5; font-family: "Helvetica Neue", Arial, sans-serif; }
 
-    /* ===== ナビゲーション ===== */
+    /* ===== 最上部タイトルバー ===== */
+    #app-header {
+      position: fixed; top: 0; left: 0; right: 0; height: 44px;
+      background: var(--primary-navy); color: white;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 15px; z-index: 120; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #app-header h1 { font-size: 16px; margin: 0; letter-spacing: 0.05em; font-weight: bold; }
+    .btn-home {
+      color: white; text-decoration: none; font-size: 20px;
+      display: flex; align-items: center; gap: 5px; font-weight: bold;
+    }
+    .btn-home span { font-size: 12px; }
+
+    /* ===== ナビゲーション（一段下げ） ===== */
     #top-nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      position: fixed; top: 44px; left: 0; right: 0; z-index: 100;
       background: rgba(255, 255, 255, 0.98); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       display: flex; align-items: center; padding: 8px 12px; gap: 8px; flex-wrap: wrap;
     }
@@ -50,7 +68,7 @@
       display: none; position: absolute; top: 100%; left: 0; margin-top: 4px;
       background: white; border: 1px solid #ddd; border-radius: 10px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); padding: 12px;
-      min-width: 320px; max-height: 80vh; overflow-y: auto; z-index: 200;
+      min-width: 320px; max-height: 75vh; overflow-y: auto; z-index: 200;
     }
     .dropdown-panel.open { display: block; }
 
@@ -68,32 +86,47 @@
     
     .btn-confirm { background: #4facfe; color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 10px; width: 100%; }
 
-    /* ===== 切断セクション ===== */
+    /* ===== 切断セクション（カラー強化） ===== */
     .cut-section { display: flex; align-items: center; gap: 12px; margin-left: 10px; flex: 1; }
     .cut-tabs-wrapper { background: #eee; border-radius: 20px; padding: 3px; overflow-x: auto; max-width: 700px; scrollbar-width: none; }
     .cut-tabs-wrapper::-webkit-scrollbar { display: none; }
     .cut-tabs { display: flex; gap: 2px; }
-    .cut-tab { background: transparent; border: none; padding: 6px 14px; border-radius: 14px; font-weight: bold; color: #888; cursor: pointer; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
-    .cut-tab.active { background: #fff; color: #ff9800; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
-    .cut-tab.has-cut { color: #4CAF50; }
+    
+    .cut-tab { 
+      background: #f9f9f9; border: none; padding: 6px 14px; border-radius: 14px; 
+      font-weight: bold; cursor: pointer; font-size: 11px; white-space: nowrap; flex-shrink: 0;
+      transition: 0.2s; border-bottom: 3px solid transparent;
+    }
 
-    .controls-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .tab-color-0 { color: #ff0000; } .tab-color-0.active { background: rgba(255, 0, 0, 0.1); border-bottom-color: #ff0000; }
+    .tab-color-1 { color: #008000; } .tab-color-1.active { background: rgba(0, 128, 0, 0.1); border-bottom-color: #008000; }
+    .tab-color-2 { color: #0000ff; } .tab-color-2.active { background: rgba(0, 0, 255, 0.1); border-bottom-color: #0000ff; }
+    .tab-color-3 { color: #ff8c00; } .tab-color-3.active { background: rgba(255, 140, 0, 0.1); border-bottom-color: #ff8c00; }
+    .tab-color-4 { color: #800080; } .tab-color-4.active { background: rgba(128, 0, 128, 0.1); border-bottom-color: #800080; }
+    .tab-color-5 { color: #00ced1; } .tab-color-5.active { background: rgba(0, 206, 209, 0.1); border-bottom-color: #00ced1; }
+    .tab-color-6 { color: #ff00ff; } .tab-color-6.active { background: rgba(255, 0, 255, 0.1); border-bottom-color: #ff00ff; }
+    .tab-color-7 { color: #8b4513; } .tab-color-7.active { background: rgba(139, 69, 19, 0.1); border-bottom-color: #133b8b; }
+
+    .controls-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
     #status-box { font-size: 13px; font-weight: bold; color: #555; min-width: 45px; text-align: center; }
-    #btn-flip { background: #ffb74d; color: white; border: none; padding: 8px 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: none; font-size: 12px; white-space: nowrap; }
-    .btn-all-reset { background: #ef5350; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; white-space: nowrap; }
+    
+    #btn-flip { background: #ffb74d; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; font-size: 11px; white-space: nowrap; }
+    .btn-current-reset { background: #90a4ae; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; font-size: 11px; white-space: nowrap; }
+    .btn-all-reset { background: #ef5350; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 11px; white-space: nowrap; }
 
-    /* ===== ヘルプパネル ===== */
+    /* ===== ヘルプパネル（拡充） ===== */
     .help-btn { background: #9575cd; border: 1px solid #7e57c2; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; position: relative; }
-    .help-panel { display: none; position: absolute; top: 100%; right: 0; margin-top: 4px; background: white; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); padding: 16px; min-width: 280px; z-index: 200; }
+    .help-panel { display: none; position: absolute; top: 100%; right: 0; margin-top: 4px; background: white; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); padding: 20px; min-width: 320px; z-index: 200; }
     .help-panel.open { display: block; }
-    .help-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px dashed #eee; }
+    .help-title { font-size: 15px; font-weight: bold; color: #333; margin-bottom: 12px; border-bottom: 2px solid #9575cd; padding-bottom: 5px; }
+    .help-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #eee; }
     .help-item:last-child { border-bottom: none; }
-    .help-icon { font-size: 20px; min-width: 30px; text-align: center; }
-    .help-text { font-size: 13px; color: #555; line-height: 1.5; }
-    .help-text strong { color: #333; }
+    .help-icon { font-size: 22px; min-width: 30px; text-align: center; }
+    .help-text { font-size: 13px; color: #555; line-height: 1.6; }
+    .help-text strong { color: #000; font-size: 14px; }
 
     @media (max-width: 950px) {
-      #top-nav { padding: 4px; gap: 4px; }
+      #top-nav { padding: 4px; gap: 4px; top: 44px; }
       .nav-tab, .help-btn { padding: 8px 5px; font-size: 11px; flex: 1; justify-content: center; }
       .cut-section { width: 100%; margin: 0; border-top: 1px solid #eee; padding: 6px 0; order: 3; flex-direction: column; gap: 8px; }
       .cut-tabs-wrapper { max-width: 100%; width: 100%; background: #f0f0f0; border-radius: 8px; padding: 2px; }
@@ -109,6 +142,11 @@
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+  <header id="app-header">
+    <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
+    <h1>立体図形スライサー</h1>
+    <div style="width:50px;"></div> </header>
+
   <nav id="top-nav">
     <div class="nav-tab" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
     <div class="nav-tab" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
@@ -117,15 +155,12 @@
     <div class="dropdown-panel" id="panel-shape">
       <div class="section-title">基本図形</div>
       <div class="btn-grid">
-        <button class="grid-btn active" id="btn-cube" onclick="setShapeUI('cube')">立方体</button>
-        <button class="grid-btn" id="btn-box" onclick="setShapeUI('box')">直方体</button>
-        <button class="grid-btn" id="btn-sphere" onclick="setShapeUI('sphere')">球</button>
+        <button class="grid-btn active" onclick="setShapeUI('cube')">立方体</button>
+        <button class="grid-btn" onclick="setShapeUI('box')">直方体</button>
+        <button class="grid-btn" onclick="setShapeUI('sphere')">球</button>
       </div>
-
       <div id="cube-params" class="param-area">
-        <div class="param-row">
-          <div class="param-item"><span>一辺の長さ</span><input type="number" id="inp-cube-s" value="7" min="2" max="12" onchange="setShape('cube')"></div>
-        </div>
+        <div class="param-row"><div class="param-item"><span>一辺の長さ</span><input type="number" id="inp-cube-s" value="7" min="2" max="12" onchange="setShape('cube')"></div></div>
         <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
       </div>
       <div id="box-params" class="param-area">
@@ -136,7 +171,6 @@
         </div>
         <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
       </div>
-
       <div class="section-title">柱体・錐体・多面体</div>
       <div class="btn-grid">
         <button class="grid-btn" onclick="setShapeUI('prism-3')">三角柱</button>
@@ -145,8 +179,6 @@
         <button class="grid-btn" onclick="setShapeUI('cylinder')">円柱</button>
         <button class="grid-btn" onclick="setShapeUI('pyramid-3')">三角錐</button>
         <button class="grid-btn" onclick="setShapeUI('pyramid-4')">四角錐</button>
-        <button class="grid-btn" onclick="setShapeUI('pyramid-5')">五角錐</button>
-        <button class="grid-btn" onclick="setShapeUI('pyramid-6')">六角錐</button>
         <button class="grid-btn" onclick="setShapeUI('cone')">円錐</button>
         <button class="grid-btn" onclick="setShapeUI('poly-4')">正四面体</button>
         <button class="grid-btn" onclick="setShapeUI('poly-8')">正八面体</button>
@@ -171,36 +203,43 @@
 
     <div class="help-panel" id="panel-help">
       <div id="help-pc">
-        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>左ドラッグ</strong><br>立体を回転させる</div></div>
-        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>右ドラッグ</strong><br>立体を上下左右に移動</div></div>
-        <div class="help-item"><span class="help-icon">🔘</span><div class="help-text"><strong>ホイール</strong><br>拡大・縮小（ズーム）</div></div>
-        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>点をクリック</strong><br>3点選んで切断を実行</div></div>
+        <div class="help-title">PC版 操作ガイド</div>
+        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>左ドラッグ</strong>：立体を自由に回転</div></div>
+        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>右ドラッグ</strong>：立体を上下左右に並行移動</div></div>
+        <div class="help-item"><span class="help-icon">🔘</span><div class="help-text"><strong>マウスホイール</strong>：拡大・縮小</div></div>
+        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>クリック</strong>：3つの点を選ぶと自動で切断</div></div>
+        <div class="help-item"><span class="help-icon">🔁</span><div class="help-text"><strong>逆側</strong>：切断後に残す側を入れ替えます（反対側を見たい時に便利）</div></div>
+        <div class="help-item"><span class="help-icon">🗑️</span><div class="help-text"><strong>消す</strong>：現在選択中のタブの点と断面だけをリセット</div></div>
       </div>
       <div id="help-mobile" style="display:none;">
-        <div class="help-item"><span class="help-icon">☝️</span><div class="help-text"><strong>1本指ドラッグ</strong><br>立体を回転させる</div></div>
-        <div class="help-item"><span class="help-icon">✌️</span><div class="help-text"><strong>2本指ドラッグ</strong><br>立体を上下左右に移動</div></div>
-        <div class="help-item"><span class="help-icon">🤏</span><div class="help-text"><strong>ピンチイン/アウト</strong><br>拡大・縮小（ズーム）</div></div>
-        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>点をタップ</strong><br>3点選んで切断を実行</div></div>
+        <div class="help-title">スマホ版 操作ガイド</div>
+        <div class="help-item"><span class="help-icon">☝️</span><div class="help-text"><strong>1本指スワイプ</strong>：立体を自由に回転</div></div>
+        <div class="help-item"><span class="help-icon">✌️</span><div class="help-text"><strong>2本指スワイプ</strong>：立体を上下左右に並行移動</div></div>
+        <div class="help-item"><span class="help-icon">🤏</span><div class="help-text"><strong>ピンチイン・アウト</strong>：拡大・縮小</div></div>
+        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>タップ</strong>：3つの点を選ぶと自動で切断</div></div>
+        <div class="help-item"><span class="help-icon">🔁</span><div class="help-text"><strong>逆側</strong>：切断後に残す側を入れ替えます</div></div>
+        <div class="help-item"><span class="help-icon">🗑️</span><div class="help-text"><strong>消す</strong>：現在の切断プランだけをリセット</div></div>
       </div>
     </div>
 
     <div class="cut-section">
       <div class="cut-tabs-wrapper">
         <div class="cut-tabs">
-          <button class="cut-tab active" id="tab-0" onclick="switchCutTab(0)">切断①</button>
-          <button class="cut-tab" id="tab-1" onclick="switchCutTab(1)">切断②</button>
-          <button class="cut-tab" id="tab-2" onclick="switchCutTab(2)">切断③</button>
-          <button class="cut-tab" id="tab-3" onclick="switchCutTab(3)">切断④</button>
-          <button class="cut-tab" id="tab-4" onclick="switchCutTab(4)">切断⑤</button>
-          <button class="cut-tab" id="tab-5" onclick="switchCutTab(5)">切断⑥</button>
-          <button class="cut-tab" id="tab-6" onclick="switchCutTab(6)">切断⑦</button>
-          <button class="cut-tab" id="tab-7" onclick="switchCutTab(7)">切断⑧</button>
+          <button class="cut-tab active tab-color-0" id="tab-0" onclick="switchCutTab(0)">切断①</button>
+          <button class="cut-tab tab-color-1" id="tab-1" onclick="switchCutTab(1)">切断②</button>
+          <button class="cut-tab tab-color-2" id="tab-2" onclick="switchCutTab(2)">切断③</button>
+          <button class="cut-tab tab-color-3" id="tab-3" onclick="switchCutTab(3)">切断④</button>
+          <button class="cut-tab tab-color-4" id="tab-4" onclick="switchCutTab(4)">切断⑤</button>
+          <button class="cut-tab tab-color-5" id="tab-5" onclick="switchCutTab(5)">切断⑥</button>
+          <button class="cut-tab tab-color-6" id="tab-6" onclick="switchCutTab(6)">切断⑦</button>
+          <button class="cut-tab tab-color-7" id="tab-7" onclick="switchCutTab(7)">切断⑧</button>
         </div>
       </div>
       <div class="controls-right">
         <span id="status-box">0 / 3</span>
         <button id="btn-flip" onclick="flipCurrentCut()">🔁 逆側</button>
-        <button class="btn-all-reset" onclick="resetAll()">🗑 全リセット</button>
+        <button class="btn-current-reset" id="btn-reset-single" onclick="resetCurrentCut()">🗑️ 消す</button>
+        <button class="btn-all-reset" onclick="resetAll()">🗑️ 全リセット</button>
       </div>
     </div>
   </nav>
@@ -212,9 +251,9 @@
     let currentMesh, wireMesh, currentGeo, currentEdgesGeo;
     let snapGroup = new THREE.Group(), intersectGroup = new THREE.Group();
     let openDropdown = null;
+    let curDiv = 1;
 
-    // 切断ごとの色設定（①～⑧）
-    const CUT_COLORS = [0xff0000, 0x00ff00, 0x0000ff, 0xffa500, 0x800080, 0x00ffff, 0xff00ff, 0xffff00];
+    const CUT_COLORS = [0xff0000, 0x008000, 0x0000ff, 0xff8c00, 0x800080, 0x00ced1, 0xff00ff, 0x133b8b];
 
     function toggleDropdown(id) {
       const panel = document.getElementById(id);
@@ -226,15 +265,13 @@
 
     function setShapeUI(type) {
       document.querySelectorAll('#panel-shape .grid-btn').forEach(b => b.classList.remove('active'));
-      const activeBtn = Array.from(document.querySelectorAll('#panel-shape .grid-btn')).find(b => b.textContent.includes(type) || (type === 'cube' && b.textContent === '立方体'));
-      if (activeBtn) activeBtn.classList.add('active');
+      setShape(type);
       document.getElementById('cube-params').classList.toggle('show', type === 'cube');
       document.getElementById('box-params').classList.toggle('show', type === 'box');
-      setShape(type);
       if (type !== 'cube' && type !== 'box') closeAll();
     }
 
-    function setDivisionUI(div) { setDivision(div); closeAll(); }
+    function setDivisionUI(div) { curDiv = div; setDivision(div); closeAll(); }
 
     function init() {
       scene = new THREE.Scene(); scene.background = new THREE.Color(0xfdfcf5);
@@ -254,42 +291,62 @@
     }
 
     function setShape(type) {
-      if (currentMesh) { scene.remove(currentMesh, wireMesh); capMeshes.forEach(c => scene.remove(c)); capMeshes.fill(null); }
-      let geo, edgeGeo;
-      if (type === 'cube') {
-        const s = parseFloat(document.getElementById('inp-cube-s').value);
-        geo = new THREE.BoxGeometry(s, s, s); edgeGeo = new THREE.EdgesGeometry(geo);
-      } else if (type === 'box') {
-        geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-w').value), parseFloat(document.getElementById('inp-h').value), parseFloat(document.getElementById('inp-d').value));
-        edgeGeo = new THREE.EdgesGeometry(geo);
-      } else if (type === 'sphere') {
-        geo = new THREE.SphereGeometry(6, 48, 48); edgeGeo = new THREE.EdgesGeometry(new THREE.SphereGeometry(6, 6, 4));
-      } else if (type.includes('prism')) {
-        const seg = parseInt(type.split('-')[1]) || 32; geo = new THREE.CylinderGeometry(5, 5, 9, seg); edgeGeo = new THREE.EdgesGeometry(geo, 15);
-      } else if (type.includes('pyramid')) {
-        const seg = parseInt(type.split('-')[1]) || 32; geo = new THREE.ConeGeometry(6, 9, seg); edgeGeo = new THREE.EdgesGeometry(geo, 15);
-      } else {
-        geo = new THREE.CylinderGeometry(4, 4, 9, 32); edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 8), 15);
-      }
-      geo.translate(3, 0, 0); edgeGeo.translate(3, 0, 0);
-      currentGeo = geo; currentEdgesGeo = edgeGeo;
+      resetAllInternal();
+      if (currentMesh) { scene.remove(currentMesh, wireMesh); }
+      let geo;
+      if (type === 'cube') geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-cube-s').value), parseFloat(document.getElementById('inp-cube-s').value), parseFloat(document.getElementById('inp-cube-s').value));
+      else if (type === 'box') geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-w').value), parseFloat(document.getElementById('inp-h').value), parseFloat(document.getElementById('inp-d').value));
+      else if (type === 'sphere') geo = new THREE.SphereGeometry(6, 48, 48);
+      else if (type === 'prism-3') geo = new THREE.CylinderGeometry(5, 5, 9, 3);
+      else if (type === 'prism-5') geo = new THREE.CylinderGeometry(5, 5, 9, 5);
+      else if (type === 'prism-6') geo = new THREE.CylinderGeometry(5, 5, 9, 6);
+      else if (type === 'cylinder') geo = new THREE.CylinderGeometry(4, 4, 9, 32);
+      else if (type === 'pyramid-3') geo = new THREE.ConeGeometry(6, 9, 3);
+      else if (type === 'pyramid-4') geo = new THREE.ConeGeometry(6, 9, 4);
+      else if (type === 'cone') geo = new THREE.ConeGeometry(5, 9, 32);
+      else if (type === 'poly-4') geo = new THREE.TetrahedronGeometry(6);
+      else if (type === 'poly-8') geo = new THREE.OctahedronGeometry(5);
+      else if (type === 'poly-12') geo = new THREE.DodecahedronGeometry(5);
+      else if (type === 'poly-20') geo = new THREE.IcosahedronGeometry(5);
+      else geo = new THREE.BoxGeometry(7, 7, 7);
+
+      geo.translate(3, 0, 0); currentGeo = geo;
+      currentEdgesGeo = new THREE.EdgesGeometry(geo, (type.includes('sphere') || type.includes('cylinder') || type.includes('cone')) ? 10 : 1);
       currentMesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0xa8d5e2, side: THREE.DoubleSide, clippingPlanes: planes, clipShadows: true }));
-      wireMesh = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.3, transparent: true }));
+      wireMesh = new THREE.LineSegments(currentEdgesGeo, new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.3, transparent: true }));
       scene.add(currentMesh, wireMesh);
-      resetAll();
+      setDivision(curDiv); 
     }
 
     const isTouchDevice = () => ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     function setDivision(div) {
-      snapGroup.clear(); const attr = currentEdgesGeo.attributes.position;
-      const stepLimit = (currentMesh.geometry.type === "SphereGeometry") ? 1 : div;
+      snapGroup.clear();
       const snapSize = isTouchDevice() ? 0.45 : 0.2;
-      for (let i = 0; i < attr.count; i += 2) {
-        const v1 = new THREE.Vector3().fromBufferAttribute(attr, i), v2 = new THREE.Vector3().fromBufferAttribute(attr, i + 1);
-        for (let j = 0; j <= stepLimit; j++) {
-          const dot = new THREE.Mesh(new THREE.SphereGeometry(snapSize), new THREE.MeshBasicMaterial({ color: 0x555555, opacity: 0.4, transparent: true }));
-          dot.position.lerpVectors(v1, v2, j / stepLimit); snapGroup.add(dot);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0x555555, opacity: 0.4, transparent: true });
+      const posAttr = currentMesh.geometry.attributes.position;
+      const vertexSet = new Set();
+      
+      for (let i = 0; i < posAttr.count; i++) {
+        const v = new THREE.Vector3().fromBufferAttribute(posAttr, i);
+        // 角柱の中心点(3, y, 0)を排除
+        if (Math.abs(v.x - 3) < 0.01 && Math.abs(v.z - 0) < 0.01) continue; 
+        
+        const key = `${v.x.toFixed(2)},${v.y.toFixed(2)},${v.z.toFixed(2)}`;
+        if (!vertexSet.has(key)) {
+          const dot = new THREE.Mesh(new THREE.SphereGeometry(snapSize), dotMat);
+          dot.position.copy(v); snapGroup.add(dot); vertexSet.add(key);
+        }
+      }
+      if (div > 1) {
+        const attr = currentEdgesGeo.attributes.position;
+        for (let i = 0; i < attr.count; i += 2) {
+          const v1 = new THREE.Vector3().fromBufferAttribute(attr, i);
+          const v2 = new THREE.Vector3().fromBufferAttribute(attr, i + 1);
+          for (let j = 1; j < div; j++) {
+            const dot = new THREE.Mesh(new THREE.SphereGeometry(snapSize), dotMat);
+            dot.position.lerpVectors(v1, v2, j / div); snapGroup.add(dot);
+          }
         }
       }
     }
@@ -308,23 +365,23 @@
         const xDir = ref.cross(normal).normalize(), yDir = normal.clone().cross(xDir).normalize();
         pts.sort((a, b) => Math.atan2(a.clone().sub(center).dot(yDir), a.clone().sub(center).dot(xDir)) - Math.atan2(b.clone().sub(center).dot(yDir), b.clone().sub(center).dot(xDir)));
         const shape = new THREE.Shape(pts.map(p => new THREE.Vector2(p.clone().sub(center).dot(xDir), p.clone().sub(center).dot(yDir))));
-        const cap = new THREE.Mesh(new THREE.ShapeGeometry(shape), new THREE.MeshPhongMaterial({ color: 0x5d99c6, side: THREE.DoubleSide, clippingPlanes: planes.filter((_, i) => i !== idx) }));
+        const cap = new THREE.Mesh(new THREE.ShapeGeometry(shape), new THREE.MeshPhongMaterial({ color: CUT_COLORS[idx], side: THREE.DoubleSide, opacity: 0.6, transparent: true, clippingPlanes: planes.filter((_, i) => i !== idx) }));
         const m = new THREE.Matrix4().makeBasis(xDir, yDir, normal); cap.applyMatrix4(m); cap.position.copy(center);
         capMeshes[idx] = cap; scene.add(cap);
       }
     }
 
     const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
-    if (isTouchDevice()) { raycaster.params.Points.threshold = 0.8; raycaster.params.Line.threshold = 0.8; }
+    if (isTouchDevice()) { raycaster.params.Points.threshold = 0.8; }
+
     window.addEventListener('pointerdown', (e) => {
-      if (e.target.closest('#top-nav')) return;
+      if (e.target.closest('#top-nav') || e.target.closest('#app-header')) return;
       mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
       raycaster.setFromCamera(mouse, camera); const hits = raycaster.intersectObjects(snapGroup.children);
       if (hits.length > 0) {
         const p = hits[0].object.position.clone(); if (cutPoints[currentCutIndex].length >= 3) return;
         cutPoints[currentCutIndex].push(p);
         const markerSize = isTouchDevice() ? 0.5 : 0.35;
-        // マーカーの色を現在の切断インデックスに合わせて設定
         const m = new THREE.Mesh(new THREE.SphereGeometry(markerSize, 12, 10), new THREE.MeshBasicMaterial({ color: CUT_COLORS[currentCutIndex] })); 
         m.position.copy(p); m.renderOrder = 999; scene.add(m); cutMarkers[currentCutIndex].push(m);
         updateUI(); if (cutPoints[currentCutIndex].length === 3) applyCut();
@@ -335,11 +392,19 @@
     function updateUI() {
       const len = cutPoints[currentCutIndex].length; document.getElementById('status-box').innerText = `${len} / 3`;
       document.getElementById('btn-flip').style.display = (len === 3) ? 'block' : 'none';
+      document.getElementById('btn-reset-single').style.display = (len > 0) ? 'block' : 'none';
       for (let i = 0; i < MAX_CUTS; i++) { const t = document.getElementById('tab-' + i); if (t) { t.classList.toggle('active', i === currentCutIndex); t.classList.toggle('has-cut', cutPoints[i].length === 3); } }
     }
+
     window.switchCutTab = (idx) => { currentCutIndex = idx; updateUI(); };
     window.flipCurrentCut = () => { planes[currentCutIndex].normal.negate(); planes[currentCutIndex].constant *= -1; calculateIntersectionPointsAndCreateCap(planes[currentCutIndex], currentCutIndex); };
-    window.resetAll = () => { cutPoints.forEach((_, i) => { cutPoints[i] = []; cutMarkers[i].forEach(m => scene.remove(m)); cutMarkers[i] = []; planes[i].setComponents(0, -1, 0, 10000); if (capMeshes[i]) scene.remove(capMeshes[i]); capMeshes[i] = null; }); setDivision(1); updateUI(); };
+    window.resetCurrentCut = () => {
+      cutPoints[currentCutIndex] = []; cutMarkers[currentCutIndex].forEach(m => scene.remove(m)); cutMarkers[currentCutIndex] = [];
+      planes[currentCutIndex].setComponents(0, -1, 0, 10000); if (capMeshes[currentCutIndex]) scene.remove(capMeshes[currentCutIndex]);
+      capMeshes[currentCutIndex] = null; updateUI();
+    };
+    function resetAllInternal() { cutPoints.forEach((_, i) => { currentCutIndex = i; resetCurrentCut(); }); currentCutIndex = 0; updateUI(); }
+    window.resetAll = () => { resetAllInternal(); };
     function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
     window.onload = () => {
       if (isTouchDevice()) { document.getElementById('help-pc').style.display = 'none'; document.getElementById('help-mobile').style.display = 'block'; }
