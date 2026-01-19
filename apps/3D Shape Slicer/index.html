@@ -262,8 +262,9 @@
     }
 
     .cut-tabs {
-      display: flex;
-      gap: 2px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
     }
 
     .cut-tab {
@@ -580,6 +581,7 @@
 
       .cut-tabs {
         display: flex;
+        /* gridを上書きして横並びスクロール */
         width: 100%;
         /* 中身が縮まないように */
         min-width: 300px;
