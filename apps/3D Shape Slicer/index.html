@@ -838,6 +838,8 @@
     let snapGroup = new THREE.Group();
     let openDropdown = null;
     let curDiv = 1;
+    let showWire = true;
+    let showGuide = true;
 
     const CUT_COLORS = [0xff0000, 0x008000, 0x0000ff, 0xff8c00, 0x800080, 0x00ced1, 0xff00ff, 0x133b8b];
 
@@ -1027,7 +1029,6 @@
       capMeshes[currentCutIndex] = null; updateUI();
     };
 
-    let showWire = true;
     window.toggleWireframe = () => {
       showWire = !showWire;
       if (wireMesh) wireMesh.visible = showWire;
@@ -1036,7 +1037,6 @@
       btn.classList.toggle('active', showWire);
     };
 
-    let showGuide = true;
     window.toggleGuide = () => {
       showGuide = !showGuide;
       const guide = document.querySelector('.bg-guide');
@@ -1050,7 +1050,6 @@
     window.resetAll = () => { resetAllInternal(); };
     function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
     window.onload = () => {
-      if (isTouchDevice()) { document.getElementById('help-pc').style.display = 'none'; document.getElementById('help-mobile').style.display = 'block'; }
       init();
     };
     window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
