@@ -262,9 +262,8 @@
     }
 
     .cut-tabs {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      display: flex;
+      gap: 4px;
     }
 
     .cut-tab {
@@ -406,6 +405,34 @@
       white-space: nowrap;
     }
 
+    /* ===== ヘッダー右側 ===== */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-btn {
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .app-version {
+      font-size: 12px;
+      margin-left: 8px;
+      opacity: 0.8;
+      font-weight: normal;
+    }
+
     /* ===== ヘルプパネル ===== */
     .help-btn {
       background: #9575cd;
@@ -424,12 +451,20 @@
       position: relative;
     }
 
+    /* PCではナビゲーションの使い方ボタンを非表示 */
+    @media (min-width: 951px) {
+      .help-btn {
+        display: none;
+      }
+    }
+
     .help-panel {
       display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
+      position: fixed;
+      top: 50px;
+      right: 15px;
       margin-top: 4px;
+      /* 削除予定 */
       background: white;
       border: 1px solid #ddd;
       border-radius: 12px;
@@ -511,6 +546,12 @@
 
 
     @media (max-width: 950px) {
+
+      /* ヘッダーの使い方ボタンはスマホでは非表示 */
+      .header-btn.help-trigger-pc {
+        display: none;
+      }
+
       #top-nav {
         padding: 4px;
         gap: 4px;
@@ -681,8 +722,11 @@
 
   <header id="app-header">
     <div style="width:20px;"></div>
-    <h1>立体図形スライサー</h1>
-    <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
+    <h1>立体図形スライサー <span class="app-version">ver 1.1</span></h1>
+    <div class="header-right">
+      <div class="header-btn help-trigger-pc" onclick="toggleDropdown('panel-help')">📖 使い方</div>
+      <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
+    </div>
   </header>
 
   <nav id="top-nav">
