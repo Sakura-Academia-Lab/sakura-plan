@@ -435,10 +435,58 @@
       padding: 20px;
       min-width: 320px;
       z-index: 200;
+      /* スクロール可能にする */
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .help-panel.open {
       display: block;
+    }
+
+    /* ... omitted parts to match context ... */
+
+    @media (max-width: 950px) {
+      /* ... existing styles ... */
+
+      .cut-section {
+        width: 100%;
+        margin: 0;
+        border-top: 1px solid #eee;
+        padding: 6px 0;
+        order: 3;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      /* スマホ版: 補助線・ガイドボタンを全リセットの下（一番下）に配置 */
+      #btn-toggle-wire,
+      #btn-toggle-guide {
+        order: 10;
+        width: 48%;
+        /* 2つ横並び */
+        margin-top: 5px;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .bg-guide {
+        display: block;
+        bottom: 80px;
+        /* ナビに隠れないようさらに上げる */
+        left: 10px;
+        right: 10px;
+        /* 幅を確保 */
+        width: auto;
+      }
+
+      .bg-guide .guide-pc {
+        display: none;
+      }
+
+      .bg-guide .guide-mobile {
+        display: block;
+      }
     }
 
     .help-title {
@@ -479,69 +527,9 @@
       font-size: 14px;
     }
 
+
+
     @media (max-width: 950px) {
-      #top-nav {
-        padding: 4px;
-        gap: 4px;
-        top: 44px;
-      }
-
-      .nav-tab,
-      .help-btn {
-        padding: 8px 5px;
-        font-size: 11px;
-        flex: 1;
-        justify-content: center;
-      }
-
-      .cut-section {
-        width: 100%;
-        margin: 0;
-        border-top: 1px solid #eee;
-        padding: 6px 0;
-        order: 3;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .cut-tabs-wrapper {
-        max-width: 100%;
-        width: 100%;
-        background: #f0f0f0;
-        border-radius: 8px;
-        padding: 2px;
-      }
-
-      .cut-tabs {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        gap: 1px;
-      }
-
-      .cut-tab {
-        flex: 1;
-        padding: 8px 0;
-        font-size: 9px;
-        border-radius: 4px;
-        text-align: center;
-        min-width: 0;
-      }
-
-      .controls-right {
-        width: 100%;
-        margin: 0;
-        border-top: 1px dashed #eee;
-        padding-top: 4px;
-        justify-content: space-between;
-      }
-
-      .btn-all-reset {
-        flex-grow: 1;
-        margin-left: 10px;
-        text-align: center;
-      }
-
       .dropdown-panel {
         width: 95vw;
         left: 2.5vw;
@@ -549,7 +537,12 @@
 
       .bg-guide {
         display: block;
-        bottom: 60px;
+        bottom: 80px;
+        /* ナビに隠れないようさらに上げる */
+        left: 10px;
+        right: 10px;
+        /* 幅を確保 */
+        width: auto;
       }
 
       .bg-guide .guide-pc {
