@@ -118,9 +118,10 @@
     }
 
     .nav-tab.active {
-      background: #a8d5e2;
-      border-color: #81b3c3;
-      color: #005662;
+      background: #3949ab;
+      border-color: #283593;
+      color: white;
+      box-shadow: 0 0 5px rgba(57, 73, 171, 0.4);
     }
 
     .nav-tab::after {
@@ -668,18 +669,21 @@
       bottom: 10px;
       right: 10px;
       /* 透過背景 */
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.85);
+      /* 視認性向上のため不透明度アップ */
       backdrop-filter: blur(4px);
-      padding: 10px 15px;
+      padding: 12px 16px;
       border-radius: 8px;
       font-size: 11px;
-      color: #444;
+      color: #222;
+      /* 文字色を濃く */
       pointer-events: none;
       /* 3D操作を阻害しない */
       user-select: none;
       z-index: 50;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.2);
       line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .bg-guide strong {
@@ -721,10 +725,7 @@
       </div>
       <div id="box-params" class="param-area">
         <div class="param-row">
-          <div class="toggles-wrapper">
-            <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
-            <button class="nav-tab active" id="btn-toggle-guide" onclick="toggleGuide()">ℹ️ ガイド：ON</button>
-          </div>
+
           <div class="param-item"><span>横</span><input type="number" id="inp-w" value="5" onchange="setShape('box')">
           </div>
           <div class="param-item"><span>高</span><input type="number" id="inp-h" value="8" onchange="setShape('box')">
