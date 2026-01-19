@@ -632,10 +632,16 @@
       }
 
       .dropdown-panel {
-        width: 95vw;
-        left: 2.5vw;
-        top: 40px;
-        /* 位置調整 */
+        position: fixed;
+        /* fix: ナビのoverflowによる切り取られを回避 */
+        top: 15vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90vw;
+        max-height: 70vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid #999;
       }
 
       .bg-guide {
