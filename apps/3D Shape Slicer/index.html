@@ -132,9 +132,10 @@
 
     .dropdown-panel {
       display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
+      position: fixed;
+      /* absoluteから変更 */
+      top: 50px;
+      left: 10px;
       margin-top: 4px;
       background: white;
       border: 1px solid #ddd;
@@ -453,7 +454,9 @@
 
     /* PCではナビゲーションの使い方ボタンを非表示 */
     @media (min-width: 951px) {
-      .help-btn {
+
+      .help-btn,
+      .hide-on-pc {
         display: none;
       }
     }
@@ -547,8 +550,8 @@
 
     @media (max-width: 950px) {
 
-      /* ヘッダーの使い方ボタンはスマホでは非表示 */
-      .header-btn.help-trigger-pc {
+      /* ヘッダーのボタン群はスマホでは非表示 */
+      .header-btn {
         display: none;
       }
 
@@ -724,14 +727,16 @@
     <div style="width:20px;"></div>
     <h1>立体図形スライサー <span class="app-version">ver 1.1</span></h1>
     <div class="header-right">
+      <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
+      <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
       <div class="header-btn help-trigger-pc" onclick="toggleDropdown('panel-help')">📖 使い方</div>
       <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
     </div>
   </header>
 
   <nav id="top-nav">
-    <div class="nav-tab" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
-    <div class="nav-tab" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
+    <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
+    <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
     <div class="help-btn" onclick="toggleDropdown('panel-help')">📖 使い方</div>
 
     <div class="dropdown-panel" id="panel-shape">
