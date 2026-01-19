@@ -530,18 +530,119 @@
 
 
     @media (max-width: 950px) {
+      #top-nav {
+        padding: 4px;
+        gap: 4px;
+        top: 44px;
+        /* 高さが自動調整されるようにmax-heightは一旦解除、または少し余裕を持たせる */
+        max-height: 80vh;
+        overflow-y: auto;
+        justify-content: space-between;
+      }
+
+      /* 1段目: 図形、等分、使い方の3つを横並び */
+      .nav-tab,
+      .help-btn {
+        padding: 6px 2px;
+        font-size: 10px;
+        flex: 0 0 32%;
+        /* 3つでほぼ100% */
+        justify-content: center;
+        margin: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        border-radius: 4px;
+        height: 34px;
+        /* 高さ統一 */
+      }
+
+      .cut-section {
+        width: 100%;
+        margin: 0;
+        border-top: 1px solid #eee;
+        padding: 4px 0;
+        order: 3;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      /* 2段目: 切断タブ */
+      .cut-tabs-wrapper {
+        width: 100%;
+        background: #f0f0f0;
+        border-radius: 6px;
+        padding: 2px;
+        overflow-x: auto;
+        /* 横スクロール許可 */
+        white-space: nowrap;
+      }
+
+      .cut-tabs {
+        display: flex;
+        width: 100%;
+        /* 中身が縮まないように */
+        min-width: 300px;
+        /* 最低幅確保 */
+      }
+
+      .cut-tab {
+        flex: 1;
+        padding: 6px 0;
+        font-size: 10px;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      /* 3段目以降: コントロール + トグル */
+      .controls-right {
+        width: 100%;
+        margin: 0;
+        border-top: 1px dashed #eee;
+        padding-top: 4px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        /* 折り返し許可 */
+        gap: 4px;
+      }
+
+      #status-box {
+        font-size: 11px;
+        min-width: 30px;
+      }
+
+      #btn-flip,
+      .btn-current-reset,
+      .btn-all-reset {
+        padding: 6px 8px;
+        font-size: 10px;
+        flex-grow: 1;
+      }
+
+      .toggles-wrapper {
+        width: 100%;
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
+      }
+
+      .toggles-wrapper button {
+        flex: 1;
+        font-size: 10px;
+        padding: 6px 0;
+      }
+
       .dropdown-panel {
         width: 95vw;
         left: 2.5vw;
+        top: 40px;
+        /* 位置調整 */
       }
 
       .bg-guide {
         display: block;
         bottom: 80px;
-        /* ナビに隠れないようさらに上げる */
         left: 10px;
         right: 10px;
-        /* 幅を確保 */
         width: auto;
       }
 
@@ -595,11 +696,7 @@
   <nav id="top-nav">
     <div class="nav-tab" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
     <div class="nav-tab" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
-    <div class="help-btn" onclick="toggleDropdown('panel-help')">📖 使い方ガイド</div>
-
-    <!-- 直接配置ボタン -->
-    <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
-    <button class="nav-tab active" id="btn-toggle-guide" onclick="toggleGuide()">ℹ️ ガイド：ON</button>
+    <div class="help-btn" onclick="toggleDropdown('panel-help')">📖 使い方</div>
 
     <div class="dropdown-panel" id="panel-shape">
       <div class="section-title">基本図形</div>
@@ -617,6 +714,10 @@
       </div>
       <div id="box-params" class="param-area">
         <div class="param-row">
+          <div class="toggles-wrapper">
+            <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
+            <button class="nav-tab active" id="btn-toggle-guide" onclick="toggleGuide()">ℹ️ ガイド：ON</button>
+          </div>
           <div class="param-item"><span>横</span><input type="number" id="inp-w" value="5" onchange="setShape('box')">
           </div>
           <div class="param-item"><span>高</span><input type="number" id="inp-h" value="8" onchange="setShape('box')">
