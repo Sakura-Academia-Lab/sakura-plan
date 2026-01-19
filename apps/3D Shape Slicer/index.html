@@ -31,126 +31,578 @@
       --primary-navy: #1a2a44;
       --accent-sakura: #ffcae0;
     }
-    * { box-sizing: border-box; }
-    body { margin: 0; overflow: hidden; background-color: #fdfcf5; font-family: "Helvetica Neue", Arial, sans-serif; }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #fdfcf5;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+    }
 
     /* ===== 最上部タイトルバー ===== */
     #app-header {
-      position: fixed; top: 0; left: 0; right: 0; height: 44px;
-      background: var(--primary-navy); color: white;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 15px; z-index: 120; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: var(--primary-navy);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      z-index: 120;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
-    #app-header h1 { font-size: 16px; margin: 0; letter-spacing: 0.05em; font-weight: bold; }
-    .btn-home {
-      color: white; text-decoration: none; font-size: 20px;
-      display: flex; align-items: center; gap: 5px; font-weight: bold;
-    }
-    .btn-home span { font-size: 12px; }
 
-    /* ===== ナビゲーション（一段下げ） ===== */
+    #app-header h1 {
+      font-size: 16px;
+      margin: 0;
+      letter-spacing: 0.05em;
+      font-weight: bold;
+    }
+
+    .btn-home {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+    }
+
+    .btn-home span {
+      font-size: 12px;
+    }
+
+    /* ===== ナビゲーション ===== */
     #top-nav {
-      position: fixed; top: 44px; left: 0; right: 0; z-index: 100;
-      background: rgba(255, 255, 255, 0.98); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      display: flex; align-items: center; padding: 8px 12px; gap: 8px; flex-wrap: wrap;
+      position: fixed;
+      top: 44px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .nav-tab {
-      background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; padding: 8px 14px;
-      font-size: 13px; font-weight: bold; color: #555; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      white-space: nowrap;
     }
-    .nav-tab:hover { background: #e8e8e8; }
-    .nav-tab.active { background: #a8d5e2; border-color: #81b3c3; color: #005662; }
-    .nav-tab::after { content: '▼'; font-size: 10px; opacity: 0.6; }
+
+    .nav-tab:hover {
+      background: #e8e8e8;
+    }
+
+    .nav-tab.active {
+      background: #a8d5e2;
+      border-color: #81b3c3;
+      color: #005662;
+    }
+
+    .nav-tab::after {
+      content: '▼';
+      font-size: 10px;
+      opacity: 0.6;
+    }
 
     .dropdown-panel {
-      display: none; position: absolute; top: 100%; left: 0; margin-top: 4px;
-      background: white; border: 1px solid #ddd; border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); padding: 12px;
-      min-width: 320px; max-height: 75vh; overflow-y: auto; z-index: 200;
-    }
-    .dropdown-panel.open { display: block; }
-
-    .section-title { font-size: 11px; font-weight: bold; color: #888; margin: 10px 0 6px 0; padding-bottom: 4px; border-bottom: 1px dashed #ddd; }
-    .btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .grid-btn { padding: 8px 4px; font-size: 11px; cursor: pointer; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #666; transition: 0.2s; }
-    .grid-btn.active { background: #a8d5e2; color: #005662; border-color: #81b3c3; font-weight: bold; }
-
-    .param-area { display: none; background: #eef7ff; padding: 12px; border-radius: 8px; margin: 8px 0; border: 1px solid #cce4f7; }
-    .param-area.show { display: block; }
-    .param-row { display: flex; gap: 10px; align-items: flex-end; }
-    .param-item { flex: 1; display: flex; flex-direction: column; align-items: center; }
-    .param-item span { font-size: 10px; color: #666; margin-bottom: 4px; }
-    .param-item input { width: 100%; padding: 8px; text-align: center; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; font-weight: bold; }
-    
-    .btn-confirm { background: #4facfe; color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 10px; width: 100%; }
-
-    /* ===== 切断セクション（カラー強化） ===== */
-    .cut-section { display: flex; align-items: center; gap: 12px; margin-left: 10px; flex: 1; }
-    .cut-tabs-wrapper { background: #eee; border-radius: 20px; padding: 3px; overflow-x: auto; max-width: 700px; scrollbar-width: none; }
-    .cut-tabs-wrapper::-webkit-scrollbar { display: none; }
-    .cut-tabs { display: flex; gap: 2px; }
-    
-    .cut-tab { 
-      background: #f9f9f9; border: none; padding: 6px 14px; border-radius: 14px; 
-      font-weight: bold; cursor: pointer; font-size: 11px; white-space: nowrap; flex-shrink: 0;
-      transition: 0.2s; border-bottom: 3px solid transparent;
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 12px;
+      min-width: 320px;
+      max-height: 75vh;
+      overflow-y: auto;
+      z-index: 200;
     }
 
-    .tab-color-0 { color: #ff0000; } .tab-color-0.active { background: rgba(255, 0, 0, 0.1); border-bottom-color: #ff0000; }
-    .tab-color-1 { color: #008000; } .tab-color-1.active { background: rgba(0, 128, 0, 0.1); border-bottom-color: #008000; }
-    .tab-color-2 { color: #0000ff; } .tab-color-2.active { background: rgba(0, 0, 255, 0.1); border-bottom-color: #0000ff; }
-    .tab-color-3 { color: #ff8c00; } .tab-color-3.active { background: rgba(255, 140, 0, 0.1); border-bottom-color: #ff8c00; }
-    .tab-color-4 { color: #800080; } .tab-color-4.active { background: rgba(128, 0, 128, 0.1); border-bottom-color: #800080; }
-    .tab-color-5 { color: #00ced1; } .tab-color-5.active { background: rgba(0, 206, 209, 0.1); border-bottom-color: #00ced1; }
-    .tab-color-6 { color: #ff00ff; } .tab-color-6.active { background: rgba(255, 0, 255, 0.1); border-bottom-color: #ff00ff; }
-    .tab-color-7 { color: #8b4513; } .tab-color-7.active { background: rgba(139, 69, 19, 0.1); border-bottom-color: #133b8b; }
+    .dropdown-panel.open {
+      display: block;
+    }
 
-    .controls-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-    #status-box { font-size: 13px; font-weight: bold; color: #555; min-width: 45px; text-align: center; }
-    
-    #btn-flip { background: #ffb74d; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; font-size: 11px; white-space: nowrap; }
-    .btn-current-reset { background: #90a4ae; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; font-size: 11px; white-space: nowrap; }
-    .btn-all-reset { background: #ef5350; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 11px; white-space: nowrap; }
+    .section-title {
+      font-size: 11px;
+      font-weight: bold;
+      color: #888;
+      margin: 10px 0 6px 0;
+      padding-bottom: 4px;
+      border-bottom: 1px dashed #ddd;
+    }
 
-    /* ===== ヘルプパネル（拡充） ===== */
-    .help-btn { background: #9575cd; border: 1px solid #7e57c2; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; position: relative; }
-    .help-panel { display: none; position: absolute; top: 100%; right: 0; margin-top: 4px; background: white; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); padding: 20px; min-width: 320px; z-index: 200; }
-    .help-panel.open { display: block; }
-    .help-title { font-size: 15px; font-weight: bold; color: #333; margin-bottom: 12px; border-bottom: 2px solid #9575cd; padding-bottom: 5px; }
-    .help-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #eee; }
-    .help-item:last-child { border-bottom: none; }
-    .help-icon { font-size: 22px; min-width: 30px; text-align: center; }
-    .help-text { font-size: 13px; color: #555; line-height: 1.6; }
-    .help-text strong { color: #000; font-size: 14px; }
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .grid-btn {
+      padding: 8px 4px;
+      font-size: 11px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      color: #666;
+      transition: 0.2s;
+    }
+
+    .grid-btn.active {
+      background: #a8d5e2;
+      color: #005662;
+      border-color: #81b3c3;
+      font-weight: bold;
+    }
+
+    .param-area {
+      display: none;
+      background: #eef7ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+      border: 1px solid #cce4f7;
+    }
+
+    .param-area.show {
+      display: block;
+    }
+
+    .param-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .param-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .param-item span {
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .param-item input {
+      width: 100%;
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .btn-confirm {
+      background: #4facfe;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    /* ===== 切断セクション ===== */
+    .cut-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: 10px;
+      flex: 1;
+    }
+
+    .cut-tabs-wrapper {
+      background: #eee;
+      border-radius: 20px;
+      padding: 3px;
+      overflow-x: auto;
+      max-width: 700px;
+      scrollbar-width: none;
+    }
+
+    .cut-tabs-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cut-tabs {
+      display: flex;
+      gap: 2px;
+    }
+
+    .cut-tab {
+      background: #f9f9f9;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 11px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab-color-0 {
+      color: #ff0000;
+    }
+
+    .tab-color-0.active {
+      background: rgba(255, 0, 0, 0.1);
+      border-bottom-color: #ff0000;
+    }
+
+    .tab-color-1 {
+      color: #008000;
+    }
+
+    .tab-color-1.active {
+      background: rgba(0, 128, 0, 0.1);
+      border-bottom-color: #008000;
+    }
+
+    .tab-color-2 {
+      color: #0000ff;
+    }
+
+    .tab-color-2.active {
+      background: rgba(0, 0, 255, 0.1);
+      border-bottom-color: #0000ff;
+    }
+
+    .tab-color-3 {
+      color: #ff8c00;
+    }
+
+    .tab-color-3.active {
+      background: rgba(255, 140, 0, 0.1);
+      border-bottom-color: #ff8c00;
+    }
+
+    .tab-color-4 {
+      color: #800080;
+    }
+
+    .tab-color-4.active {
+      background: rgba(128, 0, 128, 0.1);
+      border-bottom-color: #800080;
+    }
+
+    .tab-color-5 {
+      color: #00ced1;
+    }
+
+    .tab-color-5.active {
+      background: rgba(0, 206, 209, 0.1);
+      border-bottom-color: #00ced1;
+    }
+
+    .tab-color-6 {
+      color: #ff00ff;
+    }
+
+    .tab-color-6.active {
+      background: rgba(255, 0, 255, 0.1);
+      border-bottom-color: #ff00ff;
+    }
+
+    .tab-color-7 {
+      color: #133b8b;
+    }
+
+    .tab-color-7.active {
+      background: rgba(19, 59, 139, 0.1);
+      border-bottom-color: #133b8b;
+    }
+
+    .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    #status-box {
+      font-size: 13px;
+      font-weight: bold;
+      color: #555;
+      min-width: 45px;
+      text-align: center;
+    }
+
+    #btn-flip {
+      background: #ffb74d;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .btn-current-reset {
+      background: #90a4ae;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .btn-all-reset {
+      background: #ef5350;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    /* ===== ヘルプパネル ===== */
+    .help-btn {
+      background: #9575cd;
+      border: 1px solid #7e57c2;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .help-panel {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 20px;
+      min-width: 320px;
+      z-index: 200;
+    }
+
+    .help-panel.open {
+      display: block;
+    }
+
+    .help-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #9575cd;
+      padding-bottom: 5px;
+    }
+
+    .help-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #eee;
+    }
+
+    .help-item:last-child {
+      border-bottom: none;
+    }
+
+    .help-icon {
+      font-size: 22px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .help-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .help-text strong {
+      color: #000;
+      font-size: 14px;
+    }
 
     @media (max-width: 950px) {
-      #top-nav { padding: 4px; gap: 4px; top: 44px; }
-      .nav-tab, .help-btn { padding: 8px 5px; font-size: 11px; flex: 1; justify-content: center; }
-      .cut-section { width: 100%; margin: 0; border-top: 1px solid #eee; padding: 6px 0; order: 3; flex-direction: column; gap: 8px; }
-      .cut-tabs-wrapper { max-width: 100%; width: 100%; background: #f0f0f0; border-radius: 8px; padding: 2px; }
-      .cut-tabs { display: flex; justify-content: space-between; width: 100%; gap: 1px; }
-      .cut-tab { flex: 1; padding: 8px 0; font-size: 9px; border-radius: 4px; text-align: center; min-width: 0; }
-      .controls-right { width: 100%; margin: 0; border-top: 1px dashed #eee; padding-top: 4px; justify-content: space-between; }
-      .btn-all-reset { flex-grow: 1; margin-left: 10px; text-align: center; }
-      .dropdown-panel { width: 95vw; left: 2.5vw; }
+      #top-nav {
+        padding: 4px;
+        gap: 4px;
+        top: 44px;
+      }
+
+      .nav-tab,
+      .help-btn {
+        padding: 8px 5px;
+        font-size: 11px;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .cut-section {
+        width: 100%;
+        margin: 0;
+        border-top: 1px solid #eee;
+        padding: 6px 0;
+        order: 3;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .cut-tabs-wrapper {
+        max-width: 100%;
+        width: 100%;
+        background: #f0f0f0;
+        border-radius: 8px;
+        padding: 2px;
+      }
+
+      .cut-tabs {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 1px;
+      }
+
+      .cut-tab {
+        flex: 1;
+        padding: 8px 0;
+        font-size: 9px;
+        border-radius: 4px;
+        text-align: center;
+        min-width: 0;
+      }
+
+      .controls-right {
+        width: 100%;
+        margin: 0;
+        border-top: 1px dashed #eee;
+        padding-top: 4px;
+        justify-content: space-between;
+      }
+
+      .btn-all-reset {
+        flex-grow: 1;
+        margin-left: 10px;
+        text-align: center;
+      }
+
+      .dropdown-panel {
+        width: 95vw;
+        left: 2.5vw;
+      }
+
+      .bg-guide {
+        display: block;
+        bottom: 60px;
+      }
+
+      .bg-guide .guide-pc {
+        display: none;
+      }
+
+      .bg-guide .guide-mobile {
+        display: block;
+      }
+    }
+
+    /* ===== 背景ガイド表示 ===== */
+    .bg-guide {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      /* 透過背景 */
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #444;
+      pointer-events: none;
+      /* 3D操作を阻害しない */
+      user-select: none;
+      z-index: 50;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      line-height: 1.6;
+    }
+
+    .bg-guide strong {
+      color: #000;
+      font-weight: bold;
+      margin-right: 4px;
     }
   </style>
 </head>
 
 <body>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
 
   <header id="app-header">
     <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
     <h1>立体図形スライサー</h1>
-    <div style="width:50px;"></div> </header>
+    <div style="width:50px;"></div>
+  </header>
 
   <nav id="top-nav">
     <div class="nav-tab" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
     <div class="nav-tab" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
-    <div class="help-btn" onclick="toggleDropdown('panel-help')">❓ 操作ガイド</div>
+    <div class="help-btn" onclick="toggleDropdown('panel-help')">📖 使い方ガイド</div>
 
     <div class="dropdown-panel" id="panel-shape">
       <div class="section-title">基本図形</div>
@@ -160,14 +612,20 @@
         <button class="grid-btn" onclick="setShapeUI('sphere')">球</button>
       </div>
       <div id="cube-params" class="param-area">
-        <div class="param-row"><div class="param-item"><span>一辺の長さ</span><input type="number" id="inp-cube-s" value="7" min="2" max="12" onchange="setShape('cube')"></div></div>
+        <div class="param-row">
+          <div class="param-item"><span>一辺の長さ</span><input type="number" id="inp-cube-s" value="6" min="2" max="12"
+              onchange="setShape('cube')"></div>
+        </div>
         <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
       </div>
       <div id="box-params" class="param-area">
         <div class="param-row">
-          <div class="param-item"><span>横</span><input type="number" id="inp-w" value="5" onchange="setShape('box')"></div>
-          <div class="param-item"><span>高</span><input type="number" id="inp-h" value="8" onchange="setShape('box')"></div>
-          <div class="param-item"><span>奥</span><input type="number" id="inp-d" value="5" onchange="setShape('box')"></div>
+          <div class="param-item"><span>横</span><input type="number" id="inp-w" value="5" onchange="setShape('box')">
+          </div>
+          <div class="param-item"><span>高</span><input type="number" id="inp-h" value="8" onchange="setShape('box')">
+          </div>
+          <div class="param-item"><span>奥</span><input type="number" id="inp-d" value="5" onchange="setShape('box')">
+          </div>
         </div>
         <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
       </div>
@@ -179,6 +637,8 @@
         <button class="grid-btn" onclick="setShapeUI('cylinder')">円柱</button>
         <button class="grid-btn" onclick="setShapeUI('pyramid-3')">三角錐</button>
         <button class="grid-btn" onclick="setShapeUI('pyramid-4')">四角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-5')">五角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-6')">六角錐</button>
         <button class="grid-btn" onclick="setShapeUI('cone')">円錐</button>
         <button class="grid-btn" onclick="setShapeUI('poly-4')">正四面体</button>
         <button class="grid-btn" onclick="setShapeUI('poly-8')">正八面体</button>
@@ -202,23 +662,28 @@
     </div>
 
     <div class="help-panel" id="panel-help">
-      <div id="help-pc">
-        <div class="help-title">PC版 操作ガイド</div>
-        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>左ドラッグ</strong>：立体を自由に回転</div></div>
-        <div class="help-item"><span class="help-icon">🖱️</span><div class="help-text"><strong>右ドラッグ</strong>：立体を上下左右に並行移動</div></div>
-        <div class="help-item"><span class="help-icon">🔘</span><div class="help-text"><strong>マウスホイール</strong>：拡大・縮小</div></div>
-        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>クリック</strong>：3つの点を選ぶと自動で切断</div></div>
-        <div class="help-item"><span class="help-icon">🔁</span><div class="help-text"><strong>逆側</strong>：切断後に残す側を入れ替えます（反対側を見たい時に便利）</div></div>
-        <div class="help-item"><span class="help-icon">🗑️</span><div class="help-text"><strong>消す</strong>：現在選択中のタブの点と断面だけをリセット</div></div>
+      <div class="help-title">使い方ガイド (Step by Step)</div>
+      <div class="help-item">
+        <span class="help-icon">1️⃣</span>
+        <div class="help-text"><strong>図形を選ぶ</strong><br>メニューの「� 図形選択」から好きな立体を選びます。<br>寸法も自由に変更できます。</div>
       </div>
-      <div id="help-mobile" style="display:none;">
-        <div class="help-title">スマホ版 操作ガイド</div>
-        <div class="help-item"><span class="help-icon">☝️</span><div class="help-text"><strong>1本指スワイプ</strong>：立体を自由に回転</div></div>
-        <div class="help-item"><span class="help-icon">✌️</span><div class="help-text"><strong>2本指スワイプ</strong>：立体を上下左右に並行移動</div></div>
-        <div class="help-item"><span class="help-icon">🤏</span><div class="help-text"><strong>ピンチイン・アウト</strong>：拡大・縮小</div></div>
-        <div class="help-item"><span class="help-icon">👆</span><div class="help-text"><strong>タップ</strong>：3つの点を選ぶと自動で切断</div></div>
-        <div class="help-item"><span class="help-icon">🔁</span><div class="help-text"><strong>逆側</strong>：切断後に残す側を入れ替えます</div></div>
-        <div class="help-item"><span class="help-icon">🗑️</span><div class="help-text"><strong>消す</strong>：現在の切断プランだけをリセット</div></div>
+      <div class="help-item">
+        <span class="help-icon">2️⃣</span>
+        <div class="help-text"><strong>等分点を設定</strong><br>「📍 等分点設定」で、辺上の点の数（分割数）を決めます。<br>「頂点のみ」や「3等分」などを選んでみましょう。
+        </div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">3️⃣</span>
+        <div class="help-text"><strong>切断する</strong><br>立体上の点を <strong>3つ</strong> 順番に選ぶと、その3点を通る面で切断されます。<br>失敗したら「🗑️
+          消す」でやり直せます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">4️⃣</span>
+        <div class="help-text"><strong>断面の操作</strong><br>「🔁 逆側」ボタンを押すと、切り取られる側（残る側）を入れ替えられます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">5️⃣</span>
+        <div class="help-text"><strong>複数回切断</strong><br>画面下のタブ（切断①〜⑧）を使って、最大8回まで切断を重ねることができます。</div>
       </div>
     </div>
 
@@ -244,12 +709,27 @@
     </div>
   </nav>
 
+  <div class="bg-guide">
+    <div class="guide-pc">
+      <div>🖱️ <strong>左ドラッグ</strong>：立体を自由に回転</div>
+      <div>🖱️ <strong>右ドラッグ</strong>：立体を上下左右に並行移動</div>
+      <div>🔘 <strong>ホイール</strong>：拡大・縮小</div>
+      <div>👆 <strong>クリック</strong>：3つの点を選ぶと自動で切断</div>
+    </div>
+    <div class="guide-mobile" style="display:none;">
+      <div>☝️ <strong>1本指</strong>：立体を自由に回転</div>
+      <div>✌️ <strong>2本指</strong>：立体を上下左右に並行移動</div>
+      <div>🤏 <strong>ピンチ</strong>：拡大・縮小</div>
+      <div>👆 <strong>タップ</strong>：3つの点を選ぶと自動で切断</div>
+    </div>
+  </div>
+
   <script>
     let scene, camera, renderer, controls;
     let planes = [], cutPoints = [], cutMarkers = [], capMeshes = [], currentCutIndex = 0;
     const MAX_CUTS = 8;
     let currentMesh, wireMesh, currentGeo, currentEdgesGeo;
-    let snapGroup = new THREE.Group(), intersectGroup = new THREE.Group();
+    let snapGroup = new THREE.Group();
     let openDropdown = null;
     let curDiv = 1;
 
@@ -275,10 +755,19 @@
 
     function init() {
       scene = new THREE.Scene(); scene.background = new THREE.Color(0xfdfcf5);
-      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(20, 20, 26);
-      renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.localClippingEnabled = true;
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(20, 20, 26);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.localClippingEnabled = true;
       document.body.appendChild(renderer.domElement);
-      controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      // 表示位置の修正：原点(0,0,0)をターゲットにする
+      controls.target.set(0, 0, 0);
+
       const ambientLight = new THREE.AmbientLight(0x808080); scene.add(ambientLight);
       const dirLight = new THREE.DirectionalLight(0xffffff, 0.8); dirLight.position.set(10, 20, 10); scene.add(dirLight);
 
@@ -286,36 +775,60 @@
         planes.push(new THREE.Plane(new THREE.Vector3(0, -1, 0), 10000));
         cutPoints.push([]); cutMarkers.push([]); capMeshes.push(null);
       }
-      scene.add(snapGroup, intersectGroup);
+      scene.add(snapGroup);
       setShape('cube'); animate();
     }
 
     function setShape(type) {
       resetAllInternal();
-      if (currentMesh) { scene.remove(currentMesh, wireMesh); }
-      let geo;
-      if (type === 'cube') geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-cube-s').value), parseFloat(document.getElementById('inp-cube-s').value), parseFloat(document.getElementById('inp-cube-s').value));
-      else if (type === 'box') geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-w').value), parseFloat(document.getElementById('inp-h').value), parseFloat(document.getElementById('inp-d').value));
-      else if (type === 'sphere') geo = new THREE.SphereGeometry(6, 48, 48);
-      else if (type === 'prism-3') geo = new THREE.CylinderGeometry(5, 5, 9, 3);
-      else if (type === 'prism-5') geo = new THREE.CylinderGeometry(5, 5, 9, 5);
-      else if (type === 'prism-6') geo = new THREE.CylinderGeometry(5, 5, 9, 6);
-      else if (type === 'cylinder') geo = new THREE.CylinderGeometry(4, 4, 9, 32);
-      else if (type === 'pyramid-3') geo = new THREE.ConeGeometry(6, 9, 3);
-      else if (type === 'pyramid-4') geo = new THREE.ConeGeometry(6, 9, 4);
-      else if (type === 'cone') geo = new THREE.ConeGeometry(5, 9, 32);
-      else if (type === 'poly-4') geo = new THREE.TetrahedronGeometry(6);
-      else if (type === 'poly-8') geo = new THREE.OctahedronGeometry(5);
-      else if (type === 'poly-12') geo = new THREE.DodecahedronGeometry(5);
-      else if (type === 'poly-20') geo = new THREE.IcosahedronGeometry(5);
-      else geo = new THREE.BoxGeometry(7, 7, 7);
+      if (currentMesh) scene.remove(currentMesh, wireMesh);
+      let geo, edgeGeo;
+      if (type === 'cube') {
+        const s = parseFloat(document.getElementById('inp-cube-s').value);
+        geo = new THREE.BoxGeometry(s, s, s);
+        edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'box') {
+        geo = new THREE.BoxGeometry(parseFloat(document.getElementById('inp-w').value), parseFloat(document.getElementById('inp-h').value), parseFloat(document.getElementById('inp-d').value));
+        edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'sphere') {
+        geo = new THREE.SphereGeometry(6, 48, 48);
+        edgeGeo = new THREE.EdgesGeometry(new THREE.SphereGeometry(6, 12, 10));
+      } else if (type === 'prism-3') {
+        geo = new THREE.CylinderGeometry(5, 5, 9, 3); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'prism-5') {
+        geo = new THREE.CylinderGeometry(5, 5, 9, 5); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'prism-6') {
+        geo = new THREE.CylinderGeometry(5, 5, 9, 6); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'cylinder') {
+        geo = new THREE.CylinderGeometry(4, 4, 9, 32); edgeGeo = new THREE.EdgesGeometry(new THREE.CylinderGeometry(4, 4, 9, 12));
+      } else if (type === 'pyramid-3') {
+        geo = new THREE.ConeGeometry(6, 9, 3); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'pyramid-4') {
+        geo = new THREE.ConeGeometry(6, 9, 4); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'pyramid-5') {
+        geo = new THREE.ConeGeometry(6, 9, 5); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'pyramid-6') {
+        geo = new THREE.ConeGeometry(6, 9, 6); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'cone') {
+        geo = new THREE.ConeGeometry(6, 9, 32); edgeGeo = new THREE.EdgesGeometry(new THREE.ConeGeometry(6, 9, 12));
+      } else if (type === 'poly-4') {
+        geo = new THREE.TetrahedronGeometry(6); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'poly-8') {
+        geo = new THREE.OctahedronGeometry(6); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'poly-12') {
+        geo = new THREE.DodecahedronGeometry(6); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else if (type === 'poly-20') {
+        geo = new THREE.IcosahedronGeometry(6); edgeGeo = new THREE.EdgesGeometry(geo);
+      } else {
+        geo = new THREE.BoxGeometry(6, 6, 6); edgeGeo = new THREE.EdgesGeometry(geo);
+      }
 
-      geo.translate(3, 0, 0); currentGeo = geo;
-      currentEdgesGeo = new THREE.EdgesGeometry(geo, (type.includes('sphere') || type.includes('cylinder') || type.includes('cone')) ? 10 : 1);
+      // 表示位置の修正：translate(3,0,0)を削除して中央配置
+      currentGeo = geo; currentEdgesGeo = edgeGeo;
       currentMesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0xa8d5e2, side: THREE.DoubleSide, clippingPlanes: planes, clipShadows: true }));
-      wireMesh = new THREE.LineSegments(currentEdgesGeo, new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.3, transparent: true }));
+      wireMesh = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.3, transparent: true }));
       scene.add(currentMesh, wireMesh);
-      setDivision(curDiv); 
+      setDivision(curDiv);
     }
 
     const isTouchDevice = () => ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -324,21 +837,25 @@
       snapGroup.clear();
       const snapSize = isTouchDevice() ? 0.45 : 0.2;
       const dotMat = new THREE.MeshBasicMaterial({ color: 0x555555, opacity: 0.4, transparent: true });
-      const posAttr = currentMesh.geometry.attributes.position;
+      // 修正: スナップ点の生成元をレンダリング用メッシュ(高詳細)からワイヤーフレーム用メッシュ(低詳細)に変更
+      const posAttr = currentEdgesGeo ? currentEdgesGeo.attributes.position : currentMesh.geometry.attributes.position;
       const vertexSet = new Set();
-      
+
       for (let i = 0; i < posAttr.count; i++) {
         const v = new THREE.Vector3().fromBufferAttribute(posAttr, i);
-        // 角柱の中心点(3, y, 0)を排除
-        if (Math.abs(v.x - 3) < 0.01 && Math.abs(v.z - 0) < 0.01) continue; 
-        
-        const key = `${v.x.toFixed(2)},${v.y.toFixed(2)},${v.z.toFixed(2)}`;
+        // 角柱/円柱の中心点を排除（センター化に伴い原点判定に変更）
+        const isPyramidApex = currentGeo.type === "ConeGeometry" && Math.abs(v.y - 4.5) < 0.01 && Math.abs(v.x - 0) < 0.01;
+        const isCenterPoint = !isPyramidApex && Math.abs(v.x - 0) < 0.01 && Math.abs(v.z - 0) < 0.01;
+        if (isCenterPoint) continue;
+
+        const key = `${v.x.toFixed(3)},${v.y.toFixed(3)},${v.z.toFixed(3)}`;
         if (!vertexSet.has(key)) {
           const dot = new THREE.Mesh(new THREE.SphereGeometry(snapSize), dotMat);
           dot.position.copy(v); snapGroup.add(dot); vertexSet.add(key);
         }
       }
-      if (div > 1) {
+
+      if (div > 1 && currentEdgesGeo) {
         const attr = currentEdgesGeo.attributes.position;
         for (let i = 0; i < attr.count; i += 2) {
           const v1 = new THREE.Vector3().fromBufferAttribute(attr, i);
@@ -382,7 +899,7 @@
         const p = hits[0].object.position.clone(); if (cutPoints[currentCutIndex].length >= 3) return;
         cutPoints[currentCutIndex].push(p);
         const markerSize = isTouchDevice() ? 0.5 : 0.35;
-        const m = new THREE.Mesh(new THREE.SphereGeometry(markerSize, 12, 10), new THREE.MeshBasicMaterial({ color: CUT_COLORS[currentCutIndex] })); 
+        const m = new THREE.Mesh(new THREE.SphereGeometry(markerSize, 12, 10), new THREE.MeshBasicMaterial({ color: CUT_COLORS[currentCutIndex] }));
         m.position.copy(p); m.renderOrder = 999; scene.add(m); cutMarkers[currentCutIndex].push(m);
         updateUI(); if (cutPoints[currentCutIndex].length === 3) applyCut();
       }
@@ -395,7 +912,6 @@
       document.getElementById('btn-reset-single').style.display = (len > 0) ? 'block' : 'none';
       for (let i = 0; i < MAX_CUTS; i++) { const t = document.getElementById('tab-' + i); if (t) { t.classList.toggle('active', i === currentCutIndex); t.classList.toggle('has-cut', cutPoints[i].length === 3); } }
     }
-
     window.switchCutTab = (idx) => { currentCutIndex = idx; updateUI(); };
     window.flipCurrentCut = () => { planes[currentCutIndex].normal.negate(); planes[currentCutIndex].constant *= -1; calculateIntersectionPointsAndCreateCap(planes[currentCutIndex], currentCutIndex); };
     window.resetCurrentCut = () => {
