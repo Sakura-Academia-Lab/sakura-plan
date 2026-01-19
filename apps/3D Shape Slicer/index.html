@@ -631,7 +631,8 @@
         padding: 6px 0;
       }
 
-      .dropdown-panel {
+      .dropdown-panel,
+      .help-panel {
         position: fixed;
         /* fix: ナビのoverflowによる切り取られを回避 */
         top: 15vh;
@@ -811,6 +812,10 @@
         <button id="btn-flip" onclick="flipCurrentCut()">🔁 逆側</button>
         <button class="btn-current-reset" id="btn-reset-single" onclick="resetCurrentCut()">🗑️ 消す</button>
         <button class="btn-all-reset" onclick="resetAll()">🗑️ 全リセット</button>
+        <div class="toggles-wrapper">
+          <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
+          <button class="nav-tab active" id="btn-toggle-guide" onclick="toggleGuide()">ℹ️ ガイド：ON</button>
+        </div>
       </div>
     </div>
   </nav>
