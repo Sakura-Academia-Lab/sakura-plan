@@ -461,33 +461,12 @@
         gap: 8px;
       }
 
-      /* スマホ版: 補助線・ガイドボタンを全リセットの下（一番下）に配置 */
-      #btn-toggle-wire,
-      #btn-toggle-guide {
-        order: 10;
-        width: 48%;
-        /* 2つ横並び */
-        margin-top: 5px;
-        text-align: center;
-        justify-content: center;
+      .guide-pc {
+        display: none !important;
       }
 
-      .bg-guide {
-        display: block;
-        bottom: 80px;
-        /* ナビに隠れないようさらに上げる */
-        left: 10px;
-        right: 10px;
-        /* 幅を確保 */
-        width: auto;
-      }
-
-      .bg-guide .guide-pc {
-        display: none;
-      }
-
-      .bg-guide .guide-mobile {
-        display: block;
+      .guide-mobile {
+        display: block !important;
       }
     }
 
@@ -701,9 +680,9 @@
       style="display:none;visibility:hidden"></iframe></noscript>
 
   <header id="app-header">
-    <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
+    <div style="width:20px;"></div>
     <h1>立体図形スライサー</h1>
-    <div style="width:50px;"></div>
+    <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
   </header>
 
   <nav id="top-nav">
@@ -772,7 +751,23 @@
     </div>
 
     <div class="help-panel" id="panel-help">
-      <div class="help-title">使い方ガイド (Step by Step)</div>
+      <div class="help-title">操作方法</div>
+      <div class="help-item">
+        <div class="help-text guide-pc">
+          <div>🖱️ <strong>左ドラッグ</strong>：回転</div>
+          <div>🖱️ <strong>右ドラッグ</strong>：移動</div>
+          <div>🔘 <strong>ホイール</strong>：拡縮</div>
+          <div>👆 <strong>クリック</strong>：点の選択</div>
+        </div>
+        <div class="help-text guide-mobile" style="display:none;">
+          <div>☝️ <strong>1本指</strong>：回転</div>
+          <div>✌️ <strong>2本指</strong>：移動</div>
+          <div>🤏 <strong>ピンチ</strong>：拡縮</div>
+          <div>👆 <strong>タップ</strong>：点の選択</div>
+        </div>
+      </div>
+
+      <div class="help-title">使い方ステップ</div>
       <div class="help-item">
         <span class="help-icon">1️⃣</span>
         <div class="help-text"><strong>図形を選ぶ</strong><br>メニューの「� 図形選択」から好きな立体を選びます。<br>寸法も自由に変更できます。</div>
@@ -817,26 +812,12 @@
         <button class="btn-all-reset" onclick="resetAll()">🗑️ 全リセット</button>
         <div class="toggles-wrapper">
           <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
-          <button class="nav-tab active" id="btn-toggle-guide" onclick="toggleGuide()">ℹ️ ガイド：ON</button>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="bg-guide">
-    <div class="guide-pc">
-      <div>🖱️ <strong>左ドラッグ</strong>：立体を自由に回転</div>
-      <div>🖱️ <strong>右ドラッグ</strong>：立体を上下左右に並行移動</div>
-      <div>🔘 <strong>ホイール</strong>：拡大・縮小</div>
-      <div>👆 <strong>クリック</strong>：3つの点を選ぶと自動で切断</div>
-    </div>
-    <div class="guide-mobile" style="display:none;">
-      <div>☝️ <strong>1本指</strong>：立体を自由に回転</div>
-      <div>✌️ <strong>2本指</strong>：立体を上下左右に並行移動</div>
-      <div>🤏 <strong>ピンチ</strong>：拡大・縮小</div>
-      <div>👆 <strong>タップ</strong>：3つの点を選ぶと自動で切断</div>
-    </div>
-  </div>
+
 
   <script>
     let scene, camera, renderer, controls;
@@ -847,7 +828,6 @@
     let openDropdown = null;
     let curDiv = 1;
     let showWire = true;
-    let showGuide = true;
 
     const CUT_COLORS = [0xff0000, 0x008000, 0x0000ff, 0xff8c00, 0x800080, 0x00ced1, 0xff00ff, 0x133b8b];
 
@@ -1045,14 +1025,7 @@
       btn.classList.toggle('active', showWire);
     };
 
-    window.toggleGuide = () => {
-      showGuide = !showGuide;
-      const guide = document.querySelector('.bg-guide');
-      if (guide) guide.style.display = showGuide ? '' : 'none'; // '' に戻すことでCSSのmedia queryを有効にする
-      const btn = document.getElementById('btn-toggle-guide');
-      btn.innerText = showGuide ? "ℹ️ ガイド：ON" : "ℹ️ ガイド：OFF";
-      btn.classList.toggle('active', showGuide);
-    };
+
 
     function resetAllInternal() { cutPoints.forEach((_, i) => { currentCutIndex = i; resetCurrentCut(); }); currentCutIndex = 0; updateUI(); }
     window.resetAll = () => { resetAllInternal(); };
