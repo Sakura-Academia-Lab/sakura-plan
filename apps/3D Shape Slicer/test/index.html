@@ -148,6 +148,38 @@
       z-index: 200;
     }
 
+    /* モバイル用ステッパー */
+    .stepper-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .stepper-btn {
+      background: #ddd;
+      border: 1px solid #ccc;
+      color: #333;
+      font-weight: bold;
+      border-radius: 4px;
+      width: 30px;
+      height: 36px;
+      display: none;
+      /* デフォルト非表示 */
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .mobile-snap-note {
+      display: none;
+      font-size: 10px;
+      color: #e53935;
+      margin-top: 8px;
+      font-weight: bold;
+    }
+
     .dropdown-panel.open {
       display: block;
     }
@@ -686,6 +718,20 @@
       .bg-guide .guide-mobile {
         display: block;
       }
+
+      /* モバイルでステッパー表示 */
+      .stepper-btn {
+        display: flex;
+      }
+
+      /* 6等分以上を非表示 */
+      .snap-high-res {
+        display: none !important;
+      }
+
+      .mobile-snap-note {
+        display: block;
+      }
     }
 
     /* ===== 背景ガイド表示 ===== */
@@ -748,19 +794,39 @@
       </div>
       <div id="cube-params" class="param-area">
         <div class="param-row">
-          <div class="param-item"><span>一辺の長さ</span><input type="number" id="inp-cube-s" value="6" min="2" max="12"
-              onchange="setShape('cube')"></div>
+          <div class="param-item"><span>一辺の長さ</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-cube-s', -1, 'cube')">－</button>
+              <input type="number" id="inp-cube-s" value="6" min="2" max="12" onchange="setShape('cube')">
+              <button class="stepper-btn" onclick="stepParam('inp-cube-s', 1, 'cube')">＋</button>
+            </div>
+          </div>
         </div>
         <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
       </div>
       <div id="box-params" class="param-area">
         <div class="param-row">
 
-          <div class="param-item"><span>横</span><input type="number" id="inp-w" value="5" onchange="setShape('box')">
+          <div class="param-item"><span>横</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-w', -1, 'box')">－</button>
+              <input type="number" id="inp-w" value="5" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-w', 1, 'box')">＋</button>
+            </div>
           </div>
-          <div class="param-item"><span>高</span><input type="number" id="inp-h" value="8" onchange="setShape('box')">
+          <div class="param-item"><span>高</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-h', -1, 'box')">－</button>
+              <input type="number" id="inp-h" value="8" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-h', 1, 'box')">＋</button>
+            </div>
           </div>
-          <div class="param-item"><span>奥</span><input type="number" id="inp-d" value="5" onchange="setShape('box')">
+          <div class="param-item"><span>奥</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-d', -1, 'box')">－</button>
+              <input type="number" id="inp-d" value="5" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-d', 1, 'box')">＋</button>
+            </div>
           </div>
         </div>
         <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
@@ -793,10 +859,11 @@
         <button class="grid-btn snap-ui" onclick="setDivisionUI(3)">3等分</button>
         <button class="grid-btn snap-ui" onclick="setDivisionUI(4)">4等分</button>
         <button class="grid-btn snap-ui" onclick="setDivisionUI(5)">5等分</button>
-        <button class="grid-btn snap-ui" onclick="setDivisionUI(6)">6等分</button>
-        <button class="grid-btn snap-ui" onclick="setDivisionUI(8)">8等分</button>
-        <button class="grid-btn snap-ui" onclick="setDivisionUI(10)">10等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(6)">6等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(8)">8等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(10)">10等分</button>
       </div>
+      <div class="mobile-snap-note">※スマホ版は5等分までです。6等分以上はPC版をご利用ください。</div>
     </div>
 
     <div class="help-panel" id="panel-help">
@@ -861,6 +928,7 @@
         <button class="btn-all-reset" onclick="resetAll()">🗑️ 全リセット</button>
         <div class="toggles-wrapper">
           <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
+          <button class="nav-tab active" id="btn-toggle-snap" onclick="toggleSnapPoints()">⚫ 点：ON</button>
         </div>
       </div>
     </div>
@@ -877,6 +945,7 @@
     let openDropdown = null;
     let curDiv = 1;
     let showWire = true;
+    let showSnap = true;
 
     const CUT_COLORS = [0xff0000, 0x008000, 0x0000ff, 0xff8c00, 0x800080, 0x00ced1, 0xff00ff, 0x133b8b];
 
@@ -897,6 +966,18 @@
     }
 
     function setDivisionUI(div) { curDiv = div; setDivision(div); closeAll(); }
+
+    function stepParam(id, delta, type) {
+      const el = document.getElementById(id);
+      let val = parseFloat(el.value) + delta;
+      if (val < 1) val = 1;
+      if (id === 'inp-cube-s') {
+        if (val < 2) val = 2;
+        if (val > 12) val = 12;
+      }
+      el.value = val;
+      setShape(type);
+    }
 
     function init() {
       scene = new THREE.Scene(); scene.background = new THREE.Color(0xfdfcf5);
@@ -1035,7 +1116,7 @@
     }
 
     const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
-    if (isTouchDevice()) { raycaster.params.Points.threshold = 0.8; }
+    if (isTouchDevice()) { raycaster.params.Points.threshold = 1.5; }
 
     window.addEventListener('pointerdown', (e) => {
       if (e.target.closest('#top-nav') || e.target.closest('#app-header')) return;
@@ -1072,6 +1153,14 @@
       const btn = document.getElementById('btn-toggle-wire');
       btn.innerText = showWire ? "🕸️ 補助線：ON" : "🕸️ 補助線：OFF";
       btn.classList.toggle('active', showWire);
+    };
+
+    window.toggleSnapPoints = () => {
+      showSnap = !showSnap;
+      snapGroup.visible = showSnap;
+      const btn = document.getElementById('btn-toggle-snap');
+      btn.innerText = showSnap ? "⚫ 点：ON" : "⚫ 点：OFF";
+      btn.classList.toggle('active', showSnap);
     };
 
 
