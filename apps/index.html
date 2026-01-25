@@ -2,596 +2,959 @@
 <html lang="ja">
 
 <head>
-    <meta charset="UTF-8">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-YV5WWWG39Z');
-    </script>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-YV5WWWG39Z');
+  </script>
 
-    <script>(function (w, d, s, l, i) {
-            w[l] = w[l] || []; w[l].push({
-                'gtm.start':
-                    new Date().getTime(), event: 'gtm.js'
-            }); var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apps | 桜アカデミア</title>
-    <style>
-        /* --- 共通設定 --- */
-        :root {
-            --primary-navy: #1a2a44;
-            --accent-sakura: #ffcae0;
-            --text-gray: #555555;
-            --bg-light: #fdfdfd;
-        }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>立体図形スライサー | 桜アカデミア</title>
 
-        body {
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: var(--text-gray);
-            background-color: var(--bg-light);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-        /* --- ヘッダーエリア --- */
-        header {
-            background: #fff;
-            padding: 20px 5%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        }
+  <style>
+    :root {
+      --primary-navy: #1a2a44;
+      --accent-sakura: #ffcae0;
+    }
 
-        .header-top {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            max-width: 1000px;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        .header-logo-icon {
-            width: 60px;
-            height: 60px;
-        }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #fdfcf5;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+    }
 
-        .header-logo-icon svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
+    /* ===== 最上部タイトルバー ===== */
+    #app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: var(--primary-navy);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      z-index: 120;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
 
-        .header-text h1 {
-            color: var(--primary-navy);
-            margin: 0;
-            font-size: 1.5rem;
-            line-height: 1.2;
-        }
+    #app-header h1 {
+      font-size: 16px;
+      margin: 0;
+      letter-spacing: 0.05em;
+      font-weight: bold;
+    }
 
-        .header-text p {
-            margin: 0;
-            font-size: 0.8rem;
-            color: #888;
-        }
+    .btn-home {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+    }
 
-        .back-link {
-            position: absolute;
-            top: 20px;
-            right: 5%;
-            text-decoration: none;
-            color: #888;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
+    .btn-home span {
+      font-size: 12px;
+    }
 
-        .back-link:hover {
-            color: var(--primary-navy);
-        }
+    /* ===== ナビゲーション ===== */
+    #top-nav {
+      position: fixed;
+      top: 44px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-        .x-btn {
-            background-color: #000;
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
+    .nav-tab {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
 
-        .x-btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.8;
-        }
+    .nav-tab:hover {
+      background: #e8e8e8;
+    }
 
-        /* --- メインコンテンツ --- */
-        main {
-            flex: 1;
-            padding: 40px 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .nav-tab.active {
+      background: #3949ab;
+      border-color: #283593;
+      color: white;
+      box-shadow: 0 0 5px rgba(57, 73, 171, 0.4);
+    }
 
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-            justify-content: center;
-            margin-bottom: 60px;
-        }
+    .nav-tab::after {
+      content: '▼';
+      font-size: 10px;
+      opacity: 0.6;
+    }
 
-        /* --- カードデザイン --- */
-        .app-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: 0.3s;
-            border: 2px solid transparent;
-            position: relative;
-        }
+    .dropdown-panel {
+      display: none;
+      position: fixed;
+      /* absoluteから変更 */
+      top: 50px;
+      left: 10px;
+      margin-top: 4px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 12px;
+      min-width: 320px;
+      max-height: 75vh;
+      overflow-y: auto;
+      z-index: 200;
+    }
 
-        .app-icon-area {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 15px;
-        }
+    .toggles-wrapper {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
 
-        .app-icon-area svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
+    /* モバイル用ステッパー */
+    .stepper-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+    }
 
-        .app-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--primary-navy);
-            margin: 5px 0;
-        }
+    .stepper-btn {
+      background: #ddd;
+      border: 1px solid #ccc;
+      color: #333;
+      font-weight: bold;
+      border-radius: 4px;
+      width: 30px;
+      height: 36px;
+      display: none;
+      /* デフォルト非表示 */
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
 
-        .app-title small {
-            font-size: 0.8em;
-            color: #888;
-            font-weight: normal;
-        }
+    .mobile-snap-note {
+      display: none;
+      font-size: 10px;
+      color: #e53935;
+      margin-top: 8px;
+      font-weight: bold;
+    }
 
-        .app-desc {
-            font-size: 0.9rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
+    .dropdown-panel.open {
+      display: block;
+    }
 
-        .free-use-badge {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            font-size: 0.75rem;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #c8e6c9;
-        }
+    .section-title {
+      font-size: 11px;
+      font-weight: bold;
+      color: #888;
+      margin: 10px 0 6px 0;
+      padding-bottom: 4px;
+      border-bottom: 1px dashed #ddd;
+    }
 
-        .note-text {
-            display: block;
-            font-size: 0.75rem;
-            color: #999;
-            margin-top: 10px;
-            border-top: 1px solid #eee;
-            padding-top: 8px;
-        }
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
 
-        .btn-group {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .grid-btn {
+      padding: 8px 4px;
+      font-size: 11px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      color: #666;
+      transition: 0.2s;
+    }
 
-        .main-btn {
-            background-color: var(--primary-navy);
-            color: #fff;
-            padding: 12px;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: 0.3s;
-            display: block;
-        }
+    .grid-btn.active {
+      background: #a8d5e2;
+      color: #005662;
+      border-color: #81b3c3;
+      font-weight: bold;
+    }
 
-        .main-btn:hover {
-            background-color: var(--accent-sakura);
-            color: var(--primary-navy);
-            transform: translateY(-2px);
-        }
+    .param-area {
+      display: none;
+      background: #eef7ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+      border: 1px solid #cce4f7;
+    }
 
-        .sub-btn {
-            background-color: #f0f2f5;
-            color: #555;
-            padding: 10px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            text-decoration: none;
-            transition: 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-        }
+    .param-area.show {
+      display: block;
+    }
 
-        .sub-btn:hover {
-            background-color: #e0e0e0;
-        }
+    .param-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
 
-        .dl-note {
-            font-size: 0.7rem;
-            color: #999;
-            margin-top: 5px;
-            line-height: 1.4;
-            display: block;
-            text-align: left;
-            padding: 0 10px;
-        }
+    .param-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        /* --- 状態別スタイル --- */
-        .app-card.active {
-            border-top: 5px solid var(--primary-navy);
-        }
+    .param-item span {
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 4px;
+    }
 
-        .app-card.disabled {
-            background-color: #f9f9f9;
-            border: 2px dashed #ddd;
-            opacity: 0.8;
-        }
+    .param-item input {
+      width: 100%;
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+    }
 
-        .app-card.disabled .main-btn {
-            background-color: #ccc;
-            pointer-events: none;
-        }
+    .btn-confirm {
+      background: #4facfe;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 10px;
+      width: 100%;
+    }
 
-        /* バッジ */
-        .status-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
+    /* ===== 切断セクション ===== */
+    .cut-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: 10px;
+      flex: 1;
+    }
 
-        .status-badge.ver {
-            background: #e3f2fd;
-            color: #1976d2;
-            border: 1px solid #bbdefb;
-        }
+    .cut-tabs-wrapper {
+      background: #eee;
+      border-radius: 20px;
+      padding: 3px;
+      overflow-x: auto;
+      max-width: 700px;
+      scrollbar-width: none;
+    }
 
-        .status-badge.soon {
-            background: #eee;
-            color: #777;
-        }
+    .cut-tabs-wrapper::-webkit-scrollbar {
+      display: none;
+    }
 
-        /* --- 更新履歴エリア --- */
-        .update-history {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px 30px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    .cut-tabs {
+      display: flex;
+      gap: 4px;
+    }
 
-        .update-history h3 {
-            font-size: 1.1rem;
-            color: var(--primary-navy);
-            margin: 0 0 15px 0;
-            border-bottom: 2px solid #f0f2f5;
-            padding-bottom: 8px;
-        }
+    .cut-tab {
+      background: #f9f9f9;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 11px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: 0.2s;
+      border-bottom: 3px solid transparent;
+    }
 
-        .history-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+    .tab-color-0 {
+      color: #ff0000;
+    }
 
-        .history-item {
-            display: flex;
-            gap: 15px;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            border-bottom: 1px dashed #eee;
-            padding-bottom: 8px;
-        }
+    .tab-color-0.active {
+      background: rgba(255, 0, 0, 0.1);
+      border-bottom-color: #ff0000;
+    }
 
-        .history-item:last-child {
-            border-bottom: none;
-        }
+    .tab-color-1 {
+      color: #008000;
+    }
 
-        .history-date {
-            color: #888;
-            font-weight: bold;
-            min-width: 90px;
-        }
+    .tab-color-1.active {
+      background: rgba(0, 128, 0, 0.1);
+      border-bottom-color: #008000;
+    }
 
-        .history-content {
-            color: #555;
-        }
+    .tab-color-2 {
+      color: #0000ff;
+    }
 
-        .history-tag {
-            font-size: 0.7rem;
-            background: #eee;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 5px;
-            color: #666;
-        }
+    .tab-color-2.active {
+      background: rgba(0, 0, 255, 0.1);
+      border-bottom-color: #0000ff;
+    }
 
-        /* SVGカラー定義 */
-        .body-color {
-            fill: #aebbc9;
-        }
+    .tab-color-3 {
+      color: #ff8c00;
+    }
 
-        .head-color {
-            fill: #1a2a44;
-        }
+    .tab-color-3.active {
+      background: rgba(255, 140, 0, 0.1);
+      border-bottom-color: #ff8c00;
+    }
 
-        .cheek-color {
-            fill: #fff;
-        }
+    .tab-color-4 {
+      color: #800080;
+    }
 
-        .beak-color {
-            fill: #e05a5a;
-        }
+    .tab-color-4.active {
+      background: rgba(128, 0, 128, 0.1);
+      border-bottom-color: #800080;
+    }
 
-        .sakura-color {
-            fill: #ffcae0;
-        }
+    .tab-color-5 {
+      color: #00ced1;
+    }
 
-        .pc-color {
-            fill: #1a2a44;
-        }
+    .tab-color-5.active {
+      background: rgba(0, 206, 209, 0.1);
+      border-bottom-color: #00ced1;
+    }
 
-        .screen-color {
-            fill: #4facfe;
-        }
+    .tab-color-6 {
+      color: #ff00ff;
+    }
 
-        .data-bar {
-            fill: #fff;
-            opacity: 0.9;
-        }
+    .tab-color-6.active {
+      background: rgba(255, 0, 255, 0.1);
+      border-bottom-color: #ff00ff;
+    }
 
-        .data-line {
-            stroke: #feca57;
-            stroke-width: 2;
-            fill: none;
-        }
+    .tab-color-7 {
+      color: #133b8b;
+    }
 
-        .data-text {
-            fill: #fff;
-            opacity: 0.5;
-        }
+    .tab-color-7.active {
+      background: rgba(19, 59, 139, 0.1);
+      border-bottom-color: #133b8b;
+    }
 
-        .sim-bg {
-            fill: #eef2f5;
-        }
+    .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
 
-        .cube-face {
-            fill: #aebbc9;
-            stroke: #fff;
-            stroke-width: 2;
-        }
+    #status-box {
+      font-size: 13px;
+      font-weight: bold;
+      color: #555;
+      min-width: 45px;
+      text-align: center;
+    }
 
-        .cube-cut {
-            stroke: #ff6b6b;
-            stroke-width: 3;
-            stroke-dasharray: 5, 5;
-        }
+    #btn-flip {
+      background: #ffb74d;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      font-size: 11px;
+      white-space: nowrap;
+    }
 
-        footer {
-            text-align: center;
-            padding: 30px;
-            font-size: 0.8rem;
-            color: #aaa;
-        }
+    .btn-current-reset {
+      background: #90a4ae;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      font-size: 11px;
+      white-space: nowrap;
+    }
 
-        @media (max-width: 600px) {
-            .header-top {
-                flex-direction: column;
-                text-align: center;
-            }
+    .btn-all-reset {
+      background: #ef5350;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 11px;
+      white-space: nowrap;
+    }
 
-            .back-link {
-                position: static;
-                margin-bottom: 10px;
-            }
+    /* ===== ヘッダー右側 ===== */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
 
-            .history-item {
-                flex-direction: column;
-                gap: 5px;
-            }
-        }
-    </style>
+    .header-btn {
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.2s;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .app-version {
+      font-size: 12px;
+      margin-left: 8px;
+      opacity: 0.8;
+      font-weight: normal;
+    }
+
+    /* ===== ヘルプパネル ===== */
+    .help-btn {
+      background: #9575cd;
+      border: 1px solid #7e57c2;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    /* PCではナビゲーションの使い方ボタンを非表示 */
+    @media (min-width: 951px) {
+
+      .help-btn,
+      .hide-on-pc {
+        display: none;
+      }
+    }
+
+    .help-panel {
+      display: none;
+      position: fixed;
+      top: 50px;
+      right: 15px;
+      margin-top: 4px;
+      /* 削除予定 */
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 20px;
+      min-width: 320px;
+      z-index: 200;
+      /* スクロール可能にする */
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .help-panel.open {
+      display: block;
+    }
+
+    /* ... omitted parts to match context ... */
+
+    @media (max-width: 950px) {
+      /* ... existing styles ... */
+
+      .cut-section {
+        width: 100%;
+        margin: 0;
+        border-top: 1px solid #eee;
+        padding: 6px 0;
+        order: 3;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .guide-pc {
+        display: none !important;
+      }
+
+      .guide-mobile {
+        display: block !important;
+      }
+    }
+
+    .help-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #9575cd;
+      padding-bottom: 5px;
+    }
+
+    .help-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #eee;
+    }
+
+    .help-item:last-child {
+      border-bottom: none;
+    }
+
+    .help-icon {
+      font-size: 22px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .help-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .help-text strong {
+      color: #000;
+      font-size: 14px;
+    }
+
+
+
+    @media (max-width: 950px) {
+
+      /* ヘッダーのボタン群はスマホでは非表示 */
+      .header-btn {
+        display: none;
+      }
+
+      #top-nav {
+        padding: 4px;
+        gap: 4px;
+        top: 44px;
+        /* 高さが自動調整されるようにmax-heightは一旦解除、または少し余裕を持たせる */
+        max-height: 80vh;
+        overflow-y: auto;
+        justify-content: space-between;
+      }
+
+      /* 1段目: 図形、等分、使い方の3つを横並び */
+      .nav-tab,
+      .help-btn {
+        padding: 6px 2px;
+        font-size: 10px;
+        flex: 0 0 32%;
+        /* 3つでほぼ100% */
+        justify-content: center;
+        margin: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        border-radius: 4px;
+        height: 34px;
+        /* 高さ統一 */
+      }
+
+      .cut-section {
+        width: 100%;
+        margin: 0;
+        border-top: 1px solid #eee;
+        padding: 4px 0;
+        order: 3;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      /* 2段目: 切断タブ */
+      .cut-tabs-wrapper {
+        width: 100%;
+        background: #f0f0f0;
+        border-radius: 6px;
+        padding: 2px;
+        overflow-x: auto;
+        /* 横スクロール許可 */
+        white-space: nowrap;
+      }
+
+      .cut-tabs {
+        display: flex;
+        /* gridを上書きして横並びスクロール */
+        width: 100%;
+        /* 中身が縮まないように */
+        min-width: 300px;
+        /* 最低幅確保 */
+      }
+
+      .cut-tab {
+        flex: 1;
+        padding: 6px 0;
+        font-size: 10px;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      /* 3段目以降: コントロール + トグル */
+      .controls-right {
+        width: 100%;
+        margin: 0;
+        border-top: 1px dashed #eee;
+        padding-top: 4px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        /* 折り返し許可 */
+        gap: 4px;
+      }
+
+      #status-box {
+        font-size: 11px;
+        min-width: 30px;
+      }
+
+      #btn-flip,
+      .btn-current-reset,
+      .btn-all-reset {
+        padding: 6px 8px;
+        font-size: 10px;
+        flex-grow: 1;
+      }
+
+      .toggles-wrapper {
+        width: 100%;
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
+      }
+
+      .toggles-wrapper button {
+        flex: 1;
+        font-size: 10px;
+        padding: 6px 0;
+      }
+
+      .dropdown-panel,
+      .help-panel {
+        position: fixed;
+        /* fix: ナビのoverflowによる切り取られを回避 */
+        top: 15vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90vw;
+        max-height: 70vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid #999;
+      }
+
+      .bg-guide {
+        display: block;
+        bottom: 80px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+      }
+
+      .bg-guide .guide-pc {
+        display: none;
+      }
+
+      .bg-guide .guide-mobile {
+        display: block;
+      }
+
+      /* モバイルでステッパー表示 */
+      .stepper-btn {
+        display: flex;
+      }
+
+      /* 6等分以上を非表示 */
+      .snap-high-res {
+        display: none !important;
+      }
+
+      .mobile-snap-note {
+        display: block;
+      }
+
+      /* パラメータ入力エリアのスマホ対応 */
+      .param-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+
+      .param-item {
+        width: 100%;
+      }
+    }
+
+    /* ===== 背景ガイド表示 ===== */
+    .bg-guide {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      /* 透過背景 */
+      background: rgba(255, 255, 255, 0.85);
+      /* 視認性向上のため不透明度アップ */
+      backdrop-filter: blur(4px);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #222;
+      /* 文字色を濃く */
+      pointer-events: none;
+      /* 3D操作を阻害しない */
+      user-select: none;
+      z-index: 50;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .bg-guide strong {
+      color: #000;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+  </style>
 </head>
 
 <body>
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
 
-    <header>
-        <a href="../index.html" class="back-link">◀ ホームに戻る</a>
+  <header id="app-header">
+    <div style="width:20px;"></div>
+    <h1>立体図形スライサー <span class="app-version">ver 1.3</span></h1>
+    <div class="header-right">
+      <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
+      <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
+      <div class="header-btn help-trigger-pc" onclick="toggleDropdown('panel-help')">📖 使い方</div>
+      <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
+    </div>
+  </header>
 
-        <div class="header-top">
-            <div class="header-logo-icon">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="桜アカデミアロゴ">
-                    <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color" />
-                    <path d="M 10 20 L 90 20 L 90 70 L 10 70 Z" class="pc-color" />
-                    <rect x="15" y="25" width="70" height="40" class="screen-color" />
-                    <g transform="translate(20, 30)">
-                        <rect x="0" y="0" width="30" height="2" class="data-text" />
-                        <rect x="0" y="5" width="20" height="2" class="data-text" />
-                        <rect x="40" y="10" width="5" height="20" class="data-bar" />
-                        <rect x="48" y="5" width="5" height="25" class="data-bar" />
-                        <path d="M 38 25 L 45 20 L 53 10 L 63 15" class="data-line" />
-                    </g>
-                    <g transform="translate(55, 45) scale(0.6)">
-                        <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z"
-                            class="body-color" />
-                        <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color" />
-                        <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color" />
-                        <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color" />
-                        <path d="M 40 55 Q 30 65 10 60" class="body-color" stroke="#1a2a44" stroke-width="3" />
-                        <g transform="translate(35, 10) rotate(-10)">
-                            <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
-                            <rect x="15" y="18" width="20" height="8" class="head-color" />
-                            <circle cx="35" cy="30" r="3" class="sakura-color" />
-                        </g>
-                    </g>
-                </svg>
+  <nav id="top-nav">
+    <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
+    <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
+    <div class="help-btn" onclick="toggleDropdown('panel-help')">📖 使い方</div>
+
+    <div class="dropdown-panel" id="panel-shape">
+      <div class="section-title">基本図形</div>
+      <div class="btn-grid">
+        <button class="grid-btn active" onclick="setShapeUI('cube')">立方体</button>
+        <button class="grid-btn" onclick="setShapeUI('box')">直方体</button>
+        <button class="grid-btn" onclick="setShapeUI('sphere')">球</button>
+      </div>
+      <div id="cube-params" class="param-area">
+        <div class="param-row">
+          <div class="param-item"><span>一辺の長さ</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-cube-s', -1, 'cube')">－</button>
+              <input type="number" id="inp-cube-s" value="6" min="2" max="12" onchange="setShape('cube')">
+              <button class="stepper-btn" onclick="stepParam('inp-cube-s', 1, 'cube')">＋</button>
             </div>
-            <div class="header-text">
-                <h1>Applications</h1>
-                <p>中学受験をサポートするツールコレクション</p>
-            </div>
+          </div>
         </div>
+        <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
+      </div>
+      <div id="box-params" class="param-area">
+        <div class="param-row">
 
-        <a href="https://x.com/Sakura_Academia" target="_blank" class="x-btn">
-            <span>𝕏</span> 感想・機能追加のご要望はこちら
-        </a>
-    </header>
-
-    <main>
-        <div class="app-grid">
-
-            <div class="app-card active">
-                <span class="status-badge ver">Ver 2.0</span>
-                <div class="app-icon-area">
-                    <svg viewBox="0 0 100 100" role="img" aria-label="入試シミュレーターアイコン">
-                        <rect x="15" y="15" width="70" height="70" rx="10" class="sim-bg" />
-                        <rect x="25" y="25" width="30" height="4" fill="#ccc" />
-                        <rect x="25" y="35" width="40" height="4" fill="#ccc" />
-                        <path d="M 60 70 L 60 40 L 70 30 L 80 50 L 85 20" fill="none" stroke="#4facfe" stroke-width="3"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        <circle cx="85" cy="20" r="3" fill="#ff6b6b" />
-                    </svg>
-                </div>
-                <div class="app-title">入試シミュレーター <small>(Basic版)</small></div>
-
-                <div class="app-desc">
-                    <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
-                    学校パネルをドラッグ＆ドロップ。<br>
-                    パズル感覚で直感的に併願パターンを作成できます。<br>
-                    <span class="note-text">※偏差値データは、現在実装しておりません。</span>
-                </div>
-
-                <div class="btn-group">
-                    <a href="https://sakura-academia-lab.github.io/sakura-plan/apps/basic/index.html" target="_blank"
-                        class="main-btn">
-                        ブラウザで使う &rarr;
-                    </a>
-
-                    <div>
-                        <a href="basic_simulator.zip" download class="sub-btn">
-                            📥 オフライン版をDL (ZIP)
-                        </a>
-                        <span class="dl-note">
-                            ※ネット環境がない場所で使いたい方向け。<br>
-                            更新があった場合は再度ダウンロードが必要です。<br>
-                            （ブラウザ版は自動的に最新になります）
-                        </span>
-                    </div>
-                </div>
+          <div class="param-item"><span>横</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-w', -1, 'box')">－</button>
+              <input type="number" id="inp-w" value="5" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-w', 1, 'box')">＋</button>
             </div>
-
-            <div class="app-card active">
-                <span class="status-badge ver">Ver 1.2</span>
-                <div class="app-icon-area">
-                    <svg viewBox="0 0 100 100" role="img" aria-label="立体図形スライサーアイコン">
-                        <g transform="translate(50, 50) rotate(10) translate(-50, -50)">
-                            <path d="M 25 25 L 75 25 L 90 40 L 40 40 Z" class="cube-face" fill="#cbd5e1" />
-                            <path d="M 25 25 L 40 40 L 40 90 L 25 75 Z" class="cube-face" fill="#94a3b8" />
-                            <path d="M 40 90 L 90 90 L 90 40 L 40 40 Z" class="cube-face" fill="#e2e8f0" />
-                            <line x1="15" y1="15" x2="95" y2="95" class="cube-cut" />
-                        </g>
-                    </svg>
-                </div>
-                <div class="app-title">立体図形スライサー</div>
-                <div class="app-desc">
-                    <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
-                    立方体や三角錐の切断を3Dでシミュレーション。<br>
-                    苦手な断面図を指一本で回転・確認できます。
-                </div>
-                <div class="btn-group">
-                    <a href="./3D Shape Slicer/index.html" class="main-btn">ブラウザで使う &rarr;</a>
-                </div>
+          </div>
+          <div class="param-item"><span>高</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-h', -1, 'box')">－</button>
+              <input type="number" id="inp-h" value="8" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-h', 1, 'box')">＋</button>
             </div>
-
+          </div>
+          <div class="param-item"><span>奥</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-d', -1, 'box')">－</button>
+              <input type="number" id="inp-d" value="5" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-d', 1, 'box')">＋</button>
+            </div>
+          </div>
         </div>
+        <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
+      </div>
+      <div class="section-title">柱体・錐体・多面体</div>
+      <div class="btn-grid">
+        <button class="grid-btn" onclick="setShapeUI('prism-3')">三角柱</button>
+        <button class="grid-btn" onclick="setShapeUI('prism-5')">五角柱</button>
+        <button class="grid-btn" onclick="setShapeUI('prism-6')">六角柱</button>
+        <button class="grid-btn" onclick="setShapeUI('cylinder')">円柱</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-3')">三角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-4')">四角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-5')">五角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-6')">六角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('cone')">円錐</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-4')">正四面体</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-8')">正八面体</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-12')">正十二面体</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-20')">正二十面体</button>
+      </div>
+    </div>
 
-        <section class="update-history">
-            <h3>📢 Update History</h3>
-            <ul class="history-list">
-                <li class="history-item">
-                    <span class="history-date">2026.01.20</span>
-                    <span class="history-content">
-                        立体図形スライサー Ver 1.2を公開しました。スマホ等での入力改善。
-                    </span>
-                </li>
-                <li class="history-item">
-                    <span class="history-date">2026.01.18</span>
-                    <span class="history-content">
-                        「立体図形スライサー Ver 1.1」を正式公開しました。
-                        <span class="history-tag">New</span>
-                    </span>
-                </li>
-                <li class="history-item">
-                    <span class="history-date">2025.12.12</span>
-                    <span class="history-content">
-                        「入試シミュレーター (Basic版) Ver 2.0」に更新しました。
-                    </span>
-                </li>
-                <li class="history-item">
-                    <span class="history-date">2025.12.08</span>
-                    <span class="history-content">
-                        Webサイトを公開しました。
-                    </span>
-                </li>
-            </ul>
-        </section>
 
-    </main>
 
-    <footer>
-        &copy; 2025 Sakura Academia
-    </footer>
+    <div class="dropdown-panel" id="panel-snap">
+      <div class="section-title">エッジの分割数</div>
+      <div class="btn-grid">
+        <button class="grid-btn active snap-ui" onclick="setDivisionUI(1)">頂点のみ</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(2)">2等分</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(3)">3等分</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(4)">4等分</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(5)">5等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(6)">6等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(8)">8等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(10)">10等分</button>
+      </div>
+      <div class="mobile-snap-note">※スマホ版は5等分までです。6等分以上はPC版をご利用ください。</div>
+    </div>
 
+    <div class="help-panel" id="panel-help">
+      <div class="help-title">操作方法</div>
+      <div class="help-item">
+        <div class="help-text guide-pc">
+          <div>🖱️ <strong>左ドラッグ</strong>：回転</div>
+          <div>🖱️ <strong>右ドラッグ</strong>：移動</div>
+          <div>🔘 <strong>ホイール</strong>：拡縮</div>
+          <div>👆 <strong>クリック</strong>：点の選択 / 解除</div>
+        </div>
+        <div class="help-text guide-mobile" style="display:none;">
+          <div>☝️ <strong>1本指</strong>：回転</div>
+          <div>✌️ <strong>2本指</strong>：移動</div>
+          <div>🤏 <strong>ピンチ</strong>：拡縮</div>
+          <div>👆 <strong>タップ</strong>：点の選択 / 解除</div>
+        </div>
+      </div>
+
+      <div class="help-title">使い方ステップ</div>
+      <div class="help-item">
+        <span class="help-icon">1️⃣</span>
+        <div class="help-text"><strong>図形を選ぶ</strong><br>メニューの「� 図形選択」から好きな立体を選びます。<br>寸法も自由に変更できます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">2️⃣</span>
+        <div class="help-text"><strong>等分点を設定</strong><br>「📍 等分点設定」で、辺上の点の数（分割数）を決めます。<br>「頂点のみ」や「3等分」などを選んでみましょう。
+        </div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">3️⃣</span>
+        <div class="help-text"><strong>切断する</strong><br>立体上の点を <strong>3つ</strong> 順番に選ぶと、その3点を通る面で切断されます。<br>失敗したら「🗑️
+          消す」でやり直せます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">4️⃣</span>
+        <div class="help-text"><strong>断面の操作</strong><br>「🔁 逆側」ボタンを押すと、切り取られる側（残る側）を入れ替えられます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">5️⃣</span>
+        <div class="help-text"><strong>複数回切断</strong><br>画面下のタブ（切断①〜⑧）を使って、最大8回まで切断を重ねることができます。</div>
+      </div>
+    </div>
+
+    <div class="cut-section">
+      <div class="cut-tabs-wrapper">
+        <div class="cut-tabs">
+          <button class="cut-tab active tab-color-0" id="tab-0" onclick="switchCutTab(0)">切断①</button>
+          <button class="cut-tab tab-color-1" id="tab-1" onclick="switchCutTab(1)">切断②</button>
+          <button class="cut-tab tab-color-2" id="tab-2" onclick="switchCutTab(2)">切断③</button>
+          <button class="cut-tab tab-color-3" id="tab-3" onclick="switchCutTab(3)">切断④</button>
+          <button class="cut-tab tab-color-4" id="tab-4" onclick="switchCutTab(4)">切断⑤</button>
+          <button class="cut-tab tab-color-5" id="tab-5" onclick="switchCutTab(5)">切断⑥</button>
+          <button class="cut-tab tab-color-6" id="tab-6" onclick="switchCutTab(6)">切断⑦</button>
+          <button class="cut-tab tab-color-7" id="tab-7" onclick="switchCutTab(7)">切断⑧</button>
+        </div>
+      </div>
+      <div class="controls-right">
+        <span id="status-box">0 / 3</span>
+        <button id="btn-flip" onclick="flipCurrentCut()">🔁 逆側</button>
+        <button class="btn-current-reset" id="btn-reset-single" onclick="resetCurrentCut()">🗑️ 消す</button>
+        <button class="btn-all-reset" onclick="resetAll()">🗑️ 全リセット</button>
+        <div class="toggles-wrapper">
+          <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
+          <button class="nav-tab active" id="btn-toggle-snap" onclick="toggleSnapPoints()">⚫ 点：全表示</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <script src="js/app.js?v=1.3"></script>
 </body>
 
 </html>
