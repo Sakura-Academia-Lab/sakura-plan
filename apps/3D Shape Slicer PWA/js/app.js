@@ -432,6 +432,15 @@ function initProjectionView(viewKey, containerId) {
     const d = 1.2;
     const camera_p = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 100);
 
+    // 投影図用の照明を追加 (暗い問題の解決)
+    const p_light = new THREE.AmbientLight(0xffffff, 0.9);
+    // 注意: 投影図は scene を共有しているため、ここでの追加は1回のみで共有されるべき。
+    // しかし、独立したレンダラーで描画しているため、シーン全体を照らす。
+    if (!scene.userData.projectionLightAdded) {
+        scene.add(p_light);
+        scene.userData.projectionLightAdded = true;
+    }
+
     // カメラの向き設定
     if (viewKey === 'top') {
         camera_p.position.set(0, 10, 0);
