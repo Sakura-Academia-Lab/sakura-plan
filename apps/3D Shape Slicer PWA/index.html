@@ -992,11 +992,22 @@
       });
     }
 
-    // インストールプロンプトの制御
+    // PWAインストールの有無判定
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+
+    // 初期表示判定 (iOSなら即表示、それ以外はイベント待ち)
+    if (!isStandalone) {
+      if (isIOS) {
+        installBtn.style.display = 'block';
+      }
+    }
+
+    // インストールプロンプトの制御 (Android/PC)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.style.display = 'block'; // ボタンを表示
+      installBtn.style.display = 'block';
     });
 
     installBtn.addEventListener('click', async () => {
@@ -1007,13 +1018,12 @@
           installBtn.style.display = 'none';
         }
         deferredPrompt = null;
-      } else {
-        // iOSなどの場合の簡易ガイド
-        alert('iPhone/iPadの方は、ブラウザ下の「共有ボタン(□に↑)」から「ホーム画面に追加」を選んでください。');
+      } else if (isIOS) {
+        alert('【iOSでのインストール方法】\n画面下部の「共有ボタン(□に↑)」をタップし、\nメニューから「ホーム画面に追加」を選択してください。');
       }
     });
 
-    // 既にインストール済みの場合は隠す
+    // インストール完了時のイベント
     window.addEventListener('appinstalled', () => {
       installBtn.style.display = 'none';
       deferredPrompt = null;
