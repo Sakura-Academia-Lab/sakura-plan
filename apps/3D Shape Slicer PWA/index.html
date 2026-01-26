@@ -793,6 +793,7 @@
     <div style="width:20px;"></div>
     <h1>立体図形スライサー Pro</h1>
     <div class="header-right">
+      <button id="btn-install">📲 アプリをインストール</button>
       <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
       <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
       <div class="header-btn help-trigger-pc" onclick="toggleDropdown('panel-help')">📖 使い方</div>
@@ -960,15 +961,43 @@
 
   <script src="js/app.min.js?v=1.4"></script>
   <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('btn-install');
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {
           console.log('Service Worker registered.', reg);
-        }).catch(err => {
-          console.log('Service Worker registration failed.', err);
         });
       });
     }
+
+    // インストールプロンプトの制御
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block'; // ボタンを表示
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+      } else {
+        // iOSなどの場合の簡易ガイド
+        alert('iPhone/iPadの方は、ブラウザ下の「共有ボタン(□に↑)」から「ホーム画面に追加」を選んでください。');
+      }
+    });
+
+    // 既にインストール済みの場合は隠す
+    window.addEventListener('appinstalled', () => {
+      installBtn.style.display = 'none';
+      deferredPrompt = null;
+    });
   </script>
 </body>
 
