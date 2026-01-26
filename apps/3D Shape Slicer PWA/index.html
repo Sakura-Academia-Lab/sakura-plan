@@ -938,7 +938,7 @@
 
   <header id="app-header">
     <div style="width:20px;"></div>
-    <h1>立体図形スライサー Pro <small style="font-size: 11px; opacity: 0.6; font-weight: normal;">Ver 1.4.4</small></h1>
+    <h1>立体図形スライサー Pro <small style="font-size: 11px; opacity: 0.6; font-weight: normal;">Ver 1.4.5</small></h1>
     <div class="header-right">
       <button id="btn-install">📲 アプリをインストール</button>
       <div class="header-btn" id="btn-projection" onclick="openProjectionModal()">📐 投影図</div>
@@ -1114,11 +1114,8 @@
   <!-- 投影図モーダル -->
   <div id="projection-modal">
     <div id="projection-header">
-      <h2 style="margin:0; font-size:18px;">📐 投影図 (三面図 / 五面図)</h2>
+      <h2 style="margin:0; font-size:18px;">📐 投影図 (六面図)</h2>
       <div style="display:flex; gap:10px;">
-        <button onclick="setProjectionMode(3)" id="btn-mode-3" class="header-btn"
-          style="background:#4facfe;">3面表示</button>
-        <button onclick="setProjectionMode(5)" id="btn-mode-5" class="header-btn">5面表示</button>
         <button onclick="closeProjectionModal()" class="btn-close-modal">✕ 閉じる</button>
       </div>
     </div>
@@ -1138,13 +1135,18 @@
         <span class="view-label">右側面 (Right)</span>
         <div class="projection-canvas-container"></div>
       </div>
-      <!-- 左側面図 (5方向用) -->
-      <div class="projection-view" id="view-left" style="display:none;">
+      <!-- 左側面図 -->
+      <div class="projection-view" id="view-left">
         <span class="view-label">左側面 (Left)</span>
         <div class="projection-canvas-container"></div>
       </div>
-      <!-- 背面図 (5方向用) -->
-      <div class="projection-view" id="view-back" style="display:none;">
+      <!-- 下面図 -->
+      <div class="projection-view" id="view-bottom">
+        <span class="view-label">下面 (Bottom)</span>
+        <div class="projection-canvas-container"></div>
+      </div>
+      <!-- 背面図 -->
+      <div class="projection-view" id="view-back">
         <span class="view-label">背面 (Back)</span>
         <div class="projection-canvas-container"></div>
       </div>
@@ -1154,7 +1156,7 @@
     </div>
   </div>
 
-  <script src="js/app.js?v=1.4.4"></script>
+  <script src="js/app.js?v=1.4.5"></script>
   <script>
     let deferredPrompt;
     const installBtn = document.getElementById('btn-install');

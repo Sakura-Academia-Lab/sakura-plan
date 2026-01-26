@@ -413,12 +413,8 @@ window.addEventListener('resize', () => { camera.aspect = window.innerWidth / wi
 /* ============================================================ */
 
 let projectionActive = false;
-let projectionMode = 3; // 3 or 5
-let projectionViews = {}; // top, front, right, left, back
-const PROJECTION_VIEWS_BY_MODE = {
-    3: ['top', 'front', 'right'],
-    5: ['top', 'front', 'right', 'left', 'back']
-};
+let projectionMode = 6;
+const ALL_V_KEYS = ['top', 'bottom', 'front', 'back', 'right', 'left'];
 
 /**
  * 投影図用の独立したレンダリング環境を初期化
@@ -449,6 +445,10 @@ function initProjectionView(viewKey, containerId) {
         camera_p.position.set(0, 20, 0);
         camera_p.lookAt(0, 0, 0);
         camera_p.up.set(0, 0, -1); // 算数の上面図形式：上が奥、下が手前
+    } else if (viewKey === 'bottom') {
+        camera_p.position.set(0, -20, 0);
+        camera_p.lookAt(0, 0, 0);
+        camera_p.up.set(0, 0, 1);
     } else if (viewKey === 'front') {
         camera_p.position.set(0, 0, 20);
         camera_p.lookAt(0, 0, 0);
