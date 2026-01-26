@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-YV5WWWG39Z');
+  </script>
+
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1a2a44">
+  <link rel="manifest" href="manifest.json">
+  <title>立体図形スライサー Pro | 桜アカデミア</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --primary-navy: #1a2a44;
+      --accent-sakura: #ffcae0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #fdfcf5;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* ===== 最上部タイトルバー ===== */
+    #app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: var(--primary-navy);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      z-index: 120;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    #app-header h1 {
+      font-size: 16px;
+      margin: 0;
+      letter-spacing: 0.05em;
+      font-weight: bold;
+    }
+
+    .btn-home {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+    }
+
+    .btn-home span {
+      font-size: 12px;
+    }
+
+    /* ===== ナビゲーション ===== */
+    #top-nav {
+      position: fixed;
+      top: 44px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      background: #e8e8e8;
+    }
+
+    .nav-tab.active {
+      background: #3949ab;
+      border-color: #283593;
+      color: white;
+      box-shadow: 0 0 5px rgba(57, 73, 171, 0.4);
+    }
+
+    .nav-tab::after {
+      content: '▼';
+      font-size: 10px;
+      opacity: 0.6;
+    }
+
+    .dropdown-panel {
+      display: none;
+      position: fixed;
+      /* absoluteから変更 */
+      top: 50px;
+      left: 10px;
+      margin-top: 4px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 12px;
+      min-width: 320px;
+      max-height: 75vh;
+      overflow-y: auto;
+      z-index: 200;
+    }
+
+    .toggles-wrapper {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* モバイル用ステッパー */
+    .stepper-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .stepper-btn {
+      background: #ddd;
+      border: 1px solid #ccc;
+      color: #333;
+      font-weight: bold;
+      border-radius: 4px;
+      width: 30px;
+      height: 36px;
+      display: none;
+      /* デフォルト非表示 */
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .mobile-snap-note {
+      display: none;
+      font-size: 10px;
+      color: #e53935;
+      margin-top: 8px;
+      font-weight: bold;
+    }
+
+    .dropdown-panel.open {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: bold;
+      color: #888;
+      margin: 10px 0 6px 0;
+      padding-bottom: 4px;
+      border-bottom: 1px dashed #ddd;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .grid-btn {
+      padding: 8px 4px;
+      font-size: 11px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      color: #666;
+      transition: 0.2s;
+    }
+
+    .grid-btn.active {
+      background: #a8d5e2;
+      color: #005662;
+      border-color: #81b3c3;
+      font-weight: bold;
+    }
+
+    .param-area {
+      display: none;
+      background: #eef7ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+      border: 1px solid #cce4f7;
+    }
+
+    .param-area.show {
+      display: block;
+    }
+
+    .param-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .param-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .param-item span {
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .param-item input {
+      width: 100%;
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .btn-confirm {
+      background: #4facfe;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    /* ===== 切断セクション ===== */
+    .cut-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: 10px;
+      flex: 1;
+    }
+
+    .cut-tabs-wrapper {
+      background: #eee;
+      border-radius: 20px;
+      padding: 3px;
+      overflow-x: auto;
+      max-width: 700px;
+      scrollbar-width: none;
+    }
+
+    .cut-tabs-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cut-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .cut-tab {
+      background: #f9f9f9;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 11px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab-color-0 {
+      color: #ff0000;
+    }
+
+    .tab-color-0.active {
+      background: rgba(255, 0, 0, 0.1);
+      border-bottom-color: #ff0000;
+    }
+
+    .tab-color-1 {
+      color: #008000;
+    }
+
+    .tab-color-1.active {
+      background: rgba(0, 128, 0, 0.1);
+      border-bottom-color: #008000;
+    }
+
+    .tab-color-2 {
+      color: #0000ff;
+    }
+
+    .tab-color-2.active {
+      background: rgba(0, 0, 255, 0.1);
+      border-bottom-color: #0000ff;
+    }
+
+    .tab-color-3 {
+      color: #ff8c00;
+    }
+
+    .tab-color-3.active {
+      background: rgba(255, 140, 0, 0.1);
+      border-bottom-color: #ff8c00;
+    }
+
+    .tab-color-4 {
+      color: #800080;
+    }
+
+    .tab-color-4.active {
+      background: rgba(128, 0, 128, 0.1);
+      border-bottom-color: #800080;
+    }
+
+    .tab-color-5 {
+      color: #00ced1;
+    }
+
+    .tab-color-5.active {
+      background: rgba(0, 206, 209, 0.1);
+      border-bottom-color: #00ced1;
+    }
+
+    .tab-color-6 {
+      color: #ff00ff;
+    }
+
+    .tab-color-6.active {
+      background: rgba(255, 0, 255, 0.1);
+      border-bottom-color: #ff00ff;
+    }
+
+    .tab-color-7 {
+      color: #133b8b;
+    }
+
+    .tab-color-7.active {
+      background: rgba(19, 59, 139, 0.1);
+      border-bottom-color: #133b8b;
+    }
+
+    .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    #status-box {
+      font-size: 13px;
+      font-weight: bold;
+      color: #555;
+      min-width: 45px;
+      text-align: center;
+    }
+
+    #btn-flip {
+      background: #ffb74d;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .btn-current-reset {
+      background: #90a4ae;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .btn-all-reset {
+      background: #ef5350;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    /* ===== ヘッダー右側 ===== */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-btn {
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.2s;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .app-version {
+      font-size: 12px;
+      margin-left: 8px;
+      opacity: 0.8;
+      font-weight: normal;
+    }
+
+    /* ===== ヘルプパネル ===== */
+    .help-btn {
+      background: #9575cd;
+      border: 1px solid #7e57c2;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    /* PCではナビゲーションの使い方ボタンを非表示 */
+    @media (min-width: 951px) {
+
+      .help-btn,
+      .hide-on-pc {
+        display: none;
+      }
+    }
+
+    .help-panel {
+      display: none;
+      position: fixed;
+      top: 50px;
+      right: 15px;
+      margin-top: 4px;
+      /* 削除予定 */
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 20px;
+      min-width: 320px;
+      z-index: 200;
+      /* スクロール可能にする */
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .help-panel.open {
+      display: block;
+    }
+
+    /* ... omitted parts to match context ... */
+
+    @media (max-width: 950px) {
+      /* ... existing styles ... */
+
+      .cut-section {
+        width: 100%;
+        margin: 0;
+        border-top: 1px solid #eee;
+        padding: 6px 0;
+        order: 3;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .guide-pc {
+        display: none !important;
+      }
+
+      .guide-mobile {
+        display: block !important;
+      }
+    }
+
+    .help-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #9575cd;
+      padding-bottom: 5px;
+    }
+
+    .help-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #eee;
+    }
+
+    .help-item:last-child {
+      border-bottom: none;
+    }
+
+    .help-icon {
+      font-size: 22px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .help-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .help-text strong {
+      color: #000;
+      font-size: 14px;
+    }
+
+
+
+    @media (max-width: 950px) {
+
+      /* ヘッダーのボタン群はスマホでは非表示 */
+      .header-btn {
+        display: none;
+      }
+
+      #top-nav {
+        padding: 4px;
+        gap: 4px;
+        top: 44px;
+        /* 高さが自動調整されるようにmax-heightは一旦解除、または少し余裕を持たせる */
+        max-height: 80vh;
+        overflow-y: auto;
+        justify-content: space-between;
+      }
+
+      /* 1段目: 図形、等分、使い方の3つを横並び */
+      .nav-tab,
+      .help-btn {
+        padding: 6px 2px;
+        font-size: 10px;
+        flex: 0 0 32%;
+        /* 3つでほぼ100% */
+        justify-content: center;
+        margin: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        border-radius: 4px;
+        height: 34px;
+        /* 高さ統一 */
+      }
+
+      .cut-section {
+        width: 100%;
+        margin: 0;
+        border-top: 1px solid #eee;
+        padding: 4px 0;
+        order: 3;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      /* 2段目: 切断タブ */
+      .cut-tabs-wrapper {
+        width: 100%;
+        background: #f0f0f0;
+        border-radius: 6px;
+        padding: 2px;
+        overflow-x: auto;
+        /* 横スクロール許可 */
+        white-space: nowrap;
+      }
+
+      .cut-tabs {
+        display: flex;
+        /* gridを上書きして横並びスクロール */
+        width: 100%;
+        /* 中身が縮まないように */
+        min-width: 300px;
+        /* 最低幅確保 */
+      }
+
+      .cut-tab {
+        flex: 1;
+        padding: 6px 0;
+        font-size: 10px;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      /* 3段目以降: コントロール + トグル */
+      .controls-right {
+        width: 100%;
+        margin: 0;
+        border-top: 1px dashed #eee;
+        padding-top: 4px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        /* 折り返し許可 */
+        gap: 4px;
+      }
+
+      #status-box {
+        font-size: 11px;
+        min-width: 30px;
+      }
+
+      #btn-flip,
+      .btn-current-reset,
+      .btn-all-reset {
+        padding: 6px 8px;
+        font-size: 10px;
+        flex-grow: 1;
+      }
+
+      .toggles-wrapper {
+        width: 100%;
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
+      }
+
+      .toggles-wrapper button {
+        flex: 1;
+        font-size: 10px;
+        padding: 6px 0;
+      }
+
+      .dropdown-panel,
+      .help-panel {
+        position: fixed;
+        /* fix: ナビのoverflowによる切り取られを回避 */
+        top: 15vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90vw;
+        max-height: 70vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid #999;
+      }
+
+      .bg-guide {
+        display: block;
+        bottom: 80px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+      }
+
+      .bg-guide .guide-pc {
+        display: none;
+      }
+
+      .bg-guide .guide-mobile {
+        display: block;
+      }
+
+      /* モバイルでステッパー表示 */
+      .stepper-btn {
+        display: flex;
+      }
+
+      /* 6等分以上を非表示 */
+      .snap-high-res {
+        display: none !important;
+      }
+
+      .mobile-snap-note {
+        display: block;
+      }
+
+      /* パラメータ入力エリアのスマホ対応 */
+      .param-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+
+      .param-item {
+        width: 100%;
+      }
+    }
+
+    /* ===== 背景ガイド表示 ===== */
+    .bg-guide {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      /* 透過背景 */
+      background: rgba(255, 255, 255, 0.85);
+      /* 視認性向上のため不透明度アップ */
+      backdrop-filter: blur(4px);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #222;
+      /* 文字色を濃く */
+      pointer-events: none;
+      /* 3D操作を阻害しない */
+      user-select: none;
+      z-index: 50;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .bg-guide strong {
+      color: #000;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+
+  <header id="app-header">
+    <div style="width:20px;"></div>
+    <h1>立体図形スライサー Pro</h1>
+    <div class="header-right">
+      <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
+      <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
+      <div class="header-btn help-trigger-pc" onclick="toggleDropdown('panel-help')">📖 使い方</div>
+      <a href="../index.html" class="btn-home">🏠<span>ホーム</span></a>
+    </div>
+  </header>
+
+  <nav id="top-nav">
+    <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
+    <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
+    <div class="help-btn" onclick="toggleDropdown('panel-help')">📖 使い方</div>
+
+    <div class="dropdown-panel" id="panel-shape">
+      <div class="section-title">基本図形</div>
+      <div class="btn-grid">
+        <button class="grid-btn active" onclick="setShapeUI('cube')">立方体</button>
+        <button class="grid-btn" onclick="setShapeUI('box')">直方体</button>
+        <button class="grid-btn" onclick="setShapeUI('sphere')">球</button>
+      </div>
+      <div id="cube-params" class="param-area">
+        <div class="param-row">
+          <div class="param-item"><span>一辺の長さ</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-cube-s', -1, 'cube')">－</button>
+              <input type="number" id="inp-cube-s" value="6" min="2" max="12" onchange="setShape('cube')">
+              <button class="stepper-btn" onclick="stepParam('inp-cube-s', 1, 'cube')">＋</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
+      </div>
+      <div id="box-params" class="param-area">
+        <div class="param-row">
+
+          <div class="param-item"><span>横</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-w', -1, 'box')">－</button>
+              <input type="number" id="inp-w" value="5" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-w', 1, 'box')">＋</button>
+            </div>
+          </div>
+          <div class="param-item"><span>高</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-h', -1, 'box')">－</button>
+              <input type="number" id="inp-h" value="8" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-h', 1, 'box')">＋</button>
+            </div>
+          </div>
+          <div class="param-item"><span>奥</span>
+            <div class="stepper-wrapper">
+              <button class="stepper-btn" onclick="stepParam('inp-d', -1, 'box')">－</button>
+              <input type="number" id="inp-d" value="5" onchange="setShape('box')">
+              <button class="stepper-btn" onclick="stepParam('inp-d', 1, 'box')">＋</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-confirm" onclick="closeAll()">OK 決定して閉じる</button>
+      </div>
+      <div class="section-title">柱体・錐体・多面体</div>
+      <div class="btn-grid">
+        <button class="grid-btn" onclick="setShapeUI('prism-3')">三角柱</button>
+        <button class="grid-btn" onclick="setShapeUI('prism-5')">五角柱</button>
+        <button class="grid-btn" onclick="setShapeUI('prism-6')">六角柱</button>
+        <button class="grid-btn" onclick="setShapeUI('cylinder')">円柱</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-3')">三角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-4')">四角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-5')">五角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('pyramid-6')">六角錐</button>
+        <button class="grid-btn" onclick="setShapeUI('cone')">円錐</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-4')">正四面体</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-8')">正八面体</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-12')">正十二面体</button>
+        <button class="grid-btn" onclick="setShapeUI('poly-20')">正二十面体</button>
+      </div>
+    </div>
+
+
+
+    <div class="dropdown-panel" id="panel-snap">
+      <div class="section-title">エッジの分割数</div>
+      <div class="btn-grid">
+        <button class="grid-btn active snap-ui" onclick="setDivisionUI(1)">頂点のみ</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(2)">2等分</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(3)">3等分</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(4)">4等分</button>
+        <button class="grid-btn snap-ui" onclick="setDivisionUI(5)">5等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(6)">6等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(8)">8等分</button>
+        <button class="grid-btn snap-ui snap-high-res" onclick="setDivisionUI(10)">10等分</button>
+      </div>
+      <div class="mobile-snap-note">※スマホ版は5等分までです。6等分以上はPC版をご利用ください。</div>
+    </div>
+
+    <div class="help-panel" id="panel-help">
+      <div class="help-title">操作方法</div>
+      <div class="help-item">
+        <div class="help-text guide-pc">
+          <div>🖱️ <strong>左ドラッグ</strong>：回転</div>
+          <div>🖱️ <strong>右ドラッグ</strong>：移動</div>
+          <div>🔘 <strong>ホイール</strong>：拡縮</div>
+          <div>👆 <strong>クリック</strong>：点の選択 / 解除</div>
+          <div>🤏 <strong>端点をドラッグ</strong>：辺に沿って移動</div>
+        </div>
+        <div class="help-text guide-mobile" style="display:none;">
+          <div>☝️ <strong>1本指</strong>：回転</div>
+          <div>✌️ <strong>2本指</strong>：移動</div>
+          <div>🤏 <strong>ピンチ</strong>：拡縮</div>
+          <div>👆 <strong>タップ</strong>：点の選択 / 解除</div>
+          <div>🤏 <strong>端点をドラッグ</strong>：辺に沿って移動</div>
+        </div>
+      </div>
+
+      <div class="help-title">使い方ステップ</div>
+      <div class="help-item">
+        <span class="help-icon">1️⃣</span>
+        <div class="help-text"><strong>図形を選ぶ</strong><br>メニューの「� 図形選択」から好きな立体を選びます。<br>寸法も自由に変更できます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">2️⃣</span>
+        <div class="help-text"><strong>等分点を設定</strong><br>「📍 等分点設定」で、辺上の点の数（分割数）を決めます。<br>「頂点のみ」や「3等分」などを選んでみましょう。
+        </div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">3️⃣</span>
+        <div class="help-text"><strong>切断する</strong><br>立体上の点を <strong>3つ</strong> 順番に選ぶと、その3点を通る面で切断されます。<br>失敗したら「🗑️
+          消す」でやり直せます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">4️⃣</span>
+        <div class="help-text"><strong>断面の操作</strong><br>「🔁 逆側」ボタンを押すと、切り取られる側（残る側）を入れ替えられます。</div>
+      </div>
+      <div class="help-item">
+        <span class="help-icon">5️⃣</span>
+        <div class="help-text"><strong>複数回切断</strong><br>画面下のタブ（切断①〜⑧）を使って、最大8回まで切断を重ねることができます。</div>
+      </div>
+    </div>
+
+    <div class="cut-section">
+      <div class="cut-tabs-wrapper">
+        <div class="cut-tabs">
+          <button class="cut-tab active tab-color-0" id="tab-0" onclick="switchCutTab(0)">切断①</button>
+          <button class="cut-tab tab-color-1" id="tab-1" onclick="switchCutTab(1)">切断②</button>
+          <button class="cut-tab tab-color-2" id="tab-2" onclick="switchCutTab(2)">切断③</button>
+          <button class="cut-tab tab-color-3" id="tab-3" onclick="switchCutTab(3)">切断④</button>
+          <button class="cut-tab tab-color-4" id="tab-4" onclick="switchCutTab(4)">切断⑤</button>
+          <button class="cut-tab tab-color-5" id="tab-5" onclick="switchCutTab(5)">切断⑥</button>
+          <button class="cut-tab tab-color-6" id="tab-6" onclick="switchCutTab(6)">切断⑦</button>
+          <button class="cut-tab tab-color-7" id="tab-7" onclick="switchCutTab(7)">切断⑧</button>
+        </div>
+      </div>
+      <div class="controls-right">
+        <span id="status-box">0 / 3</span>
+        <button id="btn-flip" onclick="flipCurrentCut()">🔁 逆側</button>
+        <button class="btn-current-reset" id="btn-reset-single" onclick="resetCurrentCut()">🗑️ 消す</button>
+        <button class="btn-all-reset" onclick="resetAll()">🗑️ 全リセット</button>
+        <div class="toggles-wrapper">
+          <button class="nav-tab active" id="btn-toggle-wire" onclick="toggleWireframe()">🕸️ 補助線：ON</button>
+          <button class="nav-tab active" id="btn-toggle-snap" onclick="toggleSnapPoints()">⚫ 点：全表示</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <script src="js/app.min.js?v=1.4"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          console.log('Service Worker registered.', reg);
+        }).catch(err => {
+          console.log('Service Worker registration failed.', err);
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>
