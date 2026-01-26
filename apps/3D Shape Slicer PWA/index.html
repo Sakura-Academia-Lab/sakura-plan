@@ -58,6 +58,54 @@
       box-sizing: border-box;
     }
 
+    /* 更新通知トースト */
+    #update-toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 4px;
+      padding: 16px;
+      position: fixed;
+      z-index: 2000;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #update-toast.show {
+      visibility: visible;
+      animation: fadein 0.5s;
+    }
+
+    #update-btn {
+      background: #4facfe;
+      border: none;
+      padding: 8px 16px;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    @keyframes fadein {
+      from {
+        bottom: 0;
+        opacity: 0;
+      }
+
+      to {
+        bottom: 30px;
+        opacity: 1;
+      }
+    }
+
     body {
       margin: 0;
       overflow: hidden;
@@ -814,6 +862,7 @@
     <h1>立体図形スライサー Pro</h1>
     <div class="header-right">
       <button id="btn-install">📲 アプリをインストール</button>
+      <div class="header-btn" id="btn-projection" onclick="openProjectionModal()">📐 投影図</div>
       <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
       <div class="header-btn nav-trigger-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
       <div class="header-btn help-trigger-pc" onclick="toggleDropdown('panel-help')">📖 使い方</div>
@@ -978,17 +1027,95 @@
 
 
 
+  <div id="update-toast">
+    <div>新しいバージョンが利用可能です</div>
+    <button id="update-btn" onclick="updateApp()">更新する</button>
+  </div>
+
   <script src="js/app.min.js?v=1.4"></script>
   <script>
     let deferredPrompt;
     const installBtn = document.getElementById('btn-install');
+    let newWorker;
+
+    // Service Worker 登録
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          console.log('Service Worker registered.', reg);
+
+          // 更新が見つかった場合の処理
+          reg.addEventListener('updatefound', () => {
+            newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              // 新しいSWがインストール済み状態で、かつ既に制御中のSWがある場合(更新時)
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateToast();
+              }
+            });
+          });
+        });
+
+        // 制御が移った時のリロード処理
+        let refreshing;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          window.location.reload();
+          refreshing = true;
+        });
+      });
+    }
+
+    function showUpdateToast() {
+      const toast = document.getElementById("update-toast");
+      toast.className = "show";
+    }
+
+    function updateApp() {
+      if (newWorker) {
+        newWorker.postMessage({ type: 'SKIP_WAITING' });
+      }
+    }
+    let deferredPrompt;
+    const installBtn = document.getElementById('btn-install');
+    let newWorker;
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {
           console.log('Service Worker registered.', reg);
+
+          // 更新が見つかった場合
+          reg.addEventListener('updatefound', () => {
+            newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              // インストール完了 && まだ古いSWが有効な場合 → 更新待ちあり
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateToast();
+              }
+            });
+          });
+        });
+
+        // リロード処理
+        let refreshing;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          window.location.reload();
+          refreshing = true;
         });
       });
+    }
+
+    function showUpdateToast() {
+      const toast = document.getElementById("update-toast");
+      toast.className = "show";
+    }
+
+    function updateApp() {
+      if (newWorker) {
+        newWorker.postMessage({ type: 'SKIP_WAITING' });
+      }
     }
 
     // PWAインストールの有無判定
