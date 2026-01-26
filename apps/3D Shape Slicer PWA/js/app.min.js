@@ -409,7 +409,7 @@ window.onload = () => {
 window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
 
 /* ============================================================ */
-/* PRO EDITION: 2D PROJECTION VIEWS (三面図 / 五面図) */
+/* PRO EDITION: 2D PROJECTION VIEWS (三面図 / 五面図) - Ver 1.4.4 */
 /* ============================================================ */
 
 let projectionActive = false;
@@ -420,63 +420,64 @@ const PROJECTION_VIEWS_BY_MODE = {
     5: ['top', 'front', 'right', 'left', 'back']
 };
 
+/**
+ * 投影図用の独立したレンダリング環境を初期化
+ */
 function initProjectionView(viewKey, containerId) {
     const container = document.querySelector(`#${containerId} .projection-canvas-container`);
     const renderer_p = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer_p.setPixelRatio(window.devicePixelRatio);
     renderer_p.setSize(container.clientWidth, container.clientHeight);
+    renderer_p.localClippingEnabled = true; // 断面の切り欠き表示に必須
     container.appendChild(renderer_p.domElement);
 
     // 直交カメラ (パースなし)
-    const aspect = container.clientWidth / container.clientHeight;
-    const d = 1.2;
-    const camera_p = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 100);
+    const camera_p = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 100);
 
-    // 投影図用の照明を追加 (暗い問題の解決)
-    const p_light = new THREE.AmbientLight(0xffffff, 0.9);
-    // 注意: 投影図は scene を共有しているため、ここでの追加は1回のみで共有されるべき。
-    // しかし、独立したレンダラーで描画しているため、シーン全体を照らす。
-    if (!scene.userData.projectionLightAdded) {
-        scene.add(p_light);
-        scene.userData.projectionLightAdded = true;
-    }
+    // 投影図専用のシーンとライト（メインシーンへの干渉を物理的に遮断）
+    const p_scene = new THREE.Scene();
+    p_scene.background = new THREE.Color(0xffffff); // 背景を白に固定
+
+    // 専用の照明（メインシーンのライト設定を完全に無視する）
+    const p_ambient = new THREE.AmbientLight(0xffffff, 0.75);
+    const p_directional = new THREE.DirectionalLight(0xffffff, 0.45);
+    p_directional.position.set(5, 10, 7);
+    p_scene.add(p_ambient, p_directional);
 
     // カメラの向き設定
     if (viewKey === 'top') {
-        camera_p.position.set(0, 10, 0);
+        camera_p.position.set(0, 20, 0);
         camera_p.lookAt(0, 0, 0);
-        camera_p.up.set(0, 0, -1); // 上面図は下が正面
+        camera_p.up.set(0, 0, -1); // 算数の上面図形式：上が奥、下が手前
     } else if (viewKey === 'front') {
-        camera_p.position.set(0, 0, 10);
+        camera_p.position.set(0, 0, 20);
         camera_p.lookAt(0, 0, 0);
     } else if (viewKey === 'right') {
-        camera_p.position.set(10, 0, 0);
+        camera_p.position.set(20, 0, 0);
         camera_p.lookAt(0, 0, 0);
     } else if (viewKey === 'left') {
-        camera_p.position.set(-10, 0, 0);
+        camera_p.position.set(-20, 0, 0);
         camera_p.lookAt(0, 0, 0);
     } else if (viewKey === 'back') {
-        camera_p.position.set(0, 0, -10);
+        camera_p.position.set(0, 0, -20);
         camera_p.lookAt(0, 0, 0);
     }
 
-    projectionViews[viewKey] = { renderer: renderer_p, camera: camera_p, container };
+    projectionViews[viewKey] = { renderer: renderer_p, camera: camera_p, container, p_scene };
 }
 
 window.openProjectionModal = () => {
     projectionActive = true;
     document.getElementById('projection-modal').style.display = 'flex';
 
-    // 初回のみ初期化
+    // 初回のみ全方向分を初期化
     if (Object.keys(projectionViews).length === 0) {
-        initProjectionView('top', 'view-top');
-        initProjectionView('front', 'view-front');
-        initProjectionView('right', 'view-right');
-        initProjectionView('left', 'view-left');
-        initProjectionView('back', 'view-back');
+        ['top', 'front', 'right', 'left', 'back'].forEach(key => {
+            initProjectionView(key, `view-${key}`);
+        });
     }
 
-    setProjectionMode(projectionMode);
+    window.setProjectionMode(projectionMode);
     requestAnimationFrame(renderProjections);
 };
 
@@ -485,9 +486,11 @@ window.closeProjectionModal = () => {
     document.getElementById('projection-modal').style.display = 'none';
 };
 
+/**
+ * 表示モード切り替えと比率調整
+ */
 window.setProjectionMode = (mode) => {
     projectionMode = mode;
-    const grid = document.getElementById('projection-grid');
 
     document.getElementById('btn-mode-3').style.background = (mode === 3) ? '#4facfe' : 'rgba(255,255,255,0.1)';
     document.getElementById('btn-mode-5').style.background = (mode === 5) ? '#4facfe' : 'rgba(255,255,255,0.1)';
@@ -502,49 +505,53 @@ window.setProjectionMode = (mode) => {
         }
     });
 
-    // リサイズ処理を挟んで表示を整える
+    // どの解像度でも正方形を維持する計算 (図形が歪むのを防止)
     setTimeout(() => {
         Object.values(projectionViews).forEach(v => {
             const w = v.container.clientWidth;
             const h = v.container.clientHeight;
+            if (w === 0 || h === 0) return;
+
             v.renderer.setSize(w, h);
 
-            // 正方形を維持するための計算 (重要)
-            const d = 8; // 立体の大きさに合わせて調整
+            const zoom = 8.5; // 立体が収まるサイズ
+            const aspect = w / h;
             if (w > h) {
-                const aspect = w / h;
-                v.camera.left = -d * aspect;
-                v.camera.right = d * aspect;
-                v.camera.top = d;
-                v.camera.bottom = -d;
+                // 横長なら左右を広げる
+                v.camera.left = -zoom * aspect;
+                v.camera.right = zoom * aspect;
+                v.camera.top = zoom;
+                v.camera.bottom = -zoom;
             } else {
-                const aspect = h / w;
-                v.camera.left = -d;
-                v.camera.right = d;
-                v.camera.top = d * aspect;
-                v.camera.bottom = -d * aspect;
+                // 縦長なら上下を広げる
+                v.camera.left = -zoom;
+                v.camera.right = zoom;
+                v.camera.top = zoom / aspect;
+                v.camera.bottom = -zoom / aspect;
             }
             v.camera.updateProjectionMatrix();
         });
-    }, 100);
+    }, 150);
 };
 
+/**
+ * 投影描画ループ
+ * メインシーンから一時的にオブジェクトを借用して描画することで、属性の同期ミスを防ぐ
+ */
 function renderProjections() {
     if (!projectionActive) return;
 
-    // メインシーンのオブジェクト（図形や断面）を投影用シーンに一時的に移動または同期
-    // 今回は最も確実な「レンダリング直前に投影シーンにメインメッシュを追加」方式
     PROJECTION_VIEWS_BY_MODE[projectionMode].forEach(key => {
         const v = projectionViews[key];
-        if (v) {
-            // 図形と断面を投影シーンに追加
+        if (v && currentMesh) {
+            // 図形、ワイヤー、断面キャップを投影用シーンに一時移動
             v.p_scene.add(currentMesh);
             v.p_scene.add(wireMesh);
             capMeshes.forEach(cap => { if (cap) v.p_scene.add(cap); });
 
             v.renderer.render(v.p_scene, v.camera);
 
-            // レンダリングが終わったらメインシーンに戻す
+            // メインシーンに戻す（これを忘れるとメイン画面が消える）
             scene.add(currentMesh);
             scene.add(wireMesh);
             capMeshes.forEach(cap => { if (cap) scene.add(cap); });
