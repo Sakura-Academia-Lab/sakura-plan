@@ -1018,7 +1018,8 @@
           installBtn.style.display = 'none';
         }
         deferredPrompt = null;
-      } else if (isIOS) {
+      } else {
+        // iOSなどのフォールバック
         alert('【iOSでのインストール方法】\n画面下部の「共有ボタン(□に↑)」をタップし、\nメニューから「ホーム画面に追加」を選択してください。');
       }
     });
