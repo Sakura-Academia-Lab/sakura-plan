@@ -122,7 +122,7 @@ function setShape(type) {
     // 表示位置の修正：translate(3,0,0)を削除して中央配置
     currentGeo = geo; currentEdgesGeo = edgeGeo;
     currentMesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0xa8d5e2, side: THREE.DoubleSide, clippingPlanes: planes, clipShadows: true }));
-    wireMesh = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.3, transparent: true }));
+    wireMesh = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: 0x222222, opacity: 0.4, transparent: true }));
     scene.add(currentMesh, wireMesh);
     wireMesh.visible = showWire; // 現在の表示設定を適用
     setDivision(curDiv);
