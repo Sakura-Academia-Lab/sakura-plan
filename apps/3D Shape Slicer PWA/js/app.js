@@ -407,3 +407,118 @@ window.onload = () => {
     init();
 };
 window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+
+/* ============================================================ */
+/* PRO EDITION: 2D PROJECTION VIEWS (三面図 / 五面図) */
+/* ============================================================ */
+
+let projectionActive = false;
+let projectionMode = 3; // 3 or 5
+let projectionViews = {}; // top, front, right, left, back
+const PROJECTION_VIEWS_BY_MODE = {
+    3: ['top', 'front', 'right'],
+    5: ['top', 'front', 'right', 'left', 'back']
+};
+
+function initProjectionView(viewKey, containerId) {
+    const container = document.querySelector(`#${containerId} .projection-canvas-container`);
+    const renderer_p = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer_p.setPixelRatio(window.devicePixelRatio);
+    renderer_p.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer_p.domElement);
+
+    // 直交カメラ (パースなし)
+    const aspect = container.clientWidth / container.clientHeight;
+    const d = 1.2;
+    const camera_p = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 100);
+
+    // カメラの向き設定
+    if (viewKey === 'top') {
+        camera_p.position.set(0, 10, 0);
+        camera_p.lookAt(0, 0, 0);
+        camera_p.up.set(0, 0, -1); // 上面図は下が正面
+    } else if (viewKey === 'front') {
+        camera_p.position.set(0, 0, 10);
+        camera_p.lookAt(0, 0, 0);
+    } else if (viewKey === 'right') {
+        camera_p.position.set(10, 0, 0);
+        camera_p.lookAt(0, 0, 0);
+    } else if (viewKey === 'left') {
+        camera_p.position.set(-10, 0, 0);
+        camera_p.lookAt(0, 0, 0);
+    } else if (viewKey === 'back') {
+        camera_p.position.set(0, 0, -10);
+        camera_p.lookAt(0, 0, 0);
+    }
+
+    projectionViews[viewKey] = { renderer: renderer_p, camera: camera_p, container };
+}
+
+window.openProjectionModal = () => {
+    projectionActive = true;
+    document.getElementById('projection-modal').style.display = 'flex';
+
+    // 初回のみ初期化
+    if (Object.keys(projectionViews).length === 0) {
+        initProjectionView('top', 'view-top');
+        initProjectionView('front', 'view-front');
+        initProjectionView('right', 'view-right');
+        initProjectionView('left', 'view-left');
+        initProjectionView('back', 'view-back');
+    }
+
+    setProjectionMode(projectionMode);
+    requestAnimationFrame(renderProjections);
+};
+
+window.closeProjectionModal = () => {
+    projectionActive = false;
+    document.getElementById('projection-modal').style.display = 'none';
+};
+
+window.setProjectionMode = (mode) => {
+    projectionMode = mode;
+    const grid = document.getElementById('projection-grid');
+
+    document.getElementById('btn-mode-3').style.background = (mode === 3) ? '#4facfe' : 'rgba(255,255,255,0.1)';
+    document.getElementById('btn-mode-5').style.background = (mode === 5) ? '#4facfe' : 'rgba(255,255,255,0.1)';
+
+    const allKeys = ['top', 'front', 'right', 'left', 'back'];
+    allKeys.forEach(key => {
+        const view = document.getElementById(`view-${key}`);
+        if (PROJECTION_VIEWS_BY_MODE[mode].includes(key)) {
+            view.style.display = 'flex';
+        } else {
+            view.style.display = 'none';
+        }
+    });
+
+    // リサイズ処理を挟んで表示を整える
+    setTimeout(() => {
+        Object.values(projectionViews).forEach(v => {
+            const w = v.container.clientWidth;
+            const h = v.container.clientHeight;
+            v.renderer.setSize(w, h);
+            const aspect = w / h;
+            const d = 1.2;
+            v.camera.left = -d * aspect;
+            v.camera.right = d * aspect;
+            v.camera.top = d;
+            v.camera.bottom = -d;
+            v.camera.updateProjectionMatrix();
+        });
+    }, 10);
+};
+
+function renderProjections() {
+    if (!projectionActive) return;
+
+    PROJECTION_VIEWS_BY_MODE[projectionMode].forEach(key => {
+        const v = projectionViews[key];
+        if (v) {
+            v.renderer.render(scene, v.camera);
+        }
+    });
+
+    requestAnimationFrame(renderProjections);
+}
