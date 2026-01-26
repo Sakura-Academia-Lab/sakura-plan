@@ -1038,7 +1038,7 @@
     const installBtn = document.getElementById('btn-install');
     let newWorker;
 
-    // Service Worker 登録
+    // --- Service Worker 登録 & 更新管理 ---
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {
@@ -1048,7 +1048,7 @@
           reg.addEventListener('updatefound', () => {
             newWorker = reg.installing;
             newWorker.addEventListener('statechange', () => {
-              // 新しいSWがインストール済み状態で、かつ既に制御中のSWがある場合(更新時)
+              // 新しいSWがインストール済み && 旧SWが制御中なら更新トースト表示
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                 showUpdateToast();
               }
@@ -1076,64 +1076,22 @@
         newWorker.postMessage({ type: 'SKIP_WAITING' });
       }
     }
-    let deferredPrompt;
-    const installBtn = document.getElementById('btn-install');
-    let newWorker;
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').then(reg => {
-          console.log('Service Worker registered.', reg);
-
-          // 更新が見つかった場合
-          reg.addEventListener('updatefound', () => {
-            newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-              // インストール完了 && まだ古いSWが有効な場合 → 更新待ちあり
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                showUpdateToast();
-              }
-            });
-          });
-        });
-
-        // リロード処理
-        let refreshing;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (refreshing) return;
-          window.location.reload();
-          refreshing = true;
-        });
-      });
-    }
-
-    function showUpdateToast() {
-      const toast = document.getElementById("update-toast");
-      toast.className = "show";
-    }
-
-    function updateApp() {
-      if (newWorker) {
-        newWorker.postMessage({ type: 'SKIP_WAITING' });
-      }
-    }
-
-    // PWAインストールの有無判定
+    // --- PWAインストール制御 ---
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
 
     // 初期表示判定 (iOSなら即表示、それ以外はイベント待ち)
-    if (!isStandalone) {
-      if (isIOS) {
-        installBtn.style.display = 'block';
-      }
+    if (!isStandalone && isIOS) {
+      installBtn.style.display = 'block';
     }
 
-    // インストールプロンプトの制御 (Android/PC)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.style.display = 'block';
+      if (!isStandalone) {
+        installBtn.style.display = 'block';
+      }
     });
 
     installBtn.addEventListener('click', async () => {
@@ -1150,11 +1108,15 @@
       }
     });
 
-    // インストール完了時のイベント
     window.addEventListener('appinstalled', () => {
       installBtn.style.display = 'none';
       deferredPrompt = null;
     });
+
+    // --- 投影図モーダル制御 (Pro機能) ---
+    function openProjectionModal() {
+      alert("投影図（三面図/五面図）機能は現在実装中です。まもなく公開いたします！");
+    }
   </script>
 </body>
 
