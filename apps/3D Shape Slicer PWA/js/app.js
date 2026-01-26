@@ -508,24 +508,46 @@ window.setProjectionMode = (mode) => {
             const w = v.container.clientWidth;
             const h = v.container.clientHeight;
             v.renderer.setSize(w, h);
-            const aspect = w / h;
-            const d = 1.2;
-            v.camera.left = -d * aspect;
-            v.camera.right = d * aspect;
-            v.camera.top = d;
-            v.camera.bottom = -d;
+
+            // 正方形を維持するための計算 (重要)
+            const d = 8; // 立体の大きさに合わせて調整
+            if (w > h) {
+                const aspect = w / h;
+                v.camera.left = -d * aspect;
+                v.camera.right = d * aspect;
+                v.camera.top = d;
+                v.camera.bottom = -d;
+            } else {
+                const aspect = h / w;
+                v.camera.left = -d;
+                v.camera.right = d;
+                v.camera.top = d * aspect;
+                v.camera.bottom = -d * aspect;
+            }
             v.camera.updateProjectionMatrix();
         });
-    }, 10);
+    }, 100);
 };
 
 function renderProjections() {
     if (!projectionActive) return;
 
+    // メインシーンのオブジェクト（図形や断面）を投影用シーンに一時的に移動または同期
+    // 今回は最も確実な「レンダリング直前に投影シーンにメインメッシュを追加」方式
     PROJECTION_VIEWS_BY_MODE[projectionMode].forEach(key => {
         const v = projectionViews[key];
         if (v) {
-            v.renderer.render(scene, v.camera);
+            // 図形と断面を投影シーンに追加
+            v.p_scene.add(currentMesh);
+            v.p_scene.add(wireMesh);
+            capMeshes.forEach(cap => { if (cap) v.p_scene.add(cap); });
+
+            v.renderer.render(v.p_scene, v.camera);
+
+            // レンダリングが終わったらメインシーンに戻す
+            scene.add(currentMesh);
+            scene.add(wireMesh);
+            capMeshes.forEach(cap => { if (cap) scene.add(cap); });
         }
     });
 
