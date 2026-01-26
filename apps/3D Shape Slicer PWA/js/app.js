@@ -409,11 +409,11 @@ window.onload = () => {
 window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
 
 /* ============================================================ */
-/* PRO EDITION: 2D PROJECTION VIEWS (三面図 / 五面図) - Ver 1.4.4 */
+/* PRO EDITION: 2D PROJECTION VIEWS (六面図) - Ver 1.4.6 */
 /* ============================================================ */
 
 let projectionActive = false;
-let projectionMode = 6;
+let projectionViews = {};
 const ALL_V_KEYS = ['top', 'bottom', 'front', 'back', 'right', 'left'];
 
 /**
@@ -421,20 +421,22 @@ const ALL_V_KEYS = ['top', 'bottom', 'front', 'back', 'right', 'left'];
  */
 function initProjectionView(viewKey, containerId) {
     const container = document.querySelector(`#${containerId} .projection-canvas-container`);
+    if (!container) return;
+
     const renderer_p = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer_p.setPixelRatio(window.devicePixelRatio);
     renderer_p.setSize(container.clientWidth, container.clientHeight);
-    renderer_p.localClippingEnabled = true; // 断面の切り欠き表示に必須
+    renderer_p.localClippingEnabled = true;
     container.appendChild(renderer_p.domElement);
 
     // 直交カメラ (パースなし)
     const camera_p = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 100);
 
-    // 投影図専用のシーンとライト（メインシーンへの干渉を物理的に遮断）
+    // 投影図専用のシーン（メインシーンへの干渉を防止）
     const p_scene = new THREE.Scene();
-    p_scene.background = new THREE.Color(0xffffff); // 背景を白に固定
+    p_scene.background = new THREE.Color(0xffffff);
 
-    // 専用の照明（メインシーンのライト設定を完全に無視する）
+    // 専用の照明
     const p_ambient = new THREE.AmbientLight(0xffffff, 0.75);
     const p_directional = new THREE.DirectionalLight(0xffffff, 0.45);
     p_directional.position.set(5, 10, 7);
@@ -444,7 +446,7 @@ function initProjectionView(viewKey, containerId) {
     if (viewKey === 'top') {
         camera_p.position.set(0, 20, 0);
         camera_p.lookAt(0, 0, 0);
-        camera_p.up.set(0, 0, -1); // 算数の上面図形式：上が奥、下が手前
+        camera_p.up.set(0, 0, -1);
     } else if (viewKey === 'bottom') {
         camera_p.position.set(0, -20, 0);
         camera_p.lookAt(0, 0, 0);
@@ -452,14 +454,14 @@ function initProjectionView(viewKey, containerId) {
     } else if (viewKey === 'front') {
         camera_p.position.set(0, 0, 20);
         camera_p.lookAt(0, 0, 0);
+    } else if (viewKey === 'back') {
+        camera_p.position.set(0, 0, -20);
+        camera_p.lookAt(0, 0, 0);
     } else if (viewKey === 'right') {
         camera_p.position.set(20, 0, 0);
         camera_p.lookAt(0, 0, 0);
     } else if (viewKey === 'left') {
         camera_p.position.set(-20, 0, 0);
-        camera_p.lookAt(0, 0, 0);
-    } else if (viewKey === 'back') {
-        camera_p.position.set(0, 0, -20);
         camera_p.lookAt(0, 0, 0);
     }
 
@@ -486,7 +488,7 @@ window.closeProjectionModal = () => {
 };
 
 /**
- * 6面図の比率調整
+ * 六面図のサイズ・比率調整
  */
 window.updateProjectionLayout = () => {
     setTimeout(() => {
