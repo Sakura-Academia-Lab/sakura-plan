@@ -470,14 +470,13 @@ window.openProjectionModal = () => {
     projectionActive = true;
     document.getElementById('projection-modal').style.display = 'flex';
 
-    // 初回のみ全方向分を初期化
     if (Object.keys(projectionViews).length === 0) {
-        ['top', 'front', 'right', 'left', 'back'].forEach(key => {
+        ALL_V_KEYS.forEach(key => {
             initProjectionView(key, `view-${key}`);
         });
     }
 
-    window.setProjectionMode(projectionMode);
+    window.updateProjectionLayout();
     requestAnimationFrame(renderProjections);
 };
 
@@ -487,25 +486,9 @@ window.closeProjectionModal = () => {
 };
 
 /**
- * 表示モード切り替えと比率調整
+ * 6面図の比率調整
  */
-window.setProjectionMode = (mode) => {
-    projectionMode = mode;
-
-    document.getElementById('btn-mode-3').style.background = (mode === 3) ? '#4facfe' : 'rgba(255,255,255,0.1)';
-    document.getElementById('btn-mode-5').style.background = (mode === 5) ? '#4facfe' : 'rgba(255,255,255,0.1)';
-
-    const allKeys = ['top', 'front', 'right', 'left', 'back'];
-    allKeys.forEach(key => {
-        const view = document.getElementById(`view-${key}`);
-        if (PROJECTION_VIEWS_BY_MODE[mode].includes(key)) {
-            view.style.display = 'flex';
-        } else {
-            view.style.display = 'none';
-        }
-    });
-
-    // どの解像度でも正方形を維持する計算 (図形が歪むのを防止)
+window.updateProjectionLayout = () => {
     setTimeout(() => {
         Object.values(projectionViews).forEach(v => {
             const w = v.container.clientWidth;
@@ -514,16 +497,14 @@ window.setProjectionMode = (mode) => {
 
             v.renderer.setSize(w, h);
 
-            const zoom = 8.5; // 立体が収まるサイズ
+            const zoom = 8.5;
             const aspect = w / h;
             if (w > h) {
-                // 横長なら左右を広げる
                 v.camera.left = -zoom * aspect;
                 v.camera.right = zoom * aspect;
                 v.camera.top = zoom;
                 v.camera.bottom = -zoom;
             } else {
-                // 縦長なら上下を広げる
                 v.camera.left = -zoom;
                 v.camera.right = zoom;
                 v.camera.top = zoom / aspect;
@@ -535,23 +516,20 @@ window.setProjectionMode = (mode) => {
 };
 
 /**
- * 投影描画ループ
- * メインシーンから一時的にオブジェクトを借用して描画することで、属性の同期ミスを防ぐ
+ * 六面図の描画ループ
  */
 function renderProjections() {
     if (!projectionActive) return;
 
-    PROJECTION_VIEWS_BY_MODE[projectionMode].forEach(key => {
+    ALL_V_KEYS.forEach(key => {
         const v = projectionViews[key];
         if (v && currentMesh) {
-            // 図形、ワイヤー、断面キャップを投影用シーンに一時移動
             v.p_scene.add(currentMesh);
             v.p_scene.add(wireMesh);
             capMeshes.forEach(cap => { if (cap) v.p_scene.add(cap); });
 
             v.renderer.render(v.p_scene, v.camera);
 
-            // メインシーンに戻す（これを忘れるとメイン画面が消える）
             scene.add(currentMesh);
             scene.add(wireMesh);
             capMeshes.forEach(cap => { if (cap) scene.add(cap); });
