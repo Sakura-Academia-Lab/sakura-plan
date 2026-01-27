@@ -97,7 +97,7 @@ window.setView = (view) => {
 function addNewObject(typeOverride) {
     const type = typeOverride || document.getElementById('add-type').value;
     let w = 4, h = 6, d = 0, col = 0xffffff;
-    if (type === 'plate') { w = 4; h = 6; d = 0.1; }
+    if (type === 'plate') { w = 4; h = 6; d = 0; }
     else if (type === 'cube') { w = 4; h = 4; d = 4; }
     else { w = 4; h = 8; d = 4; }
 
