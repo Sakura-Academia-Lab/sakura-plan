@@ -45,8 +45,7 @@
 
 | 時刻 | 更新ファイル | 更新内容 |
 | --- | --- | --- |
-| 09:17 | `apps/shadow-simulator/index.html` | 影のシミュレーター機能改善（光源水平移動、タイトル変更） |
-| 09:17 | `apps/shadow-simulator/css/style.css` | CSSファイルを新規作成（ファイル分割による整理） |
-| 09:17 | `apps/shadow-simulator/js/app.js` | JSファイルを新規作成（ロジック抽出、光源X-Z座標制御追加） |
+| 10:20 | `apps/shadow-simulator/` | Ver 1.6 影の視認性向上（物体カラーを白に変更、環境光調整） |
+| 09:17 | `apps/shadow-simulator/` | Ver 1.1-1.5 機能改善（光源水平移動、ファイル整理、スマホ操作修正） |
 
 ---

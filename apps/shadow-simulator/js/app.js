@@ -49,7 +49,7 @@ function init() {
     grid.position.y = 0.01;
     scene.add(grid);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
     pointLight = new THREE.PointLight(0xffffff, 0.5, 200);
     pointLight.castShadow = true;
