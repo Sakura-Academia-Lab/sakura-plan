@@ -117,7 +117,7 @@ window.setView = (view) => {
 // --- 物体操作 (以下ロジック継続) ---
 function addNewObject(typeOverride) {
     const type = typeOverride || document.getElementById('add-type').value;
-    let w = 4, h = 6, d = 0, col = 0xffffff;
+    let w = 4, h = 6, d = 0, col = 0xe3e6e8;
     if (type === 'plate') { w = 4; h = 6; d = 0; }
     else if (type === 'cube') { w = 4; h = 4; d = 4; }
     else { w = 4; h = 8; d = 4; }
@@ -125,11 +125,9 @@ function addNewObject(typeOverride) {
     const geo = new THREE.BoxGeometry(w, h, d);
     const gridTex = createGridTexture();
     gridTex.repeat.set(w, h || 1); // 1cmごとに繰り返す
-    const mat = new THREE.MeshStandardMaterial({
+    const mat = new THREE.MeshPhongMaterial({
         color: col,
-        map: gridTex,
-        roughness: 1.0,
-        metalness: 0.0
+        map: gridTex
     });
     const mesh = new THREE.Mesh(geo, mat);
 
