@@ -45,7 +45,8 @@
 
 | 時刻 | 更新ファイル | 更新内容 |
 | --- | --- | --- |
-| 10:25 | `apps/shadow-simulator/` | Ver 1.7 視認性の徹底改善（ライティングの抜本的見直し、白の強調） |
+| 10:30 | `apps/shadow-simulator/` | Ver 1.8 視認性の究極改善（sRGB対応、HemisphereLight導入） |
+| 10:25 | `apps/shadow-simulator/` | Ver 1.7 視認性の徹底改善（ライティングの見直し、白の強調） |
 | 10:20 | `apps/shadow-simulator/` | Ver 1.6 影の視認性向上（物体カラーを白に変更、環境光調整） |
 | 09:17 | `apps/shadow-simulator/` | Ver 1.1-1.5 機能改善（光源水平移動、ファイル整理、スマホ操作修正） |
 

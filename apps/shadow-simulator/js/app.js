@@ -25,6 +25,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputEncoding = THREE.sRGBEncoding;
     document.body.appendChild(renderer.domElement);
 
     labelRenderer = new THREE.CSS2DRenderer();
@@ -49,7 +50,10 @@ function init() {
     grid.position.y = 0.01;
     scene.add(grid);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+    hemiLight.position.set(0, 20, 0);
+    scene.add(hemiLight);
 
     pointLight = new THREE.PointLight(0xffffff, 1.2, 200);
     pointLight.castShadow = true;
@@ -102,7 +106,7 @@ function addNewObject(typeOverride) {
     else { w = 4; h = 8; d = 4; }
 
     const geo = new THREE.BoxGeometry(w, h, d);
-    const mat = new THREE.MeshPhongMaterial({ color: col });
+    const mat = new THREE.MeshStandardMaterial({ color: col, roughness: 1.0, metalness: 0.0 });
     const mesh = new THREE.Mesh(geo, mat);
 
     mesh.castShadow = true;
