@@ -3,11 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PRPCBPS2');</script>
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>桜アカデミア</title>
     <style>
@@ -201,7 +204,8 @@
             opacity: 0.6;
         }
 
-        .coming-soon-badge {
+        .coming-soon-badge,
+        .new-badge {
             position: absolute;
             top: -12px;
             right: -12px;
@@ -211,6 +215,10 @@
             padding: 5px 12px;
             border-radius: 20px;
             font-weight: bold;
+        }
+
+        .new-badge {
+            background-color: var(--active-red, #ff5252);
         }
 
         /* --- Twitterリンク --- */
@@ -271,8 +279,8 @@
 </head>
 
 <body>
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
 
     <main>
         <div class="logo-container">
@@ -297,6 +305,7 @@
 
         <div class="nav-grid">
             <a href="./apps/index.html" class="nav-card">
+                <span class="new-badge">NEW!</span>
                 <span class="icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color" />
