@@ -49,9 +49,9 @@ function init() {
     grid.position.y = 0.01;
     scene.add(grid);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
 
-    pointLight = new THREE.PointLight(0xffffff, 0.5, 200);
+    pointLight = new THREE.PointLight(0xffffff, 1.2, 200);
     pointLight.castShadow = true;
     pointLight.shadow.mapSize.width = 2048;
     pointLight.shadow.mapSize.height = 2048;
