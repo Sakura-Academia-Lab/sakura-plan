@@ -45,6 +45,7 @@
 
 | 時刻 | 更新ファイル | 更新内容 |
 | --- | --- | --- |
+| 10:35 | `apps/shadow-simulator/` | Ver 1.9 方眼テクスチャ実装（物体表面にグリッドを表示し視認性向上） |
 | 10:30 | `apps/shadow-simulator/` | Ver 1.8 視認性の究極改善（sRGB対応、HemisphereLight導入） |
 | 10:25 | `apps/shadow-simulator/` | Ver 1.7 視認性の徹底改善（ライティングの見直し、白の強調） |
 | 10:20 | `apps/shadow-simulator/` | Ver 1.6 影の視認性向上（物体カラーを白に変更、環境光調整） |

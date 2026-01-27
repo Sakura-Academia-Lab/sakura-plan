@@ -14,6 +14,23 @@ const ctx = canvas.getContext('2d');
 const CANVAS_SCALE = 10;
 const CANVAS_OFFSET = canvas.width / 2;
 
+function createGridTexture() {
+    const size = 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+    ctx.strokeStyle = '#d0d8e0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, size, size);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+}
+const sharedGridTexture = createGridTexture();
+
 function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe3e6e8);
@@ -106,7 +123,14 @@ function addNewObject(typeOverride) {
     else { w = 4; h = 8; d = 4; }
 
     const geo = new THREE.BoxGeometry(w, h, d);
-    const mat = new THREE.MeshStandardMaterial({ color: col, roughness: 1.0, metalness: 0.0 });
+    const mat = new THREE.MeshStandardMaterial({
+        color: col,
+        map: sharedGridTexture,
+        roughness: 1.0,
+        metalness: 0.0
+    });
+    // UV調整でサイズに合わせたグリッド密度にする（簡易版）
+    sharedGridTexture.repeat.set(2, 2);
     const mesh = new THREE.Mesh(geo, mat);
 
     mesh.castShadow = true;
