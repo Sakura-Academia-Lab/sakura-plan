@@ -40,3 +40,13 @@
 | 14:10 | `apps/index.html` | Ver 1.4 情報を反映 |
 
 ---
+
+### 2026-01-27
+
+| 時刻 | 更新ファイル | 更新内容 |
+| --- | --- | --- |
+| 09:17 | `apps/shadow-simulator/index.html` | 影のシミュレーター機能改善（光源水平移動、タイトル変更） |
+| 09:17 | `apps/shadow-simulator/css/style.css` | CSSファイルを新規作成（ファイル分割による整理） |
+| 09:17 | `apps/shadow-simulator/js/app.js` | JSファイルを新規作成（ロジック抽出、光源X-Z座標制御追加） |
+
+---
