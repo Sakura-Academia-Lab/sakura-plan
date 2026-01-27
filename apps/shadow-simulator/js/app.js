@@ -22,14 +22,14 @@ function createGridTexture() {
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, size, size);
-    ctx.strokeStyle = '#d0d8e0';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#90a0b0';
+    ctx.lineWidth = 2;
     ctx.strokeRect(0, 0, size, size);
     const tex = new THREE.CanvasTexture(canvas);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     return tex;
 }
-const sharedGridTexture = createGridTexture();
 
 function init() {
     scene = new THREE.Scene();
@@ -67,12 +67,12 @@ function init() {
     grid.position.y = 0.01;
     scene.add(grid);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.2);
     hemiLight.position.set(0, 20, 0);
     scene.add(hemiLight);
 
-    pointLight = new THREE.PointLight(0xffffff, 1.2, 200);
+    pointLight = new THREE.PointLight(0xffffff, 3.0, 200);
     pointLight.castShadow = true;
     pointLight.shadow.mapSize.width = 2048;
     pointLight.shadow.mapSize.height = 2048;
@@ -123,14 +123,14 @@ function addNewObject(typeOverride) {
     else { w = 4; h = 8; d = 4; }
 
     const geo = new THREE.BoxGeometry(w, h, d);
+    const gridTex = createGridTexture();
+    gridTex.repeat.set(w, h || 1); // 1cmごとに繰り返す
     const mat = new THREE.MeshStandardMaterial({
         color: col,
-        map: sharedGridTexture,
+        map: gridTex,
         roughness: 1.0,
         metalness: 0.0
     });
-    // UV調整でサイズに合わせたグリッド密度にする（簡易版）
-    sharedGridTexture.repeat.set(2, 2);
     const mesh = new THREE.Mesh(geo, mat);
 
     mesh.castShadow = true;
@@ -260,6 +260,11 @@ function updateSize() {
     if (selectedObj.userData.edgeLine) selectedObj.remove(selectedObj.userData.edgeLine);
     selectedObj.geometry.dispose();
     selectedObj.geometry = new THREE.BoxGeometry(w, h, d);
+
+    if (selectedObj.material.map) {
+        selectedObj.material.map.repeat.set(w, h || 1);
+        selectedObj.material.map.needsUpdate = true;
+    }
 
     const edges = new THREE.EdgesGeometry(selectedObj.geometry);
     const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3 }));

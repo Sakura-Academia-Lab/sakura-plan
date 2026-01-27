@@ -27,7 +27,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/DragControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
 
-  <link rel="stylesheet" href="css/style.css?v=20260127_9">
+  <link rel="stylesheet" href="css/style.css?v=2.0_final">
 </head>
 
 <body>
@@ -36,7 +36,7 @@
 
   <header id="app-header">
     <a href="../index.html" class="btn-home">🏠 ホーム</a>
-    <h1 style="font-size: 16px; margin: 0;">影のシミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 1.9</small></h1>
+    <h1 style="font-size: 16px; margin: 0;">影のシミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.0</small></h1>
     <div style="width: 60px;"></div>
   </header>
 
@@ -110,8 +110,8 @@
     <div class="ctrl-group">
       <label class="ctrl-label">光源の高さ (H) (cm)</label>
       <div class="input-row">
-        <input type="number" id="light-h" value="18" min="5" max="50" step="1" onchange="updateLight()">
-        <input type="range" id="range-l" min="5" max="50" value="18" step="1" oninput="updateLight(true)">
+        <input type="number" id="light-h" value="10" min="5" max="50" step="1" onchange="updateLight()">
+        <input type="range" id="range-l" min="5" max="50" value="10" step="1" oninput="updateLight(true)">
       </div>
       <label class="ctrl-label" style="margin-top:8px;">光源の水平位置 (X, Z) (cm)</label>
       <div class="input-row">
@@ -158,7 +158,7 @@
 
   <canvas id="shadowCanvas" width="1024" height="1024" style="display:none;"></canvas>
 
-  <script src="js/app.js?v=20260127_9"></script>
+  <script src="js/app.js?v=2.0_final"></script>
 </body>
 
 </html>
