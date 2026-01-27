@@ -155,8 +155,8 @@ function addNewObject(typeOverride) {
     mesh.userData.label = label;
 
     const offset = Math.round((Math.random() - 0.5) * 4);
-    let posX = 10 + offset;
-    let posZ = -5 + offset;
+    let posX = 3 + offset;
+    let posZ = 3 + offset;
     if (w % 2 !== 0) posX += 0.5;
     if (d % 2 !== 0 && d > 0.5) posZ += 0.5;
 

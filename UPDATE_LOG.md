@@ -45,6 +45,7 @@
 
 | 時刻 | 更新ファイル | 更新内容 |
 | --- | --- | --- |
+| 10:45 | `apps/shadow-simulator/` | Ver 2.1 初期配置の調整（物体を原点付近に出現するように変更） |
 | 10:40 | `apps/shadow-simulator/` | Ver 2.0 究極の視認性（精密1cmグリッド、超高コントラスト影、初期高度調整） |
 | 10:35 | `apps/shadow-simulator/` | Ver 1.9 方眼テクスチャ実装（物体表面にグリッドを表示し視認性向上） |
 | 10:30 | `apps/shadow-simulator/` | Ver 1.8 視認性の究極改善（sRGB対応、HemisphereLight導入） |
