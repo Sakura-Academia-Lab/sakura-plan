@@ -57,14 +57,34 @@
         .header-top {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             width: 100%;
             max-width: 1000px;
         }
 
-        .header-logo-icon {
-            width: 60px;
-            height: 60px;
+        .header-logo-container {
+            width: 80px;
+            height: 80px;
+        }
+
+        .brand-logo {
+            width: 100%;
+            height: 100%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
 
         .header-logo-icon svg {
@@ -130,12 +150,37 @@
             box-sizing: border-box;
         }
 
+        .app-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary-navy);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent-sakura);
+        }
+
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 40px;
-            justify-content: center;
-            margin-bottom: 60px;
+            justify-content: flex-start;
         }
 
         /* --- カードデザイン --- */
@@ -437,6 +482,10 @@
                 flex-direction: column;
                 gap: 5px;
             }
+
+            .app-grid {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -449,30 +498,20 @@
         <a href="../index.html" class="back-link">◀ ホームに戻る</a>
 
         <div class="header-top">
-            <div class="header-logo-icon">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="桜アカデミアロゴ">
-                    <path d="M 5 70 L 95 70 L 100 85 L 0 85 Z" class="pc-color" />
-                    <path d="M 10 20 L 90 20 L 90 70 L 10 70 Z" class="pc-color" />
-                    <rect x="15" y="25" width="70" height="40" class="screen-color" />
-                    <g transform="translate(20, 30)">
-                        <rect x="0" y="0" width="30" height="2" class="data-text" />
-                        <rect x="0" y="5" width="20" height="2" class="data-text" />
-                        <rect x="40" y="10" width="5" height="20" class="data-bar" />
-                        <rect x="48" y="5" width="5" height="25" class="data-bar" />
-                        <path d="M 38 25 L 45 20 L 53 10 L 63 15" class="data-line" />
-                    </g>
-                    <g transform="translate(55, 45) scale(0.6)">
+            <div class="header-logo-container">
+                <svg class="brand-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(5,0)">
                         <path d="M 80 65 Q 75 25 45 20 Q 20 20 15 45 Q 15 70 45 75 Q 65 75 80 65 Z"
                             class="body-color" />
                         <path d="M 45 20 Q 20 20 15 45 L 30 45 Q 35 25 45 20" class="head-color" />
                         <ellipse cx="27" cy="38" rx="7" ry="5" class="cheek-color" />
                         <path d="M 15 40 Q 5 42 15 48 Z" class="beak-color" />
-                        <path d="M 40 55 Q 30 65 10 60" class="body-color" stroke="#1a2a44" stroke-width="3" />
-                        <g transform="translate(35, 10) rotate(-10)">
-                            <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
-                            <rect x="15" y="18" width="20" height="8" class="head-color" />
-                            <circle cx="35" cy="30" r="3" class="sakura-color" />
-                        </g>
+                        <path d="M 80 65 L 90 75 L 80 80" class="head-color" />
+                    </g>
+                    <g transform="translate(35, 10) rotate(-10)">
+                        <path d="M 0 10 L 25 0 L 50 10 L 25 20 Z" class="head-color" />
+                        <rect x="15" y="18" width="20" height="8" class="head-color" />
+                        <circle cx="35" cy="30" r="3" class="sakura-color" />
                     </g>
                 </svg>
             </div>
@@ -488,96 +527,112 @@
     </header>
 
     <main>
-        <div class="app-grid">
 
-            <div class="app-card active">
-                <span class="status-badge ver">公開中</span>
-                <div class="app-icon-area">
-                    <svg viewBox="0 0 100 100" role="img" aria-label="影のシミュレーターアイコン">
-                        <rect x="10" y="70" width="80" height="10" fill="#bbb" />
-                        <rect x="30" y="30" width="10" height="40" fill="#37474f" />
-                        <path d="M 40 70 L 80 70 L 60 50 Z" fill="rgba(0,0,0,0.2)" />
-                        <circle cx="20" cy="20" r="8" fill="#ffd600" />
-                        <line x1="20" y1="20" x2="60" y2="70" stroke="#ffd600" stroke-width="2"
-                            stroke-dasharray="4,2" />
-                    </svg>
-                </div>
-                <div class="app-title">影のシミュレーター</div>
-                <div class="app-desc">
-                    <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
-                    棒や壁に映る「影」を3Dで可視化。<br>
-                    面積の自動計算や豊富なプリセットで、難解な影の解法が身につきます。
-                </div>
-                <div class="btn-group">
-                    <a href="./shadow-simulator/index.html" class="main-btn">ブラウザで使う &rarr;</a>
-                </div>
-            </div>
+        <!-- Section 1: Learning Apps -->
+        <section class="app-section">
+            <h2 class="section-title">✏️ 中学受験学習アプリ</h2>
 
-            <div class="app-card active">
-                <span class="status-badge ver">Ver 2.1</span>
-                <div class="app-icon-area">
-                    <svg viewBox="0 0 100 100" role="img" aria-label="入試シミュレーターアイコン">
-                        <rect x="15" y="15" width="70" height="70" rx="10" class="sim-bg" />
-                        <rect x="25" y="25" width="30" height="4" fill="#ccc" />
-                        <rect x="25" y="35" width="40" height="4" fill="#ccc" />
-                        <path d="M 60 70 L 60 40 L 70 30 L 80 50 L 85 20" fill="none" stroke="#4facfe" stroke-width="3"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        <circle cx="85" cy="20" r="3" fill="#ff6b6b" />
-                    </svg>
-                </div>
-                <div class="app-title">入試シミュレーター <small>(受験プランナー)</small></div>
+            <div class="app-grid">
 
-                <div class="app-desc">
-                    <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
-                    学校パネルをドラッグ＆ドロップ。<br>
-                    パズル感覚で直感的に併願パターンを作成できます。<br>
-                    <span class="note-text">※偏差値データは、現在実装しておりません。</span>
+                <!-- 3D Shape Slicer -->
+                <div class="app-card active">
+                    <span class="status-badge ver">Ver 1.4</span>
+                    <div class="app-icon-area">
+                        <svg viewBox="0 0 100 100" role="img" aria-label="立体図形スライサーアイコン">
+                            <g transform="translate(50, 50) rotate(10) translate(-50, -50)">
+                                <path d="M 25 25 L 75 25 L 90 40 L 40 40 Z" class="cube-face" fill="#cbd5e1" />
+                                <path d="M 25 25 L 40 40 L 40 90 L 25 75 Z" class="cube-face" fill="#94a3b8" />
+                                <path d="M 40 90 L 90 90 L 90 40 L 40 40 Z" class="cube-face" fill="#e2e8f0" />
+                                <line x1="15" y1="15" x2="95" y2="95" class="cube-cut" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="app-title">立体図形スライサー</div>
+                    <div class="app-desc">
+                        <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
+                        立方体や三角錐の切断を3Dでシミュレーション。<br>
+                        苦手な断面図を指一本で回転・確認できます。
+                    </div>
+                    <div class="btn-group">
+                        <a href="./3D Shape Slicer/index.html" class="main-btn">ブラウザで使う &rarr;</a>
+                    </div>
                 </div>
 
-                <div class="btn-group">
-                    <a href="https://sakura-academia-lab.github.io/sakura-plan/apps/juken-planner/index.html"
-                        target="_blank" class="main-btn">
-                        ブラウザで使う &rarr;
-                    </a>
-
-                    <div>
-                        <a href="juken_planner_basic.zip" download class="sub-btn">
-                            📥 オフライン版をDL (ZIP)
-                        </a>
-                        <span class="dl-note">
-                            ※ネット環境がない場所で使いたい方向け。<br>
-                            更新があった場合は再度ダウンロードが必要です。<br>
-                            （ブラウザ版は自動的に最新になります）
-                        </span>
+                <!-- Shadow Simulator -->
+                <div class="app-card active">
+                    <span class="status-badge ver">公開中</span>
+                    <div class="app-icon-area">
+                        <svg viewBox="0 0 100 100" role="img" aria-label="影のシミュレーターアイコン">
+                            <rect x="10" y="70" width="80" height="10" fill="#bbb" />
+                            <rect x="30" y="30" width="10" height="40" fill="#37474f" />
+                            <path d="M 40 70 L 80 70 L 60 50 Z" fill="rgba(0,0,0,0.2)" />
+                            <circle cx="20" cy="20" r="8" fill="#ffd600" />
+                            <line x1="20" y1="20" x2="60" y2="70" stroke="#ffd600" stroke-width="2"
+                                stroke-dasharray="4,2" />
+                        </svg>
+                    </div>
+                    <div class="app-title">影のシミュレーター</div>
+                    <div class="app-desc">
+                        <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
+                        棒や壁に映る「影」を3Dで可視化。<br>
+                        面積の自動計算や豊富なプリセットで、難解な影の解法が身につきます。
+                    </div>
+                    <div class="btn-group">
+                        <a href="./shadow-simulator/index.html" class="main-btn">ブラウザで使う &rarr;</a>
                     </div>
                 </div>
             </div>
+        </section>
 
+        <!-- Section 2: Utility Apps -->
+        <section class="app-section">
+            <h2 class="section-title">📅 受験便利アプリ</h2>
 
-            <div class="app-card active">
-                <span class="status-badge ver">Ver 1.4</span>
-                <div class="app-icon-area">
-                    <svg viewBox="0 0 100 100" role="img" aria-label="立体図形スライサーアイコン">
-                        <g transform="translate(50, 50) rotate(10) translate(-50, -50)">
-                            <path d="M 25 25 L 75 25 L 90 40 L 40 40 Z" class="cube-face" fill="#cbd5e1" />
-                            <path d="M 25 25 L 40 40 L 40 90 L 25 75 Z" class="cube-face" fill="#94a3b8" />
-                            <path d="M 40 90 L 90 90 L 90 40 L 40 40 Z" class="cube-face" fill="#e2e8f0" />
-                            <line x1="15" y1="15" x2="95" y2="95" class="cube-cut" />
-                        </g>
-                    </svg>
+            <div class="app-grid">
+
+                <!-- Exam Planner -->
+                <div class="app-card active">
+                    <span class="status-badge ver">Ver 2.1</span>
+                    <div class="app-icon-area">
+                        <svg viewBox="0 0 100 100" role="img" aria-label="入試シミュレーターアイコン">
+                            <rect x="15" y="15" width="70" height="70" rx="10" class="sim-bg" />
+                            <rect x="25" y="25" width="30" height="4" fill="#ccc" />
+                            <rect x="25" y="35" width="40" height="4" fill="#ccc" />
+                            <path d="M 60 70 L 60 40 L 70 30 L 80 50 L 85 20" fill="none" stroke="#4facfe"
+                                stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="85" cy="20" r="3" fill="#ff6b6b" />
+                        </svg>
+                    </div>
+                    <div class="app-title">入試シミュレーター <small>(受験プランナー)</small></div>
+
+                    <div class="app-desc">
+                        <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
+                        学校パネルをドラッグ＆ドロップ。<br>
+                        パズル感覚で直感的に併願パターンを作成できます。<br>
+                        <span class="note-text">※偏差値データは、現在実装しておりません。</span>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="https://sakura-academia-lab.github.io/sakura-plan/apps/juken-planner/index.html"
+                            target="_blank" class="main-btn">
+                            ブラウザで使う &rarr;
+                        </a>
+
+                        <div>
+                            <a href="juken_planner_basic.zip" download class="sub-btn">
+                                📥 オフライン版をDL (ZIP)
+                            </a>
+                            <span class="dl-note">
+                                ※ネット環境がない場所で使いたい方向け。<br>
+                                更新があった場合は再度ダウンロードが必要です。<br>
+                                （ブラウザ版は自動的に最新になります）
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="app-title">立体図形スライサー</div>
-                <div class="app-desc">
-                    <span class="free-use-badge">✅ 個人・塾問わずフリー利用OK</span><br>
-                    立方体や三角錐の切断を3Dでシミュレーション。<br>
-                    苦手な断面図を指一本で回転・確認できます。
-                </div>
-                <div class="btn-group">
-                    <a href="./3D Shape Slicer/index.html" class="main-btn">ブラウザで使う &rarr;</a>
-                </div>
+
             </div>
-
-        </div>
+        </section>
 
         <section class="update-history">
             <h3>📢 Update History</h3>
