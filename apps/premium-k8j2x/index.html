@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakura Academia PRO</title>
+    <style>
+        /* --- Premium Theme Variables --- */
+        :root {
+            --pro-bg: #0f172a;
+            --pro-card-bg: #1e293b;
+            --pro-gold: #fbbf24;
+            --pro-gold-gradient: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
+            --pro-text: #f8fafc;
+            --pro-text-muted: #94a3b8;
+            --pro-accent: #38bdf8;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--pro-bg);
+            color: var(--pro-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 5%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pro-badge {
+            background: var(--pro-gold-gradient);
+            color: #000;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        h1 strong {
+            font-weight: 700;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--pro-text-muted);
+            font-size: 0.9rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-link:hover {
+            color: var(--pro-text);
+        }
+
+        /* --- Main Content --- */
+        main {
+            flex: 1;
+            padding: 60px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .welcome-msg {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .welcome-msg h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            background: var(--pro-gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-msg p {
+            color: var(--pro-text-muted);
+            line-height: 1.6;
+        }
+
+        /* --- App Grid --- */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            justify-content: center;
+        }
+
+        /* --- Pro Card Design --- */
+        .pro-card {
+            background: var(--pro-card-bg);
+            border-radius: 20px;
+            padding: 2px;
+            /* For gradient border */
+            position: relative;
+            background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            transition: 0.3s;
+        }
+
+        .pro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .pro-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--pro-gold), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .card-inner {
+            background: var(--pro-card-bg);
+            border-radius: 19px;
+            padding: 30px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.2));
+        }
+
+        .app-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .app-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--pro-text);
+            margin: 5px 0;
+        }
+
+        .app-desc {
+            font-size: 0.95rem;
+            color: var(--pro-text-muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .pro-btn {
+            background: var(--pro-gold-gradient);
+            color: #1e293b;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pro-btn:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* SVG Colors for Dark Mode */
+        .cube-face-1 {
+            fill: #334155;
+        }
+
+        .cube-face-2 {
+            fill: #475569;
+        }
+
+        .cube-face-3 {
+            fill: #64748b;
+        }
+
+        .cube-cut {
+            stroke: var(--pro-gold);
+            stroke-width: 3;
+            stroke-dasharray: 5, 5;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <header>
+        <div class="logo-area">
+            <span class="pro-badge">PRO</span>
+            <h1>Sakura Academia <strong>Premium</strong></h1>
+        </div>
+        <a href="../index.html" class="back-link">
+            <span>&larr;</span> Standard Apps
+        </a>
+    </header>
+
+    <main>
+        <div class="welcome-msg">
+            <h2>Premium Tools Collection</h2>
+            <p>
+                より高度な学習機能、広告のない快適な環境を提供します。<br>
+                プロフェッショナルな受験対策をここから。
+            </p>
+        </div>
+
+        <div class="app-grid">
+
+            <!-- 3D Shape Slicer PRO -->
+            <div class="pro-card">
+                <div class="card-inner">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 100 100" role="img" aria-label="Pro Slicer Icon">
+                            <defs>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <g transform="translate(50, 50) rotate(10) translate(-50, -50)">
+                                <path d="M 25 25 L 75 25 L 90 40 L 40 40 Z" class="cube-face-1" />
+                                <path d="M 25 25 L 40 40 L 40 90 L 25 75 Z" class="cube-face-2" />
+                                <path d="M 40 90 L 90 90 L 90 40 L 40 40 Z" class="cube-face-3" />
+                                <line x1="15" y1="15" x2="95" y2="95" class="cube-cut" filter="url(#glow)" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="app-title">3D Shape Slicer PRO</div>
+                    <div class="app-desc">
+                        アプリ版 (PWA) として動作する高機能版。<br>
+                        オフライン対応、フルスクリーンモード搭載。
+                    </div>
+                    <a href="./3D Shape Slicer PWA/index.html" class="pro-btn">Launch App</a>
+                </div>
+            </div>
+
+            <!-- Future App Placeholder -->
+            <div class="pro-card" style="opacity: 0.5; filter: grayscale(1);">
+                <div class="card-inner">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#64748b" stroke-width="2">
+                            <rect x="25" y="25" width="50" height="50" rx="10" />
+                            <path d="M50 40 L50 60 M40 50 L60 50" />
+                        </svg>
+                    </div>
+                    <div class="app-title">Coming Soon</div>
+                    <div class="app-desc">
+                        新しいプレミアムツールを開発中です。<br>
+                        ご期待ください。
+                    </div>
+                    <span class="pro-btn" style="background: #334155; color: #64748b; cursor: default;">Locked</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Sakura Academia Premium
+    </footer>
+
+</body>
+
+</html>
