@@ -753,13 +753,13 @@
         justify-content: space-between;
       }
 
-      /* 1段目: 図形、等分、使い方の3つを横並び */
+      /* 1段目: 投影図、図形、等分、使い方の4つを横並び */
       .nav-tab,
       .help-btn {
-        padding: 6px 2px;
+        padding: 6px 1px;
         font-size: 10px;
-        flex: 0 0 32%;
-        /* 3つでほぼ100% */
+        flex: 0 0 24%;
+        /* 4つでほぼ100% */
         justify-content: center;
         margin: 0;
         appearance: none;
@@ -949,6 +949,7 @@
   </header>
 
   <nav id="top-nav">
+    <div class="nav-tab hide-on-pc" onclick="openProjectionModal()">📐 投影図</div>
     <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-shape')">📐 図形選択</div>
     <div class="nav-tab hide-on-pc" onclick="toggleDropdown('panel-snap')">📍 等分点設定</div>
     <div class="help-btn" onclick="toggleDropdown('panel-help')">📖 使い方</div>
