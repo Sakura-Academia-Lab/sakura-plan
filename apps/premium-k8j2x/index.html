@@ -132,6 +132,14 @@
         }
 
         /* --- Pro Card Design --- */
+
+        /* Make the card itself the link */
+        a.pro-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
         .pro-card {
             background: var(--pro-card-bg);
             border-radius: 20px;
@@ -214,7 +222,8 @@
             letter-spacing: 1px;
         }
 
-        .pro-btn:hover {
+        /* Hover effect is now on the card, but we can keep button effect */
+        .pro-card:hover .pro-btn {
             filter: brightness(1.1);
             transform: scale(1.02);
             box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
@@ -278,7 +287,7 @@
         <div class="app-grid">
 
             <!-- 3D Shape Slicer PRO -->
-            <div class="pro-card">
+            <a href="./3D Shape Slicer PWA/index.html" class="pro-card">
                 <div class="card-inner">
                     <div class="app-icon">
                         <svg viewBox="0 0 100 100" role="img" aria-label="Pro Slicer Icon">
@@ -304,9 +313,9 @@
                         アプリ版 (PWA) として動作する高機能版。<br>
                         オフライン対応、フルスクリーンモード搭載。
                     </div>
-                    <a href="./3D Shape Slicer PWA/index.html" class="pro-btn">Launch App</a>
+                    <span class="pro-btn">Launch App</span>
                 </div>
-            </div>
+            </a>
 
             <!-- Future App Placeholder -->
             <div class="pro-card" style="opacity: 0.5; filter: grayscale(1);">
