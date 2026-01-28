@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-YV5WWWG39Z');
+  </script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>影のシミュレーター (Lite UI) | 桜アカデミア</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/DragControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+
+  <link rel="stylesheet" href="css/style.css?v=2.2_final">
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+
+  <header id="app-header">
+    <a href="../index.html" class="btn-home">🏠 ホーム</a>
+    <h1 style="font-size: 16px; margin: 0;">影のシミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.2</small></h1>
+    <div style="width: 60px;"></div>
+  </header>
+
+  <aside id="controls">
+    <div class="ctrl-group">
+      <label class="ctrl-label">カメラ視点</label>
+      <div class="cam-grid">
+        <button class="btn-cam" onclick="setView('top')">⬆️<span>真上から</span></button>
+        <button class="btn-cam" onclick="setView('home')">🏠<span>斜めから</span></button>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label">新しい物体を追加</label>
+      <div class="row" style="margin-bottom: 8px;">
+        <select id="add-type">
+          <option value="plate">直立した板 (厚み0)</option>
+          <option value="cube">立方体</option>
+          <option value="box">直方体</option>
+        </select>
+      </div>
+      <button class="btn-add" onclick="addNewObject()">
+        <span>＋</span> 追加する
+      </button>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="toggle-row">
+        <span>🧲 グリッドに吸着 (1cm)</span>
+        <input type="checkbox" id="snap-grid" class="toggle-check" checked>
+      </label>
+      <label class="toggle-row">
+        <span>.00 小数点モード</span>
+        <input type="checkbox" id="decimal-mode" class="toggle-check" onchange="toggleDecimalMode()">
+      </label>
+    </div>
+
+    <div id="obj-settings" class="ctrl-group">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <label class="ctrl-label" style="color:#d32f2f; margin:0;">選択中の物体</label>
+        <button class="btn-del" onclick="deleteSelected()">🗑️ 削除</button>
+      </div>
+
+      <div class="input-row">
+        <label>名前</label>
+        <input type="text" id="obj-name" onchange="updateName()">
+      </div>
+
+      <div class="input-row" id="row-w">
+        <label id="label-w">幅</label>
+        <input type="number" id="size-w" min="0" max="20" step="1" onchange="updateSize()">
+        <input type="range" id="range-w" min="0" max="20" step="1" oninput="syncSize('w')">
+      </div>
+      <div class="input-row" id="row-h">
+        <label id="label-h">高</label>
+        <input type="number" id="size-h" min="1" max="20" step="1" onchange="updateSize()">
+        <input type="range" id="range-h" min="1" max="20" step="1" oninput="syncSize('h')">
+      </div>
+      <div class="input-row" id="row-d">
+        <label id="label-d">厚</label>
+        <input type="number" id="size-d" min="0" max="20" step="1" onchange="updateSize()">
+        <input type="range" id="range-d" min="0" max="20" step="1" oninput="syncSize('d')">
+      </div>
+      <div class="input-row">
+        <label>浮</label>
+        <input type="number" id="pos-y" min="0" max="20" step="1" onchange="updatePos()">
+        <input type="range" id="range-y" min="0" max="20" step="1" oninput="syncPos()">
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label">光源の高さ (H) (cm)</label>
+      <div class="input-row">
+        <input type="number" id="light-h" value="10" min="5" max="50" step="1" onchange="updateLight()">
+        <input type="range" id="range-l" min="5" max="50" value="10" step="1" oninput="updateLight(true)">
+      </div>
+      <label class="ctrl-label" style="margin-top:8px;">光源の水平位置 (X, Z) (cm)</label>
+      <div class="input-row">
+        <label>X</label>
+        <input type="number" id="light-x" value="0" min="-50" max="50" step="1" onchange="updateLight()">
+        <input type="range" id="range-lx" min="-50" max="50" value="0" step="1" oninput="updateLight(true)">
+      </div>
+      <div class="input-row">
+        <label>Z</label>
+        <input type="number" id="light-z" value="0" min="-50" max="50" step="1" onchange="updateLight()">
+        <input type="range" id="range-lz" min="-50" max="50" value="0" step="1" oninput="updateLight(true)">
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="toggle-row">
+        <span>📏 補助線 (光の道)</span>
+        <input type="checkbox" id="show-rays" class="toggle-check" checked onchange="updateAuxiliaryLines()">
+      </label>
+    </div>
+  </aside>
+
+  <div id="area-panel">
+    <div class="area-header">影の面積 (計算結果)</div>
+    <ul class="area-list" id="area-list-content">
+      <li class="area-item"><span class="area-name">地面</span>
+        <div class="area-val-wrap"><span class="area-val">0.00</span><span class="area-unit">cm²</span></div>
+      </li>
+    </ul>
+  </div>
+
+  <div id="guide-panel">
+    <h3>🔰 使い方ガイド</h3>
+    <div class="step"><span class="step-icon">1</span>
+      <div><strong>視点：</strong>「⬆️真上」で平面図になります。</div>
+    </div>
+    <div class="step"><span class="step-icon">2</span>
+      <div><strong>追加：</strong>板や箱を追加して、壁役を作ってみましょう。</div>
+    </div>
+    <div class="step"><span class="step-icon">3</span>
+      <div><strong>面積：</strong>右下のパネルに影の面積が自動計算されます。</div>
+    </div>
+  </div>
+
+  <canvas id="shadowCanvas" width="1024" height="1024" style="display:none;"></canvas>
+
+  <script src="js/app.js?v=2.2_final"></script>
+</body>
+
+</html>
