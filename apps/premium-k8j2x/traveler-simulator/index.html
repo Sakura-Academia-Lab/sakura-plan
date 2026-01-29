@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-YV5WWWG39Z');
+  </script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>旅人算シミュレーター | 桜アカデミア</title>
+
+  <link rel="stylesheet" href="css/style.css?v=1.0">
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+
+  <header id="app-header">
+    <a href="../index.html" class="btn-home">🏠 ホーム</a>
+    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 1.0</small>
+    </h1>
+    <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
+  </header>
+
+  <aside id="controls">
+    <div class="ctrl-group">
+      <label class="ctrl-label">両端の距離 (m)</label>
+      <div class="input-row">
+        <input type="number" id="input-distance" value="100" min="10" max="500" step="10" onchange="updateSettings()">
+        <input type="range" id="range-distance" min="10" max="500" value="100" step="10" oninput="syncDistance()">
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label" style="color: var(--person-a-color);">人物A</label>
+      <div class="input-row" style="margin-bottom: 8px;">
+        <label style="min-width: 50px;">名前</label>
+        <input type="text" id="name-a" value="人物A" onchange="updateSettings()">
+      </div>
+      <div class="input-row" style="margin-bottom: 8px;">
+        <label style="min-width: 50px;">速さ</label>
+        <input type="number" id="input-speed-a" value="4" min="1" max="10" step="0.5" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">m/秒</span>
+      </div>
+      <div class="input-row">
+        <input type="range" id="range-speed-a" min="1" max="10" value="4" step="0.5" oninput="syncSpeedA()">
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">開始</label>
+        <select id="start-a" onchange="updateSettings()">
+          <option value="0">左端 (0m)</option>
+          <option value="distance">右端</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label" style="color: var(--person-b-color);">人物B</label>
+      <div class="input-row" style="margin-bottom: 8px;">
+        <label style="min-width: 50px;">名前</label>
+        <input type="text" id="name-b" value="人物B" onchange="updateSettings()">
+      </div>
+      <div class="input-row" style="margin-bottom: 8px;">
+        <label style="min-width: 50px;">速さ</label>
+        <input type="number" id="input-speed-b" value="6" min="1" max="10" step="0.5" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">m/秒</span>
+      </div>
+      <div class="input-row">
+        <input type="range" id="range-speed-b" min="1" max="10" value="6" step="0.5" oninput="syncSpeedB()">
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">開始</label>
+        <select id="start-b" onchange="updateSettings()">
+          <option value="0">左端 (0m)</option>
+          <option value="distance" selected>右端</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label">再生制御</label>
+      <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+        <button class="btn-play" onclick="startAnimation()">▶ 再生</button>
+        <button class="btn-pause" onclick="pauseAnimation()">⏸ 停止</button>
+        <button class="btn-reset" onclick="resetAnimation()">↻ リセット</button>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 80px; font-size: 11px;">再生速度</label>
+        <select id="time-scale" onchange="updateTimeScale()">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="5">5x</option>
+        </select>
+      </div>
+    </div>
+  </aside>
+
+  <div id="animation-area">
+    <div id="animation-top">
+      <canvas id="animation-canvas"></canvas>
+    </div>
+    <div id="animation-bottom">
+      <canvas id="diagram-canvas"></canvas>
+    </div>
+  </div>
+
+  <div id="chart-panel">
+    <div class="chart-container">
+      <div class="chart-title-vertical">時間-距離グラフ</div>
+      <canvas id="time-distance-chart"></canvas>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title-vertical">2人の間の距離</div>
+      <canvas id="distance-diff-chart"></canvas>
+    </div>
+  </div>
+
+  <div id="guide-modal" style="display: none;">
+    <div id="guide-overlay" onclick="toggleGuide()"></div>
+    <div id="guide-content">
+      <button class="btn-close" onclick="toggleGuide()">✕</button>
+      <h3>🔰 使い方ガイド</h3>
+      <div class="step"><span class="step-icon">1</span>
+        <div><strong>設定：</strong>速さや開始位置を調整します。</div>
+      </div>
+      <div class="step"><span class="step-icon">2</span>
+        <div><strong>再生：</strong>▶ボタンで動きを確認できます。</div>
+      </div>
+      <div class="step"><span class="step-icon">3</span>
+        <div><strong>グラフ：</strong>右側に軌跡と距離が表示されます。</div>
+      </div>
+      <div class="step"><span class="step-icon">4</span>
+        <div><strong>線分図：</strong>左下に現在の位置関係が表示されます。</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker registered.', reg))
+          .catch(err => console.log('Service Worker registration failed.', err));
+      });
+    }
+  </script>
+  <script src="js/app.js?v=1.0"></script>
+</body>
+
+</html>
