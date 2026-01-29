@@ -540,13 +540,22 @@ function drawTimeDistanceChart() {
 
     // 交点表示
     const intersections = findIntersections();
+    let meetingCount = 0;
+    let overtakingCount = 0;
     intersections.forEach((intersection) => {
       const ix = marginLeft + (intersection.time / state.maxTime) * graphW;
       const iy = marginTop + graphH - (intersection.position / state.distance) * graphH;
 
       // 色とラベルを交点タイプで分ける
       const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
-      const label = intersection.type === 'meeting' ? '出会い' : '追い越し';
+      if (intersection.type === 'meeting') {
+        meetingCount++;
+      } else {
+        overtakingCount++;
+      }
+      const label = intersection.type === 'meeting'
+        ? `出会い（${meetingCount}回目）`
+        : `追い越し（${overtakingCount}回目）`;
 
       // 点線（縦）
       ctx.strokeStyle = color;
@@ -677,13 +686,22 @@ function drawDistanceDiffChart() {
 
     // 交点表示（距離が0になる点）
     const intersections = findIntersections();
+    let meetingCount = 0;
+    let overtakingCount = 0;
     intersections.forEach((intersection) => {
       const ix = marginLeft + (intersection.time / state.maxTime) * graphW;
       const iy = marginTop + graphH; // 距離0なので下端
 
       // 色とラベルを交点タイプで分ける
       const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
-      const label = intersection.type === 'meeting' ? '出会い' : '追い越し';
+      if (intersection.type === 'meeting') {
+        meetingCount++;
+      } else {
+        overtakingCount++;
+      }
+      const label = intersection.type === 'meeting'
+        ? `出会い（${meetingCount}回目）`
+        : `追い越し（${overtakingCount}回目）`;
 
       // 点線（縦）
       ctx.strokeStyle = color;
@@ -915,12 +933,21 @@ function drawDiagram() {
   }
 
   // 交点（出会い・追い越し）に縦線を描画
+  let meetingCount = 0;
+  let overtakingCount = 0;
   intersections.forEach((intersection) => {
     const x = padding + (intersection.position / state.distance) * lineWidth;
 
     // 色とラベルを交点タイプで分ける
     const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
-    const label = intersection.type === 'meeting' ? '出会い' : '追い越し';
+    if (intersection.type === 'meeting') {
+      meetingCount++;
+    } else {
+      overtakingCount++;
+    }
+    const label = intersection.type === 'meeting'
+      ? `出会い（${meetingCount}回目）`
+      : `追い越し（${overtakingCount}回目）`;
 
     // 縦線（点線）
     ctx.strokeStyle = color;
