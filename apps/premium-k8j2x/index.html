@@ -115,6 +115,7 @@
             margin-bottom: 15px;
             background: var(--pro-gold-gradient);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -163,6 +164,7 @@
             padding: 2px;
             background: linear-gradient(135deg, var(--pro-gold), transparent);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
@@ -256,6 +258,87 @@
             stroke-width: 3;
             stroke-dasharray: 5, 5;
         }
+
+        /* --- News Section --- */
+        .news-section {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        .news-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--pro-gold);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .news-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-date {
+            color: var(--pro-text-muted);
+            font-family: monospace;
+            min-width: 90px;
+        }
+
+        .news-tag {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--pro-accent);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            height: fit-content;
+            white-space: nowrap;
+        }
+
+        .news-content {
+            color: var(--pro-text);
+        }
+
+        details.more-news {
+            margin-top: 10px;
+        }
+
+        summary.more-news-btn {
+            color: var(--pro-accent);
+            cursor: pointer;
+            list-style: none;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 5px;
+            transition: 0.3s;
+        }
+
+        summary.more-news-btn:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+        details[open] summary.more-news-btn {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -283,6 +366,44 @@
                 プロフェッショナルな受験対策をここから。
             </p>
         </div>
+
+        <section class="news-section">
+            <div class="news-header">
+                <span>✨</span> What's New
+            </div>
+            <ul class="news-list">
+                <li class="news-item">
+                    <span class="news-date">2026.01.30</span>
+                    <span class="news-tag">Update</span>
+                    <span class="news-content">旅人算シミュレーター Ver 2.4 - 交点回数表示の追加、UIレイアウトの最適化（比率3:7）を反映。</span>
+                </li>
+                <li class="news-item">
+                    <span class="news-date">2026.01.30</span>
+                    <span class="news-tag">Update</span>
+                    <span class="news-content">旅人算シミュレーター Ver 2.2-2.3 - 再生制御ボタンのヘッダー移動、ドロップダウン背景修正、線分図の配置改善。</span>
+                </li>
+                <li class="news-item">
+                    <span class="news-date">2026.01.30</span>
+                    <span class="news-tag">Update</span>
+                    <span class="news-content">旅人算シミュレーター Ver 2.1 - 再生時間（10-300秒）を自由に設定可能になりました。</span>
+                </li>
+            </ul>
+            <details class="more-news">
+                <summary class="more-news-btn">▼ 過去の更新を表示</summary>
+                <ul class="news-list">
+                    <li class="news-item">
+                        <span class="news-date">2026.01.30</span>
+                        <span class="news-tag">Update</span>
+                        <span class="news-content">旅人算シミュレーター Ver 1.7-2.0 - 間欠移動モードの実装、線分図の色分け表示機能の追加。</span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.01.29</span>
+                        <span class="news-tag">Launch</span>
+                        <span class="news-content">Sakura Academia Premium ポータル公開、旅人算シミュレーター PRO デプロイ。</span>
+                    </li>
+                </ul>
+            </details>
+        </section>
 
         <div class="app-grid">
 
