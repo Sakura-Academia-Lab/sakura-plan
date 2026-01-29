@@ -31,8 +31,7 @@
 
   <header id="app-header">
     <a href="../index.html" class="btn-home">🏠 ホーム</a>
-    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 1.0</small>
-    </h1>
+    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 1.0</small></h1>
     <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
   </header>
 
@@ -66,6 +65,14 @@
           <option value="distance">右端</option>
         </select>
       </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">動作</label>
+        <select id="mode-a" onchange="updateSettings()">
+          <option value="roundTrip">往復</option>
+          <option value="passThrough">突き抜け</option>
+          <option value="stopAtEdge">端で停止</option>
+        </select>
+      </div>
     </div>
 
     <div class="ctrl-group">
@@ -87,6 +94,14 @@
         <select id="start-b" onchange="updateSettings()">
           <option value="0">左端 (0m)</option>
           <option value="distance" selected>右端</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">動作</label>
+        <select id="mode-b" onchange="updateSettings()">
+          <option value="roundTrip">往復</option>
+          <option value="passThrough">突き抜け</option>
+          <option value="stopAtEdge">端で停止</option>
         </select>
       </div>
     </div>
@@ -150,16 +165,7 @@
     </div>
   </div>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker registered.', reg))
-          .catch(err => console.log('Service Worker registration failed.', err));
-      });
-    }
-  </script>
-  <script src="js/app.js?v=1.0"></script>
+  <script src="js/app.js?v=1.5"></script>
 </body>
 
 </html>

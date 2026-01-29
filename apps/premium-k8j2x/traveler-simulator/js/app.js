@@ -2,8 +2,8 @@
 const state = {
   distance: 100,  // 両端の距離 (m)
   people: [
-    { name: '人物A', speed: 4, startPos: 0, color: '#ff5252', direction: 1, currentDirection: 1 },
-    { name: '人物B', speed: 6, startPos: 100, color: '#4facfe', direction: -1, currentDirection: -1 }
+    { name: '人物A', speed: 4, startPos: 0, color: '#ff5252', direction: 1, currentDirection: 1, mode: 'roundTrip' },
+    { name: '人物B', speed: 6, startPos: 100, color: '#4facfe', direction: -1, currentDirection: -1, mode: 'roundTrip' }
   ],
   isPlaying: false,
   currentTime: 0,  // 秒
@@ -85,12 +85,14 @@ function updateSettings() {
   const startA = document.getElementById('start-a').value;
   state.people[0].startPos = startA === '0' ? 0 : state.distance;
   state.people[0].direction = startA === '0' ? 1 : -1;
+  state.people[0].mode = document.getElementById('mode-a').value;
 
   state.people[1].name = document.getElementById('name-b').value;
   state.people[1].speed = parseFloat(document.getElementById('input-speed-b').value);
   const startB = document.getElementById('start-b').value;
   state.people[1].startPos = startB === '0' ? 0 : state.distance;
   state.people[1].direction = startB === '0' ? 1 : -1;
+  state.people[1].mode = document.getElementById('mode-b').value;
 
   calculateMaxTime();
 
@@ -128,24 +130,34 @@ function calculateMaxTime() {
   state.maxTime = 60;
 }
 
-// ===== 位置計算（往復対応） =====
+// ===== 位置計算（移動モード対応） =====
 function calculatePosition(person, time) {
+  const mode = person.mode || 'roundTrip';
   let pos = person.startPos;
   let currentDir = person.direction;
   let remainingTime = time;
 
-  // シミュレーション：時間経過に伴う位置と方向の変化
+  if (mode === 'passThrough') {
+    // 突き抜けモード：範囲外でも進み続ける
+    pos = person.startPos + currentDir * person.speed * time;
+    return pos; // 境界チェックなし
+  }
+
+  if (mode === 'stopAtEdge') {
+    // 端で停止モード：範囲内で進み、端に到達したら停止
+    pos = person.startPos + currentDir * person.speed * time;
+    return Math.max(0, Math.min(state.distance, pos));
+  }
+
+  // roundTripモード（往復）：端で反転
   while (remainingTime > 0.001) {
-    // 現在の方向で進んだ場合の位置
     const nextPos = pos + currentDir * person.speed * remainingTime;
 
-    // 端に到達しない場合
     if (nextPos >= 0 && nextPos <= state.distance) {
       pos = nextPos;
       break;
     }
 
-    // 端に到達する場合：到達時間を計算して反転
     let timeToEdge;
     if (currentDir === 1) {
       timeToEdge = (state.distance - pos) / person.speed;
@@ -156,12 +168,10 @@ function calculatePosition(person, time) {
     }
 
     remainingTime -= timeToEdge;
-    currentDir *= -1; // 方向反転
+    currentDir *= -1;
   }
 
-  // 境界チェック
-  pos = Math.max(0, Math.min(state.distance, pos));
-  return pos;
+  return Math.max(0, Math.min(state.distance, pos));
 }
 
 // ===== 距離計算 =====
@@ -359,6 +369,12 @@ function drawAnimation(positions) {
   // 人物描画
   state.people.forEach((person, i) => {
     const pos = positions[i];
+
+    // 範囲外の場合は描画しない（passThroughモード用）
+    if (pos < 0 || pos > state.distance) {
+      return;
+    }
+
     const x = padding + (pos / state.distance) * roadWidth;
     const y = roadY + (i === 0 ? -15 : 15);
 
@@ -379,9 +395,10 @@ function drawAnimation(positions) {
     ctx.textAlign = 'center';
     ctx.fillText(person.name, x, y + (i === 0 ? -20 : 30));
 
-    // 速度表示
+    // 速度表示と動作モード
     ctx.font = '10px Arial';
-    ctx.fillText(`${person.speed}m/s`, x, y + (i === 0 ? -30 : 40));
+    const modeLabel = person.mode === 'roundTrip' ? '往復' : person.mode === 'passThrough' ? '突抜' : '停止';
+    ctx.fillText(`${person.speed}m/s (${modeLabel})`, x, y + (i === 0 ? -30 : 40));
   });
 
   // 現在時刻表示

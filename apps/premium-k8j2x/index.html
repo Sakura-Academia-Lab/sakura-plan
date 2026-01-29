@@ -378,23 +378,36 @@
                 </div>
             </a>
 
-            <!-- Future App Placeholder -->
-            <div class="pro-card" style="opacity: 0.5; filter: grayscale(1);">
+            <!-- Traveler Simulator PRO -->
+            <a href="./traveler-simulator/index.html" class="pro-card">
                 <div class="card-inner">
                     <div class="app-icon">
-                        <svg viewBox="0 0 100 100" fill="none" stroke="#64748b" stroke-width="2">
-                            <rect x="25" y="25" width="50" height="50" rx="10" />
-                            <path d="M50 40 L50 60 M40 50 L60 50" />
+                        <svg viewBox="0 0 100 100" role="img" aria-label="Traveler Simulator Icon">
+                            <defs>
+                                <filter id="glow-travel">
+                                    <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <line x1="10" y1="50" x2="90" y2="50" stroke="#475569" stroke-width="4"
+                                stroke-linecap="round" />
+                            <circle cx="30" cy="50" r="8" fill="#38bdf8" filter="url(#glow-travel)" />
+                            <circle cx="70" cy="50" r="8" fill="#fbbf24" filter="url(#glow-travel)" />
+                            <path d="M 30 50 Q 50 20 70 50" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"
+                                stroke-dasharray="4,4" />
                         </svg>
                     </div>
-                    <div class="app-title">Coming Soon</div>
+                    <div class="app-title">Traveler Simulator PRO</div>
                     <div class="app-desc">
-                        新しいプレミアムツールを開発中です。<br>
-                        ご期待ください。
+                        複雑な動きも自由にシミュレーション。<br>
+                        グラフと連動して理解を深めます。
                     </div>
-                    <span class="pro-btn" style="background: #334155; color: #64748b; cursor: default;">Locked</span>
+                    <span class="pro-btn">Launch App</span>
                 </div>
-            </div>
+            </a>
 
         </div>
     </main>
