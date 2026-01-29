@@ -1,0 +1,479 @@
+/* ===== カラーパレット ===== */
+:root {
+  --primary-navy: #1a2a44;
+  --accent-yellow: #ffd600;
+  --active-red: #ff5252;
+  --accent-blue: #4facfe;
+  --person-a-color: #ff5252;
+  --person-b-color: #4facfe;
+  --bg-light: #f5f5f5;
+  --border-color: #ddd;
+}
+
+/* ===== 基本レイアウト ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-light);
+  overflow: hidden;
+}
+
+/* ===== ヘッダー ===== */
+#app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: var(--primary-navy);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 150;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#app-header h1 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.btn-home {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: 0.2s;
+}
+
+.btn-home:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-help {
+  color: white;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--accent-yellow);
+  color: #333;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-help:hover {
+  background: #f0b700;
+}
+
+/* ===== ヘッダーコントロール ===== */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-controls button {
+  padding: 4px 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: bold;
+  min-width: 32px;
+}
+
+.header-controls .btn-play {
+  background: #4caf50;
+  color: white;
+}
+
+.header-controls .btn-play:hover {
+  background: #45a049;
+}
+
+.header-controls .btn-pause {
+  background: var(--accent-yellow);
+  color: #333;
+}
+
+.header-controls .btn-pause:hover {
+  background: #f0b700;
+}
+
+.header-controls .btn-reset {
+  background: #9e9e9e;
+  color: white;
+}
+
+.header-controls .btn-reset:hover {
+  background: #757575;
+}
+
+.header-controls select {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.header-controls select:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.header-controls select option {
+  background: var(--primary-navy);
+  color: white;
+}
+
+/* ===== 左サイドバー (Controls) ===== */
+#controls {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  width: 280px;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-right: 1px solid var(--border-color);
+  padding: 15px;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ctrl-group {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+.ctrl-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #555;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.input-row input[type="number"],
+.input-row input[type="text"],
+.input-row select {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.input-row input[type="range"] {
+  flex: 1;
+}
+
+.input-row label {
+  font-size: 12px;
+  color: #666;
+}
+
+/* ===== ボタン ===== */
+.btn-play,
+.btn-pause,
+.btn-reset {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-play {
+  background: #4caf50;
+  color: white;
+}
+
+.btn-play:hover {
+  background: #45a049;
+}
+
+.btn-pause {
+  background: var(--accent-yellow);
+  color: #333;
+}
+
+.btn-pause:hover {
+  background: #f0b700;
+}
+
+.btn-reset {
+  background: #666;
+  color: white;
+}
+
+.btn-reset:hover {
+  background: #555;
+}
+
+/* ===== アニメーションエリア ===== */
+#animation-area {
+  position: fixed;
+  top: 44px;
+  left: 280px;
+  right: 50vw;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#animation-top {
+  flex: 3;
+  background: linear-gradient(to bottom, #87ceeb 0%, #e8f5e9 50%, #d7ccc8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#animation-bottom {
+  flex: 7;
+  background: white;
+  border-top: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#animation-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#diagram-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ===== 右パネル (グラフ) ===== */
+#chart-panel {
+  position: fixed;
+  top: 44px;
+  right: 0;
+  width: 50vw;
+  bottom: 0;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+
+.chart-container {
+  flex: 0 0 auto;
+  min-height: 400px;
+  height: 50vh;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px;
+}
+
+.chart-container:last-child {
+  border-bottom: none;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.chart-title-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  padding: 10px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  background: #f0f0f0;
+  border-right: 1px solid var(--border-color);
+}
+
+.chart-container canvas {
+  flex: 1;
+  width: 100%;
+  display: block;
+}
+
+/* ===== ガイドモーダル ===== */
+#guide-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+}
+
+#guide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+#guide-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background: white;
+  border: 2px solid var(--primary-navy);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s;
+}
+
+#guide-content h3 {
+  font-size: 16px;
+  margin: 0 0 15px 0;
+  color: var(--primary-navy);
+}
+
+.btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.btn-close:hover {
+  background: #e0e0e0;
+}
+
+.step {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.step:last-child {
+  margin-bottom: 0;
+}
+
+.step-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: var(--accent-yellow);
+  color: #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.step strong {
+  color: var(--primary-navy);
+}
+
+/* ===== アニメーション ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== レスポンシブ (タブレット以下) ===== */
+@media (max-width: 768px) {
+  #controls {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 40vh;
+    border-right: none;
+    border-top: 1px solid var(--border-color);
+  }
+
+  #animation-area {
+    left: 0;
+    right: 0;
+    top: 44px;
+    bottom: calc(40vh + 30vh);
+  }
+
+  #animation-bottom {
+    flex: 0 0 100px;
+  }
+
+  #chart-panel {
+    top: auto;
+    bottom: 40vh;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 30vh;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+  }
+}
