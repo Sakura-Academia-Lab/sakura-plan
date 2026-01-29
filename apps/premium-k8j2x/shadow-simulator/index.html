@@ -22,6 +22,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>影のシミュレーター (Lite UI) | 桜アカデミア</title>
 
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0f172a">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/DragControls.js"></script>
@@ -36,7 +40,8 @@
 
   <header id="app-header">
     <a href="../index.html" class="btn-home">🏠 ホーム</a>
-    <h1 style="font-size: 16px; margin: 0;">影のシミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.2</small></h1>
+    <h1 style="font-size: 16px; margin: 0;">影のシミュレーター Pro <small style="font-size: 10px; opacity: 0.7;">Ver 2.2</small>
+    </h1>
     <div style="width: 60px;"></div>
   </header>
 
@@ -158,6 +163,15 @@
 
   <canvas id="shadowCanvas" width="1024" height="1024" style="display:none;"></canvas>
 
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW registered'))
+          .catch(err => console.log('SW error', err));
+      });
+    }
+  </script>
   <script src="js/app.js?v=2.2_final"></script>
 </body>
 
