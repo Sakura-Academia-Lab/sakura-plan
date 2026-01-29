@@ -31,7 +31,18 @@
 
   <header id="app-header">
     <a href="../index.html" class="btn-home">🏠 ホーム</a>
-    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 1.0</small></h1>
+    <div class="header-controls">
+      <button class="btn-play" onclick="startAnimation()">▶</button>
+      <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
+      <button class="btn-reset" onclick="resetAnimation()">↻</button>
+      <select id="time-scale" onchange="updateTimeScale()">
+        <option value="0.5">0.5x</option>
+        <option value="1" selected>1x</option>
+        <option value="2">2x</option>
+        <option value="5">5x</option>
+      </select>
+    </div>
+    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.2</small></h1>
     <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
   </header>
 
@@ -45,11 +56,15 @@
     </div>
 
     <div class="ctrl-group">
-      <label class="ctrl-label" style="color: var(--person-a-color);">人物A</label>
-      <div class="input-row" style="margin-bottom: 8px;">
-        <label style="min-width: 50px;">名前</label>
-        <input type="text" id="name-a" value="人物A" onchange="updateSettings()">
+      <label class="ctrl-label">再生時間 (秒)</label>
+      <div class="input-row">
+        <input type="number" id="input-max-time" value="60" min="10" max="300" step="10" onchange="updateSettings()">
+        <input type="range" id="range-max-time" min="10" max="300" value="60" step="10" oninput="syncMaxTime()">
       </div>
+    </div>
+
+    <div class="ctrl-group">
+      <label class="ctrl-label" style="color: var(--person-a-color);">人物A</label>
       <div class="input-row" style="margin-bottom: 8px;">
         <label style="min-width: 50px;">速さ</label>
         <input type="number" id="input-speed-a" value="4" min="1" max="10" step="0.5" onchange="updateSettings()">
@@ -67,20 +82,28 @@
       </div>
       <div class="input-row">
         <label style="min-width: 50px;">動作</label>
-        <select id="mode-a" onchange="updateSettings()">
+        <select id="mode-a" onchange="toggleIntermittentSettings(); updateSettings();">
           <option value="roundTrip">往復</option>
-          <option value="passThrough">突き抜け</option>
           <option value="stopAtEdge">端で停止</option>
+          <option value="intermittent">間欠移動</option>
         </select>
+      </div>
+      <div id="intermittent-a" class="intermittent-settings" style="display: none;">
+        <div class="input-row" style="margin-top: 8px;">
+          <label style="min-width: 80px; font-size: 11px;">移動時間</label>
+          <input type="number" id="work-time-a" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
+        <div class="input-row">
+          <label style="min-width: 80px; font-size: 11px;">休憩時間</label>
+          <input type="number" id="rest-time-a" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
       </div>
     </div>
 
     <div class="ctrl-group">
       <label class="ctrl-label" style="color: var(--person-b-color);">人物B</label>
-      <div class="input-row" style="margin-bottom: 8px;">
-        <label style="min-width: 50px;">名前</label>
-        <input type="text" id="name-b" value="人物B" onchange="updateSettings()">
-      </div>
       <div class="input-row" style="margin-bottom: 8px;">
         <label style="min-width: 50px;">速さ</label>
         <input type="number" id="input-speed-b" value="6" min="1" max="10" step="0.5" onchange="updateSettings()">
@@ -98,31 +121,26 @@
       </div>
       <div class="input-row">
         <label style="min-width: 50px;">動作</label>
-        <select id="mode-b" onchange="updateSettings()">
+        <select id="mode-b" onchange="toggleIntermittentSettings(); updateSettings();">
           <option value="roundTrip">往復</option>
-          <option value="passThrough">突き抜け</option>
           <option value="stopAtEdge">端で停止</option>
+          <option value="intermittent">間欠移動</option>
         </select>
+      </div>
+      <div id="intermittent-b" class="intermittent-settings" style="display: none;">
+        <div class="input-row" style="margin-top: 8px;">
+          <label style="min-width: 80px; font-size: 11px;">移動時間</label>
+          <input type="number" id="work-time-b" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
+        <div class="input-row">
+          <label style="min-width: 80px; font-size: 11px;">休憩時間</label>
+          <input type="number" id="rest-time-b" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
       </div>
     </div>
 
-    <div class="ctrl-group">
-      <label class="ctrl-label">再生制御</label>
-      <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-        <button class="btn-play" onclick="startAnimation()">▶ 再生</button>
-        <button class="btn-pause" onclick="pauseAnimation()">⏸ 停止</button>
-        <button class="btn-reset" onclick="resetAnimation()">↻ リセット</button>
-      </div>
-      <div class="input-row">
-        <label style="min-width: 80px; font-size: 11px;">再生速度</label>
-        <select id="time-scale" onchange="updateTimeScale()">
-          <option value="0.5">0.5x</option>
-          <option value="1" selected>1x</option>
-          <option value="2">2x</option>
-          <option value="5">5x</option>
-        </select>
-      </div>
-    </div>
   </aside>
 
   <div id="animation-area">

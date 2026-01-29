@@ -2,8 +2,8 @@
 const state = {
   distance: 100,  // 両端の距離 (m)
   people: [
-    { name: '人物A', speed: 4, startPos: 0, color: '#ff5252', direction: 1, currentDirection: 1, mode: 'roundTrip' },
-    { name: '人物B', speed: 6, startPos: 100, color: '#4facfe', direction: -1, currentDirection: -1, mode: 'roundTrip' }
+    { name: '人物A', speed: 4, startPos: 0, color: '#ff5252', direction: 1, currentDirection: 1, mode: 'roundTrip', workTime: 3, restTime: 3 },
+    { name: '人物B', speed: 6, startPos: 100, color: '#4facfe', direction: -1, currentDirection: -1, mode: 'roundTrip', workTime: 3, restTime: 3 }
   ],
   isPlaying: false,
   currentTime: 0,  // 秒
@@ -43,6 +43,7 @@ function init() {
   window.addEventListener('resize', handleResize);
   handleResize();
 
+  toggleIntermittentSettings();
   updateSettings();
   render();
 }
@@ -79,22 +80,23 @@ function handleResize() {
 // ===== 設定更新 =====
 function updateSettings() {
   state.distance = parseFloat(document.getElementById('input-distance').value);
+  state.maxTime = parseFloat(document.getElementById('input-max-time').value);
 
-  state.people[0].name = document.getElementById('name-a').value;
   state.people[0].speed = parseFloat(document.getElementById('input-speed-a').value);
   const startA = document.getElementById('start-a').value;
   state.people[0].startPos = startA === '0' ? 0 : state.distance;
   state.people[0].direction = startA === '0' ? 1 : -1;
   state.people[0].mode = document.getElementById('mode-a').value;
+  state.people[0].workTime = parseFloat(document.getElementById('work-time-a').value);
+  state.people[0].restTime = parseFloat(document.getElementById('rest-time-a').value);
 
-  state.people[1].name = document.getElementById('name-b').value;
   state.people[1].speed = parseFloat(document.getElementById('input-speed-b').value);
   const startB = document.getElementById('start-b').value;
   state.people[1].startPos = startB === '0' ? 0 : state.distance;
   state.people[1].direction = startB === '0' ? 1 : -1;
   state.people[1].mode = document.getElementById('mode-b').value;
-
-  calculateMaxTime();
+  state.people[1].workTime = parseFloat(document.getElementById('work-time-b').value);
+  state.people[1].restTime = parseFloat(document.getElementById('rest-time-b').value);
 
   if (!state.isPlaying) {
     resetAnimation();
@@ -105,6 +107,12 @@ function updateSettings() {
 function syncDistance() {
   const val = document.getElementById('range-distance').value;
   document.getElementById('input-distance').value = val;
+  updateSettings();
+}
+
+function syncMaxTime() {
+  const val = document.getElementById('range-max-time').value;
+  document.getElementById('input-max-time').value = val;
   updateSettings();
 }
 
@@ -124,23 +132,39 @@ function updateTimeScale() {
   state.timeScale = parseFloat(document.getElementById('time-scale').value);
 }
 
-// ===== 最大時間計算 =====
-function calculateMaxTime() {
-  // 往復を想定して、デフォルトで60秒に設定
-  state.maxTime = 60;
-}
-
 // ===== 位置計算（移動モード対応） =====
 function calculatePosition(person, time) {
   const mode = person.mode || 'roundTrip';
   let pos = person.startPos;
   let currentDir = person.direction;
-  let remainingTime = time;
 
-  if (mode === 'passThrough') {
-    // 突き抜けモード：範囲外でも進み続ける
-    pos = person.startPos + currentDir * person.speed * time;
-    return pos; // 境界チェックなし
+  if (mode === 'intermittent') {
+    // 間欠移動モード：移動と休憩を繰り返す
+    const workTime = person.workTime || 3;
+    const restTime = person.restTime || 3;
+    const cycleTime = workTime + restTime;
+
+    let totalWorkTime = 0; // 実際に移動した累積時間
+    let currentTime = 0;
+
+    while (currentTime < time) {
+      const timeInCycle = currentTime % cycleTime;
+      const remainingTime = time - currentTime;
+
+      if (timeInCycle < workTime) {
+        // 移動中
+        const workRemaining = Math.min(workTime - timeInCycle, remainingTime);
+        totalWorkTime += workRemaining;
+        currentTime += workRemaining;
+      } else {
+        // 休憩中
+        const restRemaining = Math.min(cycleTime - timeInCycle, remainingTime);
+        currentTime += restRemaining;
+      }
+    }
+
+    // 累積移動時間で位置を計算（往復対応）
+    return calculatePositionWithTime(person, totalWorkTime);
   }
 
   if (mode === 'stopAtEdge') {
@@ -150,6 +174,15 @@ function calculatePosition(person, time) {
   }
 
   // roundTripモード（往復）：端で反転
+  return calculatePositionWithTime(person, time);
+}
+
+// ===== 位置計算ヘルパー（往復対応） =====
+function calculatePositionWithTime(person, time) {
+  let pos = person.startPos;
+  let currentDir = person.direction;
+  let remainingTime = time;
+
   while (remainingTime > 0.001) {
     const nextPos = pos + currentDir * person.speed * remainingTime;
 
@@ -369,12 +402,6 @@ function drawAnimation(positions) {
   // 人物描画
   state.people.forEach((person, i) => {
     const pos = positions[i];
-
-    // 範囲外の場合は描画しない（passThroughモード用）
-    if (pos < 0 || pos > state.distance) {
-      return;
-    }
-
     const x = padding + (pos / state.distance) * roadWidth;
     const y = roadY + (i === 0 ? -15 : 15);
 
@@ -397,7 +424,13 @@ function drawAnimation(positions) {
 
     // 速度表示と動作モード
     ctx.font = '10px Arial';
-    const modeLabel = person.mode === 'roundTrip' ? '往復' : person.mode === 'passThrough' ? '突抜' : '停止';
+    let modeLabel = '往復';
+    if (person.mode === 'stopAtEdge') modeLabel = '停止';
+    if (person.mode === 'intermittent') {
+      const cycleTime = person.workTime + person.restTime;
+      const timeInCycle = state.currentTime % cycleTime;
+      modeLabel = timeInCycle < person.workTime ? '移動中' : '休憩中';
+    }
     ctx.fillText(`${person.speed}m/s (${modeLabel})`, x, y + (i === 0 ? -30 : 40));
   });
 
@@ -712,6 +745,37 @@ function toggleGuide() {
   }
 }
 
+// ===== 間欠移動設定の表示/非表示 =====
+function toggleIntermittentSettings() {
+  const modeA = document.getElementById('mode-a').value;
+  const modeB = document.getElementById('mode-b').value;
+  const intermittentA = document.getElementById('intermittent-a');
+  const intermittentB = document.getElementById('intermittent-b');
+
+  intermittentA.style.display = modeA === 'intermittent' ? 'block' : 'none';
+  intermittentB.style.display = modeB === 'intermittent' ? 'block' : 'none';
+}
+
+// ===== 矢印描画ヘルパー =====
+function drawArrowHead(ctx, x1, y1, x2, y2, color) {
+  const headLength = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(
+    x2 - headLength * Math.cos(angle - Math.PI / 6),
+    y2 - headLength * Math.sin(angle - Math.PI / 6)
+  );
+  ctx.lineTo(
+    x2 - headLength * Math.cos(angle + Math.PI / 6),
+    y2 - headLength * Math.sin(angle + Math.PI / 6)
+  );
+  ctx.closePath();
+  ctx.fill();
+}
+
 // ===== 線分図描画（軌跡表示） =====
 function drawDiagram() {
   const canvas = diagramCanvas;
@@ -728,8 +792,8 @@ function drawDiagram() {
 
   const padding = 60;
   const lineWidth = w - 2 * padding;
-  const personABaseY = h * 0.3; // 人物Aの基準Y座標（上側）
-  const personBBaseY = h * 0.7; // 人物Bの基準Y座標（下側）
+  const personABaseY = h * 0.2; // 人物Aの基準Y座標（上側から折り返す）
+  const personBBaseY = h * 0.8; // 人物Bの基準Y座標（下側から折り返す）
   const segmentGap = 25; // セグメント間の間隔
 
   // 端点ラベル（共通）
@@ -741,55 +805,103 @@ function drawDiagram() {
   ctx.fillText('B地点', padding + lineWidth, 20);
   ctx.fillText(`${state.distance}m`, padding + lineWidth, 35);
 
-  // 履歴から各人物の軌跡セグメントを描画
+  // 交点を取得して期間境界を作成（出会い/追い越しの時刻で分割）
+  const intersections = findIntersections();
+  const periodBoundaries = [0, ...intersections.map(i => i.time).sort((a, b) => a - b)];
+  if (state.history.time.length > 0) {
+    periodBoundaries.push(state.history.time[state.history.time.length - 1]);
+  }
+
+  // 期間に応じた色を生成
+  function getPeriodColor(periodIndex) {
+    const hue = (periodIndex * 60) % 360;
+    return `hsl(${hue}, 70%, 55%)`;
+  }
+
+  // 履歴から各人物の軌跡を期間ごとに描画
   if (state.history.time.length > 1) {
     state.people.forEach((person, personIdx) => {
       const baseY = personIdx === 0 ? personABaseY : personBBaseY;
-      let segmentIndex = 0;
-      let segmentStartIdx = 0;
+      let overallSegmentIndex = 0; // 全体でのセグメントインデックス（Y位置調整用）
 
-      for (let i = 1; i < state.history.time.length; i++) {
-        const pos_prev = state.history.positions[personIdx][i - 1];
-        const pos_curr = state.history.positions[personIdx][i];
+      // 各期間について
+      for (let periodIdx = 0; periodIdx < periodBoundaries.length - 1; periodIdx++) {
+        const periodStartTime = periodBoundaries[periodIdx];
+        const periodEndTime = periodBoundaries[periodIdx + 1];
 
-        // 反転検出（端に到達）
-        const hitLeftEdge = pos_prev > 0.5 && pos_curr <= 0.5;
-        const hitRightEdge = pos_prev < state.distance - 0.5 && pos_curr >= state.distance - 0.5;
+        // この期間の履歴インデックス範囲を取得
+        let periodStartIdx = -1;
+        let periodEndIdx = -1;
 
-        if (hitLeftEdge || hitRightEdge || i === state.history.time.length - 1) {
-          // セグメント描画
-          const endIdx = i;
-          const yOffset = baseY + (segmentIndex % 5) * segmentGap * (personIdx === 0 ? -1 : 1);
-
-          ctx.strokeStyle = person.color;
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-
-          for (let j = segmentStartIdx; j <= endIdx; j++) {
-            const pos = state.history.positions[personIdx][j];
-            const x = padding + (pos / state.distance) * lineWidth;
-            if (j === segmentStartIdx) {
-              ctx.moveTo(x, yOffset);
-            } else {
-              ctx.lineTo(x, yOffset);
-            }
+        for (let i = 0; i < state.history.time.length; i++) {
+          if (periodStartIdx === -1 && state.history.time[i] >= periodStartTime) {
+            periodStartIdx = i;
           }
-          ctx.stroke();
+          if (state.history.time[i] <= periodEndTime) {
+            periodEndIdx = i;
+          }
+        }
 
-          // 端点マーカー
-          if (hitLeftEdge || hitRightEdge || i === state.history.time.length - 1) {
-            const lastPos = state.history.positions[personIdx][endIdx];
-            const lastX = padding + (lastPos / state.distance) * lineWidth;
-            ctx.fillStyle = person.color;
+        if (periodStartIdx === -1 || periodEndIdx === -1 || periodStartIdx > periodEndIdx) {
+          continue;
+        }
+
+        const periodColor = getPeriodColor(periodIdx);
+
+        // この期間内で反転を検出しながらサブセグメントを描画
+        let subSegmentStartIdx = periodStartIdx;
+
+        for (let i = periodStartIdx + 1; i <= periodEndIdx; i++) {
+          const pos_prev = state.history.positions[personIdx][i - 1];
+          const pos_curr = state.history.positions[personIdx][i];
+
+          // 反転検出（端に到達）
+          const hitLeftEdge = pos_prev > 0.5 && pos_curr <= 0.5;
+          const hitRightEdge = pos_prev < state.distance - 0.5 && pos_curr >= state.distance - 0.5;
+
+          if (hitLeftEdge || hitRightEdge || i === periodEndIdx) {
+            // サブセグメント描画
+            const yOffset = baseY + (overallSegmentIndex % 5) * segmentGap * (personIdx === 0 ? 1 : -1);
+
+            ctx.strokeStyle = periodColor;
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.arc(lastX, yOffset, 5, 0, Math.PI * 2);
-            ctx.fill();
-          }
 
-          // 次のセグメントへ
-          if (hitLeftEdge || hitRightEdge) {
-            segmentIndex++;
-            segmentStartIdx = i;
+            for (let j = subSegmentStartIdx; j <= i; j++) {
+              const pos = state.history.positions[personIdx][j];
+              const x = padding + (pos / state.distance) * lineWidth;
+              if (j === subSegmentStartIdx) {
+                ctx.moveTo(x, yOffset);
+              } else {
+                ctx.lineTo(x, yOffset);
+              }
+            }
+            ctx.stroke();
+
+            // 矢印を描画
+            if (i > subSegmentStartIdx) {
+              const pos1 = state.history.positions[personIdx][i - 1];
+              const pos2 = state.history.positions[personIdx][i];
+              const x1 = padding + (pos1 / state.distance) * lineWidth;
+              const x2 = padding + (pos2 / state.distance) * lineWidth;
+              drawArrowHead(ctx, x1, yOffset, x2, yOffset, periodColor);
+            }
+
+            // 端点マーカー
+            if (hitLeftEdge || hitRightEdge || i === periodEndIdx) {
+              const lastPos = state.history.positions[personIdx][i];
+              const lastX = padding + (lastPos / state.distance) * lineWidth;
+              ctx.fillStyle = periodColor;
+              ctx.beginPath();
+              ctx.arc(lastX, yOffset, 5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+
+            // 次のサブセグメントへ
+            if (hitLeftEdge || hitRightEdge) {
+              overallSegmentIndex++;
+              subSegmentStartIdx = i;
+            }
           }
         }
       }
@@ -803,7 +915,6 @@ function drawDiagram() {
   }
 
   // 交点（出会い・追い越し）に縦線を描画
-  const intersections = findIntersections();
   intersections.forEach((intersection) => {
     const x = padding + (intersection.position / state.distance) * lineWidth;
 
@@ -843,10 +954,12 @@ window.pauseAnimation = pauseAnimation;
 window.resetAnimation = resetAnimation;
 window.updateSettings = updateSettings;
 window.syncDistance = syncDistance;
+window.syncMaxTime = syncMaxTime;
 window.syncSpeedA = syncSpeedA;
 window.syncSpeedB = syncSpeedB;
 window.updateTimeScale = updateTimeScale;
 window.toggleGuide = toggleGuide;
+window.toggleIntermittentSettings = toggleIntermittentSettings;
 
 // ===== ページ読み込み時に初期化 =====
 window.addEventListener('DOMContentLoaded', init);
