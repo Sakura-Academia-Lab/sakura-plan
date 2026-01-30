@@ -1,20 +1,66 @@
 // ===== 状態管理 =====
 const state = {
-  distance: 100,  // 両端の距離 (m)
+  waypoints: [
+    { id: 'A', name: 'A地点', distance: 0, fixed: true },
+    { id: 'B', name: 'B地点', distance: 100, fixed: true }
+  ],
   people: [
-    { name: '人物A', speed: 4, startPos: 0, color: '#ff5252', direction: 1, currentDirection: 1, mode: 'roundTrip', workTime: 3, restTime: 3 },
-    { name: '人物B', speed: 6, startPos: 100, color: '#4facfe', direction: -1, currentDirection: -1, mode: 'roundTrip', workTime: 3, restTime: 3 }
+    {
+      name: '人物A',
+      speed: 4,
+      startWaypoint: 'A',  // 開始地点ID
+      endWaypoint: 'B',    // 終了地点ID
+      color: '#ff5252',
+      mode: 'roundTrip',
+      workTime: 3,
+      restTime: 3
+    },
+    {
+      name: '人物B',
+      speed: 6,
+      startWaypoint: 'B',  // 開始地点ID
+      endWaypoint: 'A',    // 終了地点ID
+      color: '#4facfe',
+      mode: 'roundTrip',
+      workTime: 3,
+      restTime: 3
+    }
   ],
   isPlaying: false,
   currentTime: 0,  // 秒
   timeScale: 1.0,  // 再生速度倍率
-  maxTime: 60,     // 最大時間（往復を想定）
+  maxTime: 60,     // 最大時間
   history: {
     time: [],
     positions: [[], []],
     distances: []
   }
 };
+
+// ===== ヘルパー関数：地点IDから距離を取得 =====
+function getWaypointDistance(waypointId) {
+  const waypoint = state.waypoints.find(w => w.id === waypointId);
+  return waypoint ? waypoint.distance : 0;
+}
+
+// ===== ヘルパー関数：全体の距離（最初の地点～最後の地点）を取得 =====
+function getTotalDistance() {
+  if (state.waypoints.length === 0) return 100;
+  const distances = state.waypoints.map(w => w.distance);
+  return Math.max(...distances) - Math.min(...distances);
+}
+
+// ===== ヘルパー関数：人物の移動範囲を取得 =====
+function getPersonRange(person) {
+  const startDist = getWaypointDistance(person.startWaypoint);
+  const endDist = getWaypointDistance(person.endWaypoint);
+  return {
+    min: Math.min(startDist, endDist),
+    max: Math.max(startDist, endDist),
+    start: startDist,
+    direction: startDist < endDist ? 1 : -1
+  };
+}
 
 // ===== Canvas要素 =====
 let animationCanvas, animationCtx;
@@ -43,6 +89,8 @@ function init() {
   window.addEventListener('resize', handleResize);
   handleResize();
 
+  renderWaypointsList();
+  updateWaypointSelects();
   toggleIntermittentSettings();
   updateSettings();
   render();
@@ -77,23 +125,159 @@ function handleResize() {
   }
 }
 
+// ===== 地点リスト表示 =====
+function renderWaypointsList() {
+  const container = document.getElementById('waypoints-list');
+  container.innerHTML = '';
+
+  // 距離順にソート
+  const sortedWaypoints = [...state.waypoints].sort((a, b) => a.distance - b.distance);
+
+  sortedWaypoints.forEach((waypoint, index) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display: flex; align-items: center; gap: 5px; margin-bottom: 6px; padding: 6px; background: #f9f9f9; border-radius: 4px;';
+
+    // 地点名ラベル
+    const label = document.createElement('span');
+    label.textContent = waypoint.name;
+    label.style.cssText = 'min-width: 50px; font-size: 12px; font-weight: bold; color: #333;';
+    div.appendChild(label);
+
+    // 距離入力
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.value = waypoint.distance;
+    input.min = 0;
+    input.max = 500;
+    input.step = 10;
+    input.disabled = waypoint.fixed && index === 0; // A地点（最初）は常に0mで固定
+    input.style.cssText = 'flex: 1; padding: 4px; font-size: 11px; border: 1px solid #ccc; border-radius: 3px;';
+    input.onchange = () => updateWaypointDistance(waypoint.id, parseFloat(input.value));
+    div.appendChild(input);
+
+    const unit = document.createElement('span');
+    unit.textContent = 'm';
+    unit.style.cssText = 'font-size: 11px; color: #666;';
+    div.appendChild(unit);
+
+    // 削除ボタン（固定地点以外）
+    if (!waypoint.fixed) {
+      const btn = document.createElement('button');
+      btn.textContent = '✕';
+      btn.style.cssText = 'width: 24px; height: 24px; padding: 0; font-size: 14px; color: #666; background: white; border: 1px solid #ddd; border-radius: 3px; cursor: pointer;';
+      btn.onclick = () => removeWaypoint(waypoint.id);
+      div.appendChild(btn);
+    }
+
+    container.appendChild(div);
+  });
+}
+
+// ===== 地点選択ドロップダウン更新 =====
+function updateWaypointSelects() {
+  const selectIds = ['start-waypoint-a', 'end-waypoint-a', 'start-waypoint-b', 'end-waypoint-b'];
+
+  selectIds.forEach(selectId => {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = '';
+
+    state.waypoints.forEach(waypoint => {
+      const option = document.createElement('option');
+      option.value = waypoint.id;
+      option.textContent = `${waypoint.name} (${waypoint.distance}m)`;
+      select.appendChild(option);
+    });
+
+    // 前の選択を復元（存在すれば）
+    if (currentValue && state.waypoints.find(w => w.id === currentValue)) {
+      select.value = currentValue;
+    }
+  });
+}
+
+// ===== 地点追加 =====
+function addWaypoint() {
+  if (state.waypoints.length >= 10) {
+    alert('地点は最大10個までです');
+    return;
+  }
+
+  // 次のIDを決定（C, D, E...）
+  const usedIds = state.waypoints.map(w => w.id);
+  const availableIds = 'CDEFGHIJ'.split('').filter(id => !usedIds.includes(id));
+  if (availableIds.length === 0) {
+    alert('地点を追加できません');
+    return;
+  }
+
+  const newId = availableIds[0];
+  const newDistance = Math.floor((getWaypointDistance('A') + getWaypointDistance('B')) / 2);
+
+  state.waypoints.push({
+    id: newId,
+    name: `${newId}地点`,
+    distance: newDistance,
+    fixed: false
+  });
+
+  renderWaypointsList();
+  updateWaypointSelects();
+  updateSettings();
+}
+
+// ===== 地点削除 =====
+function removeWaypoint(id) {
+  const waypoint = state.waypoints.find(w => w.id === id);
+  if (!waypoint || waypoint.fixed) return;
+
+  // この地点を使用している人物がいるかチェック
+  const isUsed = state.people.some(p => p.startWaypoint === id || p.endWaypoint === id);
+  if (isUsed) {
+    alert('この地点は人物が使用しているため削除できません');
+    return;
+  }
+
+  state.waypoints = state.waypoints.filter(w => w.id !== id);
+  renderWaypointsList();
+  updateWaypointSelects();
+  updateSettings();
+}
+
+// ===== 地点の距離更新 =====
+function updateWaypointDistance(id, distance) {
+  const waypoint = state.waypoints.find(w => w.id === id);
+  if (!waypoint) return;
+
+  // A地点は常に0m
+  if (waypoint.id === 'A') {
+    waypoint.distance = 0;
+    renderWaypointsList();
+    return;
+  }
+
+  waypoint.distance = Math.max(0, Math.min(500, distance));
+  renderWaypointsList();
+  updateWaypointSelects();
+  updateSettings();
+}
+
 // ===== 設定更新 =====
 function updateSettings() {
-  state.distance = parseFloat(document.getElementById('input-distance').value);
   state.maxTime = parseFloat(document.getElementById('input-max-time').value);
 
   state.people[0].speed = parseFloat(document.getElementById('input-speed-a').value);
-  const startA = document.getElementById('start-a').value;
-  state.people[0].startPos = startA === '0' ? 0 : state.distance;
-  state.people[0].direction = startA === '0' ? 1 : -1;
+  state.people[0].startWaypoint = document.getElementById('start-waypoint-a').value;
+  state.people[0].endWaypoint = document.getElementById('end-waypoint-a').value;
   state.people[0].mode = document.getElementById('mode-a').value;
   state.people[0].workTime = parseFloat(document.getElementById('work-time-a').value);
   state.people[0].restTime = parseFloat(document.getElementById('rest-time-a').value);
 
   state.people[1].speed = parseFloat(document.getElementById('input-speed-b').value);
-  const startB = document.getElementById('start-b').value;
-  state.people[1].startPos = startB === '0' ? 0 : state.distance;
-  state.people[1].direction = startB === '0' ? 1 : -1;
+  state.people[1].startWaypoint = document.getElementById('start-waypoint-b').value;
+  state.people[1].endWaypoint = document.getElementById('end-waypoint-b').value;
   state.people[1].mode = document.getElementById('mode-b').value;
   state.people[1].workTime = parseFloat(document.getElementById('work-time-b').value);
   state.people[1].restTime = parseFloat(document.getElementById('rest-time-b').value);
@@ -104,12 +288,6 @@ function updateSettings() {
 }
 
 // ===== スライダー同期 =====
-function syncDistance() {
-  const val = document.getElementById('range-distance').value;
-  document.getElementById('input-distance').value = val;
-  updateSettings();
-}
-
 function syncMaxTime() {
   const val = document.getElementById('range-max-time').value;
   document.getElementById('input-max-time').value = val;
@@ -132,11 +310,10 @@ function updateTimeScale() {
   state.timeScale = parseFloat(document.getElementById('time-scale').value);
 }
 
-// ===== 位置計算（移動モード対応） =====
+// ===== 位置計算（地点対応、移動モード対応） =====
 function calculatePosition(person, time) {
   const mode = person.mode || 'roundTrip';
-  let pos = person.startPos;
-  let currentDir = person.direction;
+  const range = getPersonRange(person);
 
   if (mode === 'intermittent') {
     // 間欠移動モード：移動と休憩を繰り返す
@@ -164,47 +341,53 @@ function calculatePosition(person, time) {
     }
 
     // 累積移動時間で位置を計算（往復対応）
-    return calculatePositionWithTime(person, totalWorkTime);
+    return calculatePositionWithTime(person, totalWorkTime, range);
   }
 
-  if (mode === 'stopAtEdge') {
-    // 端で停止モード：範囲内で進み、端に到達したら停止
-    pos = person.startPos + currentDir * person.speed * time;
-    return Math.max(0, Math.min(state.distance, pos));
+  if (mode === 'stopAtWaypoint') {
+    // 地点で停止モード：目標地点に到達したら停止
+    const distance = Math.abs(range.max - range.min);
+    const travelDistance = person.speed * time;
+    if (travelDistance >= distance) {
+      // 終了地点に到達
+      return range.direction > 0 ? range.max : range.min;
+    }
+    // 移動中
+    return range.start + range.direction * travelDistance;
   }
 
   // roundTripモード（往復）：端で反転
-  return calculatePositionWithTime(person, time);
+  return calculatePositionWithTime(person, time, range);
 }
 
-// ===== 位置計算ヘルパー（往復対応） =====
-function calculatePositionWithTime(person, time) {
-  let pos = person.startPos;
-  let currentDir = person.direction;
+// ===== 位置計算ヘルパー（地点間往復対応） =====
+function calculatePositionWithTime(person, time, range) {
+  let pos = range.start;
+  let currentDir = range.direction;
   let remainingTime = time;
 
   while (remainingTime > 0.001) {
     const nextPos = pos + currentDir * person.speed * remainingTime;
 
-    if (nextPos >= 0 && nextPos <= state.distance) {
+    if (nextPos >= range.min && nextPos <= range.max) {
       pos = nextPos;
       break;
     }
 
     let timeToEdge;
     if (currentDir === 1) {
-      timeToEdge = (state.distance - pos) / person.speed;
-      pos = state.distance;
+      timeToEdge = (range.max - pos) / person.speed;
+      pos = range.max;
     } else {
-      timeToEdge = pos / person.speed;
-      pos = 0;
+      timeToEdge = (pos - range.min) / person.speed;
+      pos = range.min;
     }
 
     remainingTime -= timeToEdge;
     currentDir *= -1;
   }
 
-  return Math.max(0, Math.min(state.distance, pos));
+  return Math.max(range.min, Math.min(range.max, pos));
 }
 
 // ===== 距離計算 =====
@@ -262,26 +445,31 @@ function findEdgeEvents() {
   if (state.history.time.length < 2) return events;
 
   for (let personIdx = 0; personIdx < 2; personIdx++) {
+    const person = state.people[personIdx];
+    const personRange = getPersonRange(person);
+
     for (let i = 1; i < state.history.time.length; i++) {
       const pos_prev = state.history.positions[personIdx][i - 1];
       const pos_curr = state.history.positions[personIdx][i];
 
-      // 左端(0m)到達を検出（一方向のみ：近づく方向）
-      if (pos_prev > 0.5 && pos_curr <= 0.5) {
+      // 移動範囲の左端到達を検出（一方向のみ：近づく方向）
+      if (pos_prev > personRange.min + 0.5 && pos_curr <= personRange.min + 0.5) {
         const t_prev = state.history.time[i - 1];
         const t_curr = state.history.time[i];
-        const ratio = pos_prev / (pos_prev - pos_curr + 1e-10);
+        const ratio = (pos_prev - personRange.min) / (pos_prev - pos_curr + 1e-10);
         const eventTime = t_prev + (t_curr - t_prev) * ratio;
-        events.push({ time: eventTime, person: personIdx, edge: 'left' });
+        const edgeName = state.waypoints.find(w => w.distance === personRange.min)?.name || 'left';
+        events.push({ time: eventTime, person: personIdx, edge: edgeName });
       }
 
-      // 右端(distance)到達を検出（一方向のみ：近づく方向）
-      if (pos_prev < state.distance - 0.5 && pos_curr >= state.distance - 0.5) {
+      // 移動範囲の右端到達を検出（一方向のみ：近づく方向）
+      if (pos_prev < personRange.max - 0.5 && pos_curr >= personRange.max - 0.5) {
         const t_prev = state.history.time[i - 1];
         const t_curr = state.history.time[i];
-        const ratio = (state.distance - pos_prev) / (pos_curr - pos_prev + 1e-10);
+        const ratio = (personRange.max - pos_prev) / (pos_curr - pos_prev + 1e-10);
         const eventTime = t_prev + (t_curr - t_prev) * ratio;
-        events.push({ time: eventTime, person: personIdx, edge: 'right' });
+        const edgeName = state.waypoints.find(w => w.distance === personRange.max)?.name || 'right';
+        events.push({ time: eventTime, person: personIdx, edge: edgeName });
       }
     }
   }
@@ -389,20 +577,36 @@ function drawAnimation(positions) {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // 距離マーカー
+  // 地点マーカー
   const padding = 50;
   const roadWidth = w - 2 * padding;
+  const totalDistance = getTotalDistance();
+  const minDistance = Math.min(...state.waypoints.map(w => w.distance));
 
-  ctx.fillStyle = '#333';
-  ctx.font = '12px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('0m', padding, roadY + roadHeight / 2 + 20);
-  ctx.fillText(`${state.distance}m`, w - padding, roadY + roadHeight / 2 + 20);
+  state.waypoints.forEach(waypoint => {
+    const x = padding + ((waypoint.distance - minDistance) / totalDistance) * roadWidth;
+
+    // 地点の縦線
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, roadY - roadHeight / 2 - 10);
+    ctx.lineTo(x, roadY + roadHeight / 2 + 10);
+    ctx.stroke();
+
+    // 地点名と距離
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 12px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(waypoint.name, x, roadY + roadHeight / 2 + 25);
+    ctx.font = '10px Arial';
+    ctx.fillText(`${waypoint.distance}m`, x, roadY + roadHeight / 2 + 37);
+  });
 
   // 人物描画
   state.people.forEach((person, i) => {
     const pos = positions[i];
-    const x = padding + (pos / state.distance) * roadWidth;
+    const x = padding + ((pos - minDistance) / totalDistance) * roadWidth;
     const y = roadY + (i === 0 ? -15 : 15);
 
     // 円
@@ -457,6 +661,9 @@ function drawTimeDistanceChart() {
   const graphW = w - marginLeft - marginRight;
   const graphH = h - marginTop - marginBottom;
 
+  const totalDistance = getTotalDistance();
+  const minDistance = Math.min(...state.waypoints.map(w => w.distance));
+
   // 背景
   ctx.fillStyle = '#fafafa';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
@@ -504,7 +711,7 @@ function drawTimeDistanceChart() {
   ctx.textAlign = 'right';
   for (let i = 0; i <= 5; i++) {
     const y = marginTop + graphH - (i / 5) * graphH;
-    const dist = (i / 5) * state.distance;
+    const dist = minDistance + (i / 5) * totalDistance;
     ctx.fillText(dist.toFixed(0), marginLeft - 5, y + 4);
   }
 
@@ -519,7 +726,7 @@ function drawTimeDistanceChart() {
         const t = state.history.time[j];
         const pos = state.history.positions[i][j];
         const x = marginLeft + (t / state.maxTime) * graphW;
-        const y = marginTop + graphH - (pos / state.distance) * graphH;
+        const y = marginTop + graphH - ((pos - minDistance) / totalDistance) * graphH;
 
         if (j === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
@@ -544,7 +751,7 @@ function drawTimeDistanceChart() {
     let overtakingCount = 0;
     intersections.forEach((intersection) => {
       const ix = marginLeft + (intersection.time / state.maxTime) * graphW;
-      const iy = marginTop + graphH - (intersection.position / state.distance) * graphH;
+      const iy = marginTop + graphH - ((intersection.position - minDistance) / totalDistance) * graphH;
 
       // 色とラベルを交点タイプで分ける
       const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
@@ -605,6 +812,8 @@ function drawDistanceDiffChart() {
   const graphW = w - marginLeft - marginRight;
   const graphH = h - marginTop - marginBottom;
 
+  const totalDistance = getTotalDistance();
+
   // 背景
   ctx.fillStyle = '#fafafa';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
@@ -652,7 +861,7 @@ function drawDistanceDiffChart() {
   ctx.textAlign = 'right';
   for (let i = 0; i <= 5; i++) {
     const y = marginTop + graphH - (i / 5) * graphH;
-    const dist = (i / 5) * state.distance;
+    const dist = (i / 5) * totalDistance;
     ctx.fillText(dist.toFixed(0), marginLeft - 5, y + 4);
   }
 
@@ -666,7 +875,7 @@ function drawDistanceDiffChart() {
       const t = state.history.time[j];
       const dist = state.history.distances[j];
       const x = marginLeft + (t / state.maxTime) * graphW;
-      const y = marginTop + graphH - (dist / state.distance) * graphH;
+      const y = marginTop + graphH - (dist / totalDistance) * graphH;
 
       if (j === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
@@ -746,7 +955,7 @@ function drawDistanceDiffChart() {
       ctx.font = '10px Arial';
       ctx.textAlign = 'center';
       const personName = state.people[event.person].name;
-      const edgeName = event.edge === 'left' ? '左端' : '右端';
+      const edgeName = event.edge; // 地点名がそのまま入っている
       const yOffset = marginTop + 10 + (idx % 3) * 12; // 重ならないようにずらす
       ctx.fillText(`${personName} ${edgeName}`, ex, yOffset);
     });
@@ -814,14 +1023,20 @@ function drawDiagram() {
   const personBBaseY = h * 0.8; // 人物Bの基準Y座標（下側から折り返す）
   const segmentGap = 25; // セグメント間の間隔
 
-  // 端点ラベル（共通）
+  const totalDistance = getTotalDistance();
+  const minDistance = Math.min(...state.waypoints.map(w => w.distance));
+
+  // 地点ラベル表示
   ctx.fillStyle = '#333';
   ctx.font = '12px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('A地点', padding, 20);
-  ctx.fillText('0m', padding, 35);
-  ctx.fillText('B地点', padding + lineWidth, 20);
-  ctx.fillText(`${state.distance}m`, padding + lineWidth, 35);
+  state.waypoints.forEach(waypoint => {
+    const x = padding + ((waypoint.distance - minDistance) / totalDistance) * lineWidth;
+    ctx.fillText(waypoint.name, x, 20);
+    ctx.font = '10px Arial';
+    ctx.fillText(`${waypoint.distance}m`, x, 35);
+    ctx.font = '12px Arial';
+  });
 
   // 交点を取得して期間境界を作成（出会い/追い越しの時刻で分割）
   const intersections = findIntersections();
@@ -840,6 +1055,7 @@ function drawDiagram() {
   if (state.history.time.length > 1) {
     state.people.forEach((person, personIdx) => {
       const baseY = personIdx === 0 ? personABaseY : personBBaseY;
+      const personRange = getPersonRange(person);
       let overallSegmentIndex = 0; // 全体でのセグメントインデックス（Y位置調整用）
 
       // 各期間について
@@ -873,9 +1089,9 @@ function drawDiagram() {
           const pos_prev = state.history.positions[personIdx][i - 1];
           const pos_curr = state.history.positions[personIdx][i];
 
-          // 反転検出（端に到達）
-          const hitLeftEdge = pos_prev > 0.5 && pos_curr <= 0.5;
-          const hitRightEdge = pos_prev < state.distance - 0.5 && pos_curr >= state.distance - 0.5;
+          // 反転検出（移動範囲の端に到達）
+          const hitLeftEdge = pos_prev > personRange.min + 0.5 && pos_curr <= personRange.min + 0.5;
+          const hitRightEdge = pos_prev < personRange.max - 0.5 && pos_curr >= personRange.max - 0.5;
 
           if (hitLeftEdge || hitRightEdge || i === periodEndIdx) {
             // サブセグメント描画
@@ -887,7 +1103,7 @@ function drawDiagram() {
 
             for (let j = subSegmentStartIdx; j <= i; j++) {
               const pos = state.history.positions[personIdx][j];
-              const x = padding + (pos / state.distance) * lineWidth;
+              const x = padding + ((pos - minDistance) / totalDistance) * lineWidth;
               if (j === subSegmentStartIdx) {
                 ctx.moveTo(x, yOffset);
               } else {
@@ -900,15 +1116,15 @@ function drawDiagram() {
             if (i > subSegmentStartIdx) {
               const pos1 = state.history.positions[personIdx][i - 1];
               const pos2 = state.history.positions[personIdx][i];
-              const x1 = padding + (pos1 / state.distance) * lineWidth;
-              const x2 = padding + (pos2 / state.distance) * lineWidth;
+              const x1 = padding + ((pos1 - minDistance) / totalDistance) * lineWidth;
+              const x2 = padding + ((pos2 - minDistance) / totalDistance) * lineWidth;
               drawArrowHead(ctx, x1, yOffset, x2, yOffset, periodColor);
             }
 
             // 端点マーカー
             if (hitLeftEdge || hitRightEdge || i === periodEndIdx) {
               const lastPos = state.history.positions[personIdx][i];
-              const lastX = padding + (lastPos / state.distance) * lineWidth;
+              const lastX = padding + ((lastPos - minDistance) / totalDistance) * lineWidth;
               ctx.fillStyle = periodColor;
               ctx.beginPath();
               ctx.arc(lastX, yOffset, 5, 0, Math.PI * 2);
@@ -924,15 +1140,16 @@ function drawDiagram() {
         }
       }
 
-      // 人物名ラベル（開始位置に応じて左右に配置）
+      // 人物名ラベル（開始地点に応じて左右に配置）
       ctx.fillStyle = person.color;
       ctx.font = 'bold 14px Arial';
-      if (person.startPos === 0) {
-        // 左端から出発する場合は左側に表示
+      const startDistance = getWaypointDistance(person.startWaypoint);
+      if (startDistance === minDistance) {
+        // 最小距離（左端）から出発する場合は左側に表示
         ctx.textAlign = 'left';
         ctx.fillText(person.name, 10, baseY + 5);
       } else {
-        // 右端から出発する場合は右側に表示
+        // それ以外から出発する場合は右側に表示
         ctx.textAlign = 'right';
         ctx.fillText(person.name, w - 10, baseY + 5);
       }
@@ -943,7 +1160,7 @@ function drawDiagram() {
   let meetingCount = 0;
   let overtakingCount = 0;
   intersections.forEach((intersection) => {
-    const x = padding + (intersection.position / state.distance) * lineWidth;
+    const x = padding + ((intersection.position - minDistance) / totalDistance) * lineWidth;
 
     // 色とラベルを交点タイプで分ける
     const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
@@ -993,7 +1210,6 @@ window.startAnimation = startAnimation;
 window.pauseAnimation = pauseAnimation;
 window.resetAnimation = resetAnimation;
 window.updateSettings = updateSettings;
-window.syncDistance = syncDistance;
 window.syncMaxTime = syncMaxTime;
 window.syncSpeedA = syncSpeedA;
 window.syncSpeedB = syncSpeedB;
@@ -1001,6 +1217,8 @@ window.updateTimeScale = updateTimeScale;
 window.toggleGuide = toggleGuide;
 window.toggleIntermittentSettings = toggleIntermittentSettings;
 window.toggleControls = toggleControls;
+window.addWaypoint = addWaypoint;
+window.removeWaypoint = removeWaypoint;
 
 // ===== ページ読み込み時に初期化 =====
 window.addEventListener('DOMContentLoaded', init);

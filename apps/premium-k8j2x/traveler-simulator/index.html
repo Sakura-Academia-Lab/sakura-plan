@@ -22,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>旅人算シミュレーター | 桜アカデミア</title>
 
-  <link rel="stylesheet" href="css/style.css?v=2.5">
+  <link rel="stylesheet" href="css/style.css?v=3.0">
 </head>
 
 <body>
@@ -42,18 +42,20 @@
         <option value="5">5x</option>
       </select>
     </div>
-    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.5</small></h1>
+    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 3.0</small></h1>
     <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
     <button class="btn-toggle-controls" onclick="toggleControls()" title="設定を表示/非表示">⚙️</button>
   </header>
 
   <aside id="controls" class="controls-hidden">
     <div class="ctrl-group">
-      <label class="ctrl-label">両端の距離 (m)</label>
-      <div class="input-row">
-        <input type="number" id="input-distance" value="100" min="10" max="500" step="10" onchange="updateSettings()">
-        <input type="range" id="range-distance" min="10" max="500" value="100" step="10" oninput="syncDistance()">
+      <label class="ctrl-label">地点管理</label>
+      <div id="waypoints-list" style="margin-bottom: 8px;">
+        <!-- 地点リストが動的に表示される -->
       </div>
+      <button class="btn-add-waypoint" onclick="addWaypoint()" style="width: 100%; padding: 8px; font-size: 12px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+        + 地点を追加
+      </button>
     </div>
 
     <div class="ctrl-group">
@@ -75,17 +77,22 @@
         <input type="range" id="range-speed-a" min="1" max="10" value="4" step="0.5" oninput="syncSpeedA()">
       </div>
       <div class="input-row">
-        <label style="min-width: 50px;">開始</label>
-        <select id="start-a" onchange="updateSettings()">
-          <option value="0">左端 (0m)</option>
-          <option value="distance">右端</option>
+        <label style="min-width: 60px; font-size: 11px;">開始地点</label>
+        <select id="start-waypoint-a" onchange="updateSettings()">
+          <!-- 地点が動的に追加される -->
+        </select>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 60px; font-size: 11px;">終了地点</label>
+        <select id="end-waypoint-a" onchange="updateSettings()">
+          <!-- 地点が動的に追加される -->
         </select>
       </div>
       <div class="input-row">
         <label style="min-width: 50px;">動作</label>
         <select id="mode-a" onchange="toggleIntermittentSettings(); updateSettings();">
           <option value="roundTrip">往復</option>
-          <option value="stopAtEdge">端で停止</option>
+          <option value="stopAtWaypoint">地点で停止</option>
           <option value="intermittent">間欠移動</option>
         </select>
       </div>
@@ -114,17 +121,22 @@
         <input type="range" id="range-speed-b" min="1" max="10" value="6" step="0.5" oninput="syncSpeedB()">
       </div>
       <div class="input-row">
-        <label style="min-width: 50px;">開始</label>
-        <select id="start-b" onchange="updateSettings()">
-          <option value="0">左端 (0m)</option>
-          <option value="distance" selected>右端</option>
+        <label style="min-width: 60px; font-size: 11px;">開始地点</label>
+        <select id="start-waypoint-b" onchange="updateSettings()">
+          <!-- 地点が動的に追加される -->
+        </select>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 60px; font-size: 11px;">終了地点</label>
+        <select id="end-waypoint-b" onchange="updateSettings()">
+          <!-- 地点が動的に追加される -->
         </select>
       </div>
       <div class="input-row">
         <label style="min-width: 50px;">動作</label>
         <select id="mode-b" onchange="toggleIntermittentSettings(); updateSettings();">
           <option value="roundTrip">往復</option>
-          <option value="stopAtEdge">端で停止</option>
+          <option value="stopAtWaypoint">地点で停止</option>
           <option value="intermittent">間欠移動</option>
         </select>
       </div>
@@ -184,7 +196,7 @@
     </div>
   </div>
 
-  <script src="js/app.js?v=2.5"></script>
+  <script src="js/app.js?v=3.0"></script>
 </body>
 
 </html>
