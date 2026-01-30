@@ -924,11 +924,18 @@ function drawDiagram() {
         }
       }
 
-      // 人物名ラベル
+      // 人物名ラベル（開始位置に応じて左右に配置）
       ctx.fillStyle = person.color;
       ctx.font = 'bold 14px Arial';
-      ctx.textAlign = 'left';
-      ctx.fillText(person.name, 10, baseY + 5);
+      if (person.startPos === 0) {
+        // 左端から出発する場合は左側に表示
+        ctx.textAlign = 'left';
+        ctx.fillText(person.name, 10, baseY + 5);
+      } else {
+        // 右端から出発する場合は右側に表示
+        ctx.textAlign = 'right';
+        ctx.fillText(person.name, w - 10, baseY + 5);
+      }
     });
   }
 
