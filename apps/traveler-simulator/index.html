@@ -22,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>旅人算シミュレーター | 桜アカデミア</title>
 
-  <link rel="stylesheet" href="css/style.css?v=2.4">
+  <link rel="stylesheet" href="css/style.css?v=2.5">
 </head>
 
 <body>
@@ -42,11 +42,12 @@
         <option value="5">5x</option>
       </select>
     </div>
-    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.4</small></h1>
+    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.5</small></h1>
     <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
+    <button class="btn-toggle-controls" onclick="toggleControls()" title="設定を表示/非表示">⚙️</button>
   </header>
 
-  <aside id="controls">
+  <aside id="controls" class="controls-hidden">
     <div class="ctrl-group">
       <label class="ctrl-label">両端の距離 (m)</label>
       <div class="input-row">
@@ -183,7 +184,7 @@
     </div>
   </div>
 
-  <script src="js/app.js?v=2.4"></script>
+  <script src="js/app.js?v=2.5"></script>
 </body>
 
 </html>

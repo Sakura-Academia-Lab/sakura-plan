@@ -975,6 +975,12 @@ function drawDiagram() {
   ctx.fillText(`時刻: ${state.currentTime.toFixed(2)}秒`, w - 10, h - 10);
 }
 
+// ===== コントロールパネルの表示/非表示切り替え（モバイル用） =====
+function toggleControls() {
+  const controls = document.getElementById('controls');
+  controls.classList.toggle('controls-hidden');
+}
+
 // ===== グローバルに公開 =====
 window.startAnimation = startAnimation;
 window.pauseAnimation = pauseAnimation;
@@ -987,6 +993,7 @@ window.syncSpeedB = syncSpeedB;
 window.updateTimeScale = updateTimeScale;
 window.toggleGuide = toggleGuide;
 window.toggleIntermittentSettings = toggleIntermittentSettings;
+window.toggleControls = toggleControls;
 
 // ===== ページ読み込み時に初期化 =====
 window.addEventListener('DOMContentLoaded', init);
