@@ -466,6 +466,21 @@ body {
 
 /* ===== レスポンシブ (タブレット以下) ===== */
 @media (max-width: 768px) {
+  /* ヘッダーを2行に */
+  #app-header {
+    height: 88px;
+    flex-wrap: wrap;
+    padding: 8px 15px;
+    gap: 8px;
+  }
+
+  #app-header h1 {
+    order: -1;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+  }
+
   /* コントロール切り替えボタンを表示 */
   .btn-toggle-controls {
     display: block;
@@ -506,12 +521,12 @@ body {
   #animation-area {
     left: 0;
     right: 0;
-    top: 44px;
+    top: 88px;
     bottom: calc(50vh + 40vh);
   }
 
   #animation-bottom {
-    flex: 0 0 80px;
+    flex: 0 0 150px;
   }
 
   #chart-panel {

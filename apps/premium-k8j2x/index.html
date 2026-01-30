@@ -289,8 +289,9 @@
 
         .news-item {
             display: flex;
-            gap: 15px;
-            padding: 10px 0;
+            flex-direction: column;
+            gap: 8px;
+            padding: 15px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -298,10 +299,16 @@
             border-bottom: none;
         }
 
+        .news-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .news-date {
             color: var(--pro-text-muted);
             font-family: monospace;
-            min-width: 90px;
+            font-size: 13px;
         }
 
         .news-tag {
@@ -406,7 +413,7 @@
         <div class="welcome-msg">
             <h2>Premium Tools Collection</h2>
             <p>
-                より高度な学習機能、広告のない快適な環境を提供します。<br>
+                より高度な学習機能と快適な環境を提供します。<br>
                 プロフェッショナルな受験対策をここから。
             </p>
         </div>
@@ -417,8 +424,10 @@
             </div>
             <ul class="news-list">
                 <li class="news-item">
-                    <span class="news-date">2026.01.30</span>
-                    <span class="news-tag">Major Update</span>
+                    <div class="news-item-header">
+                        <span class="news-date">2026.01.30</span>
+                        <span class="news-tag">Major Update</span>
+                    </div>
                     <span class="news-content">旅人算シミュレーター Ver 3.0 - 地点機能追加！最大10地点（A～J）を設置可能、地点間の往復・地点停止モードに対応。より複雑な旅人算問題を可視化できます。</span>
                 </li>
             </ul>
@@ -426,28 +435,38 @@
                 <summary class="more-news-btn">▼ 過去の更新を表示</summary>
                 <ul class="news-list">
                     <li class="news-item">
-                        <span class="news-date">2026.01.30</span>
-                        <span class="news-tag">Update</span>
+                        <div class="news-item-header">
+                            <span class="news-date">2026.01.30</span>
+                            <span class="news-tag">Update</span>
+                        </div>
                         <span class="news-content">旅人算シミュレーター Ver 2.4 - 交点回数表示の追加、UIレイアウトの最適化（比率3:7）を反映。</span>
                     </li>
                     <li class="news-item">
-                        <span class="news-date">2026.01.30</span>
-                        <span class="news-tag">Update</span>
+                        <div class="news-item-header">
+                            <span class="news-date">2026.01.30</span>
+                            <span class="news-tag">Update</span>
+                        </div>
                         <span class="news-content">旅人算シミュレーター Ver 2.2-2.3 - 再生制御ボタンのヘッダー移動、ドロップダウン背景修正、線分図の配置改善。</span>
                     </li>
                     <li class="news-item">
-                        <span class="news-date">2026.01.30</span>
-                        <span class="news-tag">Update</span>
+                        <div class="news-item-header">
+                            <span class="news-date">2026.01.30</span>
+                            <span class="news-tag">Update</span>
+                        </div>
                         <span class="news-content">旅人算シミュレーター Ver 2.1 - 再生時間（10-300秒）を自由に設定可能になりました。</span>
                     </li>
                     <li class="news-item">
-                        <span class="news-date">2026.01.30</span>
-                        <span class="news-tag">Update</span>
+                        <div class="news-item-header">
+                            <span class="news-date">2026.01.30</span>
+                            <span class="news-tag">Update</span>
+                        </div>
                         <span class="news-content">旅人算シミュレーター Ver 1.7-2.0 - 間欠移動モードの実装、線分図の色分け表示機能の追加。</span>
                     </li>
                     <li class="news-item">
-                        <span class="news-date">2026.01.29</span>
-                        <span class="news-tag">Launch</span>
+                        <div class="news-item-header">
+                            <span class="news-date">2026.01.29</span>
+                            <span class="news-tag">Launch</span>
+                        </div>
                         <span class="news-content">Sakura Academia Premium ポータル公開、旅人算シミュレーター PRO デプロイ。</span>
                     </li>
                 </ul>
