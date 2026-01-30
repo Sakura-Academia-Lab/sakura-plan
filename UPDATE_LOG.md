@@ -88,14 +88,14 @@
 | 03:15 | `apps/traveler-simulator/` | **Ver 1.7 間欠移動モード追加** - 突き抜けを削除、3秒移動+3秒休憩の間欠移動を実装 |
 | 03:15 | `index.html` | 動作モードを「往復/端で停止/間欠移動」に変更 |
 | 03:15 | `js/app.js` | 間欠移動モード実装、移動中/休憩中の状態表示を追加 |
-| 22:05 | `apps/premium-k8j2x/` | Traveler Simulator PRO をデプロイ（最新の旅人算シミュレーター反映） |
+| 22:05 | `premium-k8j2x/` | Traveler Simulator PRO をデプロイ（最新の旅人算シミュレーター反映） |
 | 23:30 | `apps/traveler-simulator/` | **Ver 1.8 間欠移動設定機能** - 移動時間と休憩時間を自由に設定可能に、UI整理（名前フィールド削除） |
 | 23:30 | `index.html` | 間欠移動選択時に移動時間・休憩時間の設定UIを表示、名前入力欄を削除してスッキリ |
 | 23:30 | `js/app.js` | toggleIntermittentSettings()関数追加、workTime/restTimeの設定を読み込み |
-| 23:35 | `apps/premium-k8j2x/traveler-simulator/` | Ver 1.8 反映（index.html, js/app.js を最新版に更新） |
+| 23:35 | `premium-k8j2x/traveler-simulator/` | Ver 1.8 反映（index.html, js/app.js を最新版に更新） |
 | 23:50 | `apps/traveler-simulator/` | **Ver 1.9 線分図の色分けと矢印表示** - 出会い/追い越しごとに線の色を変更、同じ色=同じ期間、進行方向に矢印を表示 |
 | 23:50 | `js/app.js` | drawArrowHead()関数追加、drawDiagram()で期間ごとの色分けと矢印描画を実装 |
-| 23:55 | `apps/premium-k8j2x/traveler-simulator/` | Ver 1.9 反映（index.html, js/app.js を最新版に更新） |
+| 23:55 | `premium-k8j2x/traveler-simulator/` | Ver 1.9 反映（index.html, js/app.js を最新版に更新） |
 
 ### 2026-01-30
 
@@ -103,20 +103,20 @@
 | --- | --- | --- |
 | 00:10 | `apps/traveler-simulator/` | **Ver 2.0 色分けロジック改善** - 出会い/追い越しの前後で色を変更、端で折り返しても同じ色を維持 |
 | 00:10 | `js/app.js` | drawDiagram()を全面改修、期間ごとに履歴を分割して描画、折り返しは色を変えずY位置のみ変更 |
-| 00:15 | `apps/premium-k8j2x/traveler-simulator/` | Ver 2.0 反映（index.html, js/app.js を最新版に更新） |
+| 00:15 | `premium-k8j2x/traveler-simulator/` | Ver 2.0 反映（index.html, js/app.js を最新版に更新） |
 | 00:30 | `apps/traveler-simulator/` | **Ver 2.1 再生時間調整機能** - 最大時間（10-300秒）を自由に設定可能に |
 | 00:30 | `index.html` | 再生時間設定UIを追加（数値入力とスライダー） |
 | 00:30 | `js/app.js` | syncMaxTime()関数追加、updateSettings()でmaxTime読み込み、calculateMaxTime()削除 |
-| 00:35 | `apps/premium-k8j2x/traveler-simulator/` | Ver 2.1 反映（index.html, js/app.js を最新版に更新） |
+| 00:35 | `premium-k8j2x/traveler-simulator/` | Ver 2.1 反映（index.html, js/app.js を最新版に更新） |
 | 00:50 | `apps/traveler-simulator/` | **Ver 2.2 再生制御ボタンのヘッダー移動** - よく使う再生制御をヘッダーに配置、常に見える位置に |
 | 00:50 | `index.html` | 再生制御ボタン（再生/停止/リセット/速度）をヘッダーに移動、サイドバーから削除 |
 | 00:50 | `css/style.css` | .header-controls スタイル追加、ヘッダー内ボタンのレイアウト調整 |
-| 00:55 | `apps/premium-k8j2x/traveler-simulator/` | Ver 2.2 反映（index.html, css/style.css を最新版に更新） |
-| 01:30 | `apps/premium-k8j2x/traveler-simulator/` | **Ver 2.3 UI改善とキャッシュ対策** - ドロップダウン背景修正、アニメーション比率3:7に変更、線分図配置改善（人物Aは下へ、人物Bは上へ折り返し）、バージョンパラメータ更新 |
+| 00:55 | `premium-k8j2x/traveler-simulator/` | Ver 2.2 反映（index.html, css/style.css を最新版に更新） |
+| 01:30 | `premium-k8j2x/traveler-simulator/` | **Ver 2.3 UI改善とキャッシュ対策** - ドロップダウン背景修正、アニメーション比率3:7に変更、線分図配置改善（人物Aは下へ、人物Bは上へ折り返し）、バージョンパラメータ更新 |
 | 01:30 | `index.html` | Ver 2.3 表示更新、CSS/JSバージョンパラメータを2.3に更新（キャッシュ強制更新） |
 | 01:30 | `css/style.css` | ドロップダウンオプション背景色を暗色に修正、アニメーションエリア比率を3:7に変更 |
 | 01:30 | `js/app.js` | 線分図の人物配置を改善（personABaseY: 0.2, personBBaseY: 0.8、折り返し方向を調整） |
-| 01:45 | `apps/premium-k8j2x/traveler-simulator/` | **Ver 2.4 交点表示改善** - グラフの出会い・追い越し表示に回数を追記（例: 出会い（1回目）、追い越し（2回目））|
+| 01:45 | `premium-k8j2x/traveler-simulator/` | **Ver 2.4 交点表示改善** - グラフの出会い・追い越し表示に回数を追記（例: 出会い（1回目）、追い越し（2回目））|
 | 01:45 | `index.html` | Ver 2.4 表示更新、CSS/JSバージョンパラメータを2.4に更新 |
 | 01:45 | `js/app.js` | 時間-距離グラフ、距離差グラフ、線分図の3箇所に回数カウンター追加 |
 | 01:50 | `apps/traveler-simulator/` | **Ver 2.4 通常版にプレミアム機能を反映** - 交点回数表示、UI改善（比率3:7、線分図配置）をすべて適用 |
@@ -125,11 +125,20 @@
 | 01:50 | `js/app.js` | 線分図配置改善、回数カウンター追加（3箇所） |
 | 01:55 | `apps/index.html` | 旅人算シミュレーター Ver 2.4 を公開、コメントアウトを解除して説明文を更新 |
 | 02:00 | `apps/index.html` | Update History に旅人算シミュレーター Ver 2.4 の公開情報を追加 |
-| 02:15 | `apps/premium-k8j2x/index.html` | **プレミアムポータルのUI改善** - 更新情報を最新1件のみ表示、PWA案内をアプリ一覧下に移動（スマホ版のみ）、各アプリにPCインストールボタン追加、Launch Appボタン削除、アプリ説明を左揃えに変更 |
-| 02:30 | `apps/premium-k8j2x/traveler-simulator/` | **Ver 2.5 スマホ版UI大幅改善** - 折りたたみ式コントロールパネル、タッチ操作最適化（最小44px）、モバイルレイアウト改善、設定ボタン追加 |
+| 02:15 | `premium-k8j2x/index.html` | **プレミアムポータルのUI改善** - 更新情報を最新1件のみ表示、PWA案内をアプリ一覧下に移動（スマホ版のみ）、各アプリにPCインストールボタン追加、Launch Appボタン削除、アプリ説明を左揃えに変更 |
+| 02:30 | `premium-k8j2x/traveler-simulator/` | **Ver 2.5 スマホ版UI大幅改善** - 折りたたみ式コントロールパネル、タッチ操作最適化（最小44px）、モバイルレイアウト改善、設定ボタン追加 |
 | 02:30 | `index.html` | Ver 2.5 表示更新、CSS/JSバージョンパラメータを2.5に更新、設定切り替えボタン追加 |
 | 02:30 | `css/style.css` | モバイル用の折りたたみコントロール、タッチターゲット拡大、レイアウト最適化 |
 | 02:30 | `js/app.js` | toggleControls()関数追加 |
-| 02:30 | `apps/premium-k8j2x/index.html` | What's New に Ver 2.5 の更新情報を追加 |
+| 02:30 | `premium-k8j2x/index.html` | What's New に Ver 2.5 の更新情報を追加 |
+
+### 2026-01-30
+
+| 時刻 | 更新ファイル | 更新内容 |
+| --- | --- | --- |
+| 08:00 | `premium-k8j2x/traveler-simulator/` | **Ver 3.2 3人モード実装** - タブで2人/3人モードを切り替え可能に。3人モードでは「2人の間の距離」グラフを非表示。 |
+| 08:00 | `index.html` | Ver 3.2 表示更新、CSS/JSバージョンパラメータを3.2に更新、人数モード切り替えタブ追加 |
+| 08:00 | `css/style.css` | 人物Cカラー追加（--person-c-color: #66bb6a）、タブボタンスタイル追加、3人モード時のグラフ表示制御 |
+| 08:00 | `js/app.js` | 人物C対応、getActivePeople()ヘルパー関数追加、switchPeopleMode()関数実装、3人モード対応の描画ロジック |
 
 ---

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-YV5WWWG39Z');
+  </script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>図形の移動シミュレーター | 桜アカデミア</title>
+
+  <link rel="stylesheet" href="css/style.css?v=1.0">
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+
+  <header id="app-header">
+    <div class="header-controls">
+      <button class="btn-play" onclick="startAnimation()">▶</button>
+      <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
+      <button class="btn-reset" onclick="resetAnimation()">↻</button>
+      <select id="time-scale" onchange="updateTimeScale()">
+        <option value="0.5">0.5x</option>
+        <option value="1" selected>1x</option>
+        <option value="2">2x</option>
+        <option value="5">5x</option>
+      </select>
+    </div>
+    <h1 style="font-size: 16px; margin: 0;">図形の移動シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 1.0</small></h1>
+    <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
+    <button class="btn-toggle-controls" onclick="toggleControls()" title="設定を表示/非表示">⚙️</button>
+  </header>
+
+  <aside id="controls" class="controls-hidden">
+    <!-- 固定図形設定 -->
+    <div class="ctrl-group">
+      <label class="ctrl-label" style="color: var(--shape-fixed-color);">固定図形</label>
+      <div class="input-row">
+        <label style="min-width: 50px;">種類</label>
+        <select id="fixed-shape-type" onchange="updateFixedShapeParams()">
+          <option value="rectangle">長方形</option>
+          <option value="square">正方形</option>
+          <option value="triangle-right">直角三角形</option>
+          <option value="triangle-equilateral">正三角形</option>
+          <option value="triangle-isosceles">二等辺三角形</option>
+          <option value="trapezoid">台形</option>
+        </select>
+      </div>
+      <div id="fixed-shape-params">
+        <!-- 動的に生成 -->
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">X位置</label>
+        <input type="number" id="fixed-x" value="200" min="0" max="600" step="10" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">px</span>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">Y位置</label>
+        <input type="number" id="fixed-y" value="200" min="50" max="400" step="10" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">px</span>
+      </div>
+    </div>
+
+    <!-- 移動図形設定 -->
+    <div class="ctrl-group">
+      <label class="ctrl-label" style="color: var(--shape-moving-color);">移動図形</label>
+      <div class="input-row">
+        <label style="min-width: 50px;">種類</label>
+        <select id="moving-shape-type" onchange="updateMovingShapeParams()">
+          <option value="rectangle">長方形</option>
+          <option value="square">正方形</option>
+          <option value="triangle-right">直角三角形</option>
+          <option value="triangle-equilateral">正三角形</option>
+          <option value="triangle-isosceles">二等辺三角形</option>
+          <option value="trapezoid">台形</option>
+        </select>
+      </div>
+      <div id="moving-shape-params">
+        <!-- 動的に生成 -->
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">初期X</label>
+        <input type="number" id="moving-initial-x" value="0" min="-200" max="400" step="10" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">px</span>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">Y位置</label>
+        <input type="number" id="moving-y" value="200" min="50" max="400" step="10" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">px</span>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">速度</label>
+        <input type="number" id="moving-speed" value="50" min="10" max="200" step="10" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">px/秒</span>
+      </div>
+    </div>
+
+    <!-- アニメーション設定 -->
+    <div class="ctrl-group">
+      <label class="ctrl-label">アニメーション</label>
+      <div class="input-row">
+        <label style="min-width: 60px;">最大時間</label>
+        <input type="number" id="max-time" value="10" min="5" max="30" step="1" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">秒</span>
+      </div>
+    </div>
+  </aside>
+
+  <div id="animation-area">
+    <canvas id="main-canvas"></canvas>
+    <div id="info-overlay">
+      <p>時刻: <span id="current-time">0.00</span>秒</p>
+      <p>重なり面積: <span id="overlap-area">0.00</span> px²</p>
+    </div>
+  </div>
+
+  <div id="chart-panel">
+    <div class="chart-container">
+      <div class="chart-title-vertical">重なり面積の変化</div>
+      <canvas id="area-chart"></canvas>
+    </div>
+  </div>
+
+  <div id="guide-modal" style="display: none;">
+    <div id="guide-overlay" onclick="toggleGuide()"></div>
+    <div id="guide-content">
+      <button class="btn-close" onclick="toggleGuide()">✕</button>
+      <h3>🔰 使い方ガイド</h3>
+      <div class="step"><span class="step-icon">1</span>
+        <div><strong>図形選択：</strong>固定図形と移動図形の種類・サイズを選択します。</div>
+      </div>
+      <div class="step"><span class="step-icon">2</span>
+        <div><strong>再生：</strong>▶ボタンで移動図形が左から右へ移動します。</div>
+      </div>
+      <div class="step"><span class="step-icon">3</span>
+        <div><strong>重なり：</strong>重なった部分が黄色で表示されます。</div>
+      </div>
+      <div class="step"><span class="step-icon">4</span>
+        <div><strong>グラフ：</strong>右側に重なり面積の変化が表示されます。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- polygon-clipping CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/polygon-clipping@0.15.7/dist/polygon-clipping.umd.min.js"></script>
+
+  <script src="js/shape.js?v=1.0"></script>
+  <script src="js/polygon-utils.js?v=1.0"></script>
+  <script src="js/app.js?v=1.0"></script>
+</body>
+
+</html>

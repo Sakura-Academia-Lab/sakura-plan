@@ -6,6 +6,7 @@
   --accent-blue: #4facfe;
   --person-a-color: #ff5252;
   --person-b-color: #4facfe;
+  --person-c-color: #66bb6a;
   --bg-light: #f5f5f5;
   --border-color: #ddd;
 }
@@ -140,6 +141,33 @@ body {
 .header-controls select option {
   background: var(--primary-navy);
   color: white;
+}
+
+/* ===== 人数モード切り替えタブ ===== */
+.people-mode-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.people-mode-tabs .tab-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.people-mode-tabs .tab-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.people-mode-tabs .tab-btn.active {
+  background: var(--accent-yellow);
+  color: var(--primary-navy);
 }
 
 /* ===== 左サイドバー (Controls) ===== */
@@ -309,6 +337,15 @@ body {
   border-bottom: none;
 }
 
+/* 3人モード時に距離差グラフを非表示 */
+body.three-people-mode .chart-container:nth-child(2) {
+  display: none;
+}
+
+body.three-people-mode .chart-container:nth-child(1) {
+  height: 100%;
+}
+
 .chart-title {
   font-size: 14px;
   font-weight: bold;
@@ -468,9 +505,9 @@ body {
 @media (max-width: 768px) {
   /* ヘッダーを2行に */
   #app-header {
-    height: 88px;
+    height: 120px;
     flex-wrap: wrap;
-    padding: 8px 15px;
+    padding: 10px 15px;
     gap: 8px;
   }
 
@@ -521,12 +558,12 @@ body {
   #animation-area {
     left: 0;
     right: 0;
-    top: 88px;
+    top: 120px;
     bottom: calc(50vh + 40vh);
   }
 
   #animation-bottom {
-    flex: 0 0 150px;
+    flex: 0 0 320px;
   }
 
   #chart-panel {

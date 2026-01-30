@@ -22,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>旅人算シミュレーター | 桜アカデミア</title>
 
-  <link rel="stylesheet" href="css/style.css?v=3.0">
+  <link rel="stylesheet" href="css/style.css?v=3.2">
 </head>
 
 <body>
@@ -30,7 +30,10 @@
       style="display:none;visibility:hidden"></iframe></noscript>
 
   <header id="app-header">
-    <a href="../index.html" class="btn-home">🏠 ホーム</a>
+    <div class="people-mode-tabs">
+      <button class="tab-btn active" onclick="switchPeopleMode(2)">2人</button>
+      <button class="tab-btn" onclick="switchPeopleMode(3)">3人</button>
+    </div>
     <div class="header-controls">
       <button class="btn-play" onclick="startAnimation()">▶</button>
       <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
@@ -42,7 +45,7 @@
         <option value="5">5x</option>
       </select>
     </div>
-    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 3.0</small></h1>
+    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 3.2</small></h1>
     <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
     <button class="btn-toggle-controls" onclick="toggleControls()" title="設定を表示/非表示">⚙️</button>
   </header>
@@ -96,6 +99,12 @@
           <option value="intermittent">間欠移動</option>
         </select>
       </div>
+      <div class="input-row">
+        <label style="min-width: 70px; font-size: 11px;">出会い時</label>
+        <select id="on-meeting-a" onchange="updateSettings()" disabled>
+          <option value="none">準備中</option>
+        </select>
+      </div>
       <div id="intermittent-a" class="intermittent-settings" style="display: none;">
         <div class="input-row" style="margin-top: 8px;">
           <label style="min-width: 80px; font-size: 11px;">移動時間</label>
@@ -140,6 +149,12 @@
           <option value="intermittent">間欠移動</option>
         </select>
       </div>
+      <div class="input-row">
+        <label style="min-width: 70px; font-size: 11px;">出会い時</label>
+        <select id="on-meeting-b" onchange="updateSettings()" disabled>
+          <option value="none">準備中</option>
+        </select>
+      </div>
       <div id="intermittent-b" class="intermittent-settings" style="display: none;">
         <div class="input-row" style="margin-top: 8px;">
           <label style="min-width: 80px; font-size: 11px;">移動時間</label>
@@ -149,6 +164,56 @@
         <div class="input-row">
           <label style="min-width: 80px; font-size: 11px;">休憩時間</label>
           <input type="number" id="rest-time-b" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ctrl-group" id="person-c-controls" style="display: none;">
+      <label class="ctrl-label" style="color: var(--person-c-color);">人物C</label>
+      <div class="input-row" style="margin-bottom: 8px;">
+        <label style="min-width: 50px;">速さ</label>
+        <input type="number" id="input-speed-c" value="5" min="1" max="10" step="0.5" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">m/秒</span>
+      </div>
+      <div class="input-row">
+        <input type="range" id="range-speed-c" min="1" max="10" value="5" step="0.5" oninput="syncSpeedC()">
+      </div>
+      <div class="input-row">
+        <label style="min-width: 60px; font-size: 11px;">開始地点</label>
+        <select id="start-waypoint-c" onchange="updateSettings()">
+          <!-- 地点が動的に追加される -->
+        </select>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 60px; font-size: 11px;">終了地点</label>
+        <select id="end-waypoint-c" onchange="updateSettings()">
+          <!-- 地点が動的に追加される -->
+        </select>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">動作</label>
+        <select id="mode-c" onchange="toggleIntermittentSettings(); updateSettings();">
+          <option value="roundTrip">往復</option>
+          <option value="stopAtWaypoint">地点で停止</option>
+          <option value="intermittent">間欠移動</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 70px; font-size: 11px;">出会い時</label>
+        <select id="on-meeting-c" onchange="updateSettings()" disabled>
+          <option value="none">準備中</option>
+        </select>
+      </div>
+      <div id="intermittent-c" class="intermittent-settings" style="display: none;">
+        <div class="input-row" style="margin-top: 8px;">
+          <label style="min-width: 80px; font-size: 11px;">移動時間</label>
+          <input type="number" id="work-time-c" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
+        <div class="input-row">
+          <label style="min-width: 80px; font-size: 11px;">休憩時間</label>
+          <input type="number" id="rest-time-c" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
           <span style="font-size: 11px; color: #666;">秒</span>
         </div>
       </div>
@@ -196,7 +261,7 @@
     </div>
   </div>
 
-  <script src="js/app.js?v=3.0"></script>
+  <script src="js/app.js?v=3.2"></script>
 </body>
 
 </html>

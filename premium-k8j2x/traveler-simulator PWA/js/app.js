@@ -1,5 +1,6 @@
 // ===== 状態管理 =====
 const state = {
+  peopleCount: 2,  // 現在のモード（2または3）
   waypoints: [
     { id: 'A', name: 'A地点', distance: 0, fixed: true },
     { id: 'B', name: 'B地点', distance: 100, fixed: true }
@@ -13,7 +14,8 @@ const state = {
       color: '#ff5252',
       mode: 'roundTrip',
       workTime: 3,
-      restTime: 3
+      restTime: 3,
+      onMeeting: 'pass'  // 出会い時の動作: 'pass'(通過) or 'reverse'(折り返す)
     },
     {
       name: '人物B',
@@ -23,7 +25,19 @@ const state = {
       color: '#4facfe',
       mode: 'roundTrip',
       workTime: 3,
-      restTime: 3
+      restTime: 3,
+      onMeeting: 'pass'
+    },
+    {
+      name: '人物C',
+      speed: 5,
+      startWaypoint: 'A',  // 開始地点ID
+      endWaypoint: 'B',    // 終了地点ID
+      color: '#66bb6a',
+      mode: 'roundTrip',
+      workTime: 3,
+      restTime: 3,
+      onMeeting: 'pass'
     }
   ],
   isPlaying: false,
@@ -32,10 +46,15 @@ const state = {
   maxTime: 60,     // 最大時間
   history: {
     time: [],
-    positions: [[], []],
+    positions: [[], [], []],  // 3人分の配列
     distances: []
   }
 };
+
+// ===== ヘルパー関数：有効な人物を取得 =====
+function getActivePeople() {
+  return state.people.slice(0, state.peopleCount);
+}
 
 // ===== ヘルパー関数：地点IDから距離を取得 =====
 function getWaypointDistance(waypointId) {
@@ -69,6 +88,9 @@ let timeDistanceCanvas, timeDistanceCtx;
 let distanceDiffCanvas, distanceDiffCtx;
 let animationFrameId = null;
 
+// ===== リアルタイム状態（出会い時の反転管理） =====
+let meetingReversals = [];  // { personIdx, meetTime, originalRange } の配列
+
 // ===== 初期化 =====
 function init() {
   animationCanvas = document.getElementById('animation-canvas');
@@ -91,6 +113,13 @@ function init() {
 
   renderWaypointsList();
   updateWaypointSelects();
+
+  // 初期値を設定
+  document.getElementById('start-waypoint-a').value = state.people[0].startWaypoint;
+  document.getElementById('end-waypoint-a').value = state.people[0].endWaypoint;
+  document.getElementById('start-waypoint-b').value = state.people[1].startWaypoint;
+  document.getElementById('end-waypoint-b').value = state.people[1].endWaypoint;
+
   toggleIntermittentSettings();
   updateSettings();
   render();
@@ -175,7 +204,7 @@ function renderWaypointsList() {
 
 // ===== 地点選択ドロップダウン更新 =====
 function updateWaypointSelects() {
-  const selectIds = ['start-waypoint-a', 'end-waypoint-a', 'start-waypoint-b', 'end-waypoint-b'];
+  const selectIds = ['start-waypoint-a', 'end-waypoint-a', 'start-waypoint-b', 'end-waypoint-b', 'start-waypoint-c', 'end-waypoint-c'];
 
   selectIds.forEach(selectId => {
     const select = document.getElementById(selectId);
@@ -274,6 +303,7 @@ function updateSettings() {
   state.people[0].mode = document.getElementById('mode-a').value;
   state.people[0].workTime = parseFloat(document.getElementById('work-time-a').value);
   state.people[0].restTime = parseFloat(document.getElementById('rest-time-a').value);
+  state.people[0].onMeeting = document.getElementById('on-meeting-a').value;
 
   state.people[1].speed = parseFloat(document.getElementById('input-speed-b').value);
   state.people[1].startWaypoint = document.getElementById('start-waypoint-b').value;
@@ -281,6 +311,18 @@ function updateSettings() {
   state.people[1].mode = document.getElementById('mode-b').value;
   state.people[1].workTime = parseFloat(document.getElementById('work-time-b').value);
   state.people[1].restTime = parseFloat(document.getElementById('rest-time-b').value);
+  state.people[1].onMeeting = document.getElementById('on-meeting-b').value;
+
+  // 3人モードの場合、人物Cの設定も読み込む
+  if (state.peopleCount === 3) {
+    state.people[2].speed = parseFloat(document.getElementById('input-speed-c').value);
+    state.people[2].startWaypoint = document.getElementById('start-waypoint-c').value;
+    state.people[2].endWaypoint = document.getElementById('end-waypoint-c').value;
+    state.people[2].mode = document.getElementById('mode-c').value;
+    state.people[2].workTime = parseFloat(document.getElementById('work-time-c').value);
+    state.people[2].restTime = parseFloat(document.getElementById('rest-time-c').value);
+    state.people[2].onMeeting = document.getElementById('on-meeting-c').value;
+  }
 
   if (!state.isPlaying) {
     resetAnimation();
@@ -444,7 +486,7 @@ function findEdgeEvents() {
 
   if (state.history.time.length < 2) return events;
 
-  for (let personIdx = 0; personIdx < 2; personIdx++) {
+  for (let personIdx = 0; personIdx < state.peopleCount; personIdx++) {
     const person = state.people[personIdx];
     const personRange = getPersonRange(person);
 
@@ -483,7 +525,11 @@ function startAnimation() {
 
   state.isPlaying = true;
   state.currentTime = 0;
-  state.history = { time: [], positions: [[], []], distances: [] };
+  state.history = {
+    time: [],
+    positions: Array(state.peopleCount).fill(null).map(() => []),
+    distances: []
+  };
 
   animate();
 }
@@ -496,18 +542,25 @@ function animate() {
   state.currentTime += 0.016 * state.timeScale;
 
   // 位置計算
-  const positions = state.people.map(p => calculatePosition(p, state.currentTime));
+  const activePeople = getActivePeople();
+  const positions = activePeople.map(p => calculatePosition(p, state.currentTime));
 
   // 履歴保存（制限なし - 往復を記録）
   state.history.time.push(state.currentTime);
   positions.forEach((pos, i) => state.history.positions[i].push(pos));
-  state.history.distances.push(calculateDistance(positions[0], positions[1]));
+
+  // 2人モードの場合のみ距離を記録
+  if (state.peopleCount === 2) {
+    state.history.distances.push(calculateDistance(positions[0], positions[1]));
+  }
 
   // 描画
   drawAnimation(positions);
   drawDiagram();
   drawTimeDistanceChart();
-  drawDistanceDiffChart();
+  if (state.peopleCount === 2) {
+    drawDistanceDiffChart();
+  }
 
   // 終了判定
   if (state.currentTime >= state.maxTime) {
@@ -604,15 +657,24 @@ function drawAnimation(positions) {
   });
 
   // 人物描画
-  state.people.forEach((person, i) => {
+  const activePeople = getActivePeople();
+  activePeople.forEach((person, i) => {
     const pos = positions[i];
     const x = padding + ((pos - minDistance) / totalDistance) * roadWidth;
-    const y = roadY + (i === 0 ? -15 : 15);
+
+    // Y位置を人数に応じて調整
+    let y;
+    if (state.peopleCount === 2) {
+      y = roadY + (i === 0 ? -15 : 15);
+    } else {
+      // 3人の場合: 上(-25)、中央(0)、下(25)
+      y = roadY + (i - 1) * 25;
+    }
 
     // 円
     ctx.fillStyle = person.color;
     ctx.beginPath();
-    ctx.arc(x, y, 12, 0, Math.PI * 2);
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
     ctx.fill();
 
     // 縁取り
@@ -624,7 +686,8 @@ function drawAnimation(positions) {
     ctx.fillStyle = '#333';
     ctx.font = 'bold 11px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText(person.name, x, y + (i === 0 ? -20 : 30));
+    const nameY = (state.peopleCount === 2) ? (y + (i === 0 ? -20 : 30)) : (y - 20);
+    ctx.fillText(person.name, x, nameY);
 
     // 速度表示と動作モード
     ctx.font = '10px Arial';
@@ -717,7 +780,8 @@ function drawTimeDistanceChart() {
 
   // データ描画
   if (state.history.time.length > 0) {
-    state.people.forEach((person, i) => {
+    const activePeople = getActivePeople();
+    activePeople.forEach((person, i) => {
       ctx.strokeStyle = person.color;
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -745,54 +809,56 @@ function drawTimeDistanceChart() {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // 交点表示
-    const intersections = findIntersections();
-    let meetingCount = 0;
-    let overtakingCount = 0;
-    intersections.forEach((intersection) => {
-      const ix = marginLeft + (intersection.time / state.maxTime) * graphW;
-      const iy = marginTop + graphH - ((intersection.position - minDistance) / totalDistance) * graphH;
+    // 交点表示（2人モードのみ）
+    if (state.peopleCount === 2) {
+      const intersections = findIntersections();
+      let meetingCount = 0;
+      let overtakingCount = 0;
+      intersections.forEach((intersection) => {
+        const ix = marginLeft + (intersection.time / state.maxTime) * graphW;
+        const iy = marginTop + graphH - ((intersection.position - minDistance) / totalDistance) * graphH;
 
-      // 色とラベルを交点タイプで分ける
-      const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
-      if (intersection.type === 'meeting') {
-        meetingCount++;
-      } else {
-        overtakingCount++;
-      }
-      const label = intersection.type === 'meeting'
-        ? `出会い（${meetingCount}回目）`
-        : `追い越し（${overtakingCount}回目）`;
+        // 色とラベルを交点タイプで分ける
+        const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
+        if (intersection.type === 'meeting') {
+          meetingCount++;
+        } else {
+          overtakingCount++;
+        }
+        const label = intersection.type === 'meeting'
+          ? `出会い（${meetingCount}回目）`
+          : `追い越し（${overtakingCount}回目）`;
 
-      // 点線（縦）
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1;
-      ctx.setLineDash([3, 3]);
-      ctx.beginPath();
-      ctx.moveTo(ix, marginTop);
-      ctx.lineTo(ix, marginTop + graphH);
-      ctx.stroke();
+        // 点線（縦）
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(ix, marginTop);
+        ctx.lineTo(ix, marginTop + graphH);
+        ctx.stroke();
 
-      // 点線（横）
-      ctx.beginPath();
-      ctx.moveTo(marginLeft, iy);
-      ctx.lineTo(marginLeft + graphW, iy);
-      ctx.stroke();
-      ctx.setLineDash([]);
+        // 点線（横）
+        ctx.beginPath();
+        ctx.moveTo(marginLeft, iy);
+        ctx.lineTo(marginLeft + graphW, iy);
+        ctx.stroke();
+        ctx.setLineDash([]);
 
-      // 交点マーカー
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(ix, iy, 5, 0, Math.PI * 2);
-      ctx.fill();
+        // 交点マーカー
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(ix, iy, 5, 0, Math.PI * 2);
+        ctx.fill();
 
-      // 数値ラベル
-      ctx.fillStyle = color;
-      ctx.font = 'bold 11px Arial';
-      ctx.textAlign = 'left';
-      ctx.fillText(`${label}: ${intersection.time.toFixed(2)}秒`, ix + 10, iy - 10);
-      ctx.fillText(`距離: ${intersection.position.toFixed(1)}m`, ix + 10, iy + 5);
-    });
+        // 数値ラベル
+        ctx.fillStyle = color;
+        ctx.font = 'bold 11px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${label}: ${intersection.time.toFixed(2)}秒`, ix + 10, iy - 10);
+        ctx.fillText(`距離: ${intersection.position.toFixed(1)}m`, ix + 10, iy + 5);
+      });
+    }
   }
 }
 
@@ -981,6 +1047,13 @@ function toggleIntermittentSettings() {
 
   intermittentA.style.display = modeA === 'intermittent' ? 'block' : 'none';
   intermittentB.style.display = modeB === 'intermittent' ? 'block' : 'none';
+
+  // 3人モードの場合、人物Cの間欠移動設定も処理
+  if (state.peopleCount === 3) {
+    const modeC = document.getElementById('mode-c').value;
+    const intermittentC = document.getElementById('intermittent-c');
+    intermittentC.style.display = modeC === 'intermittent' ? 'block' : 'none';
+  }
 }
 
 // ===== 矢印描画ヘルパー =====
@@ -1019,9 +1092,12 @@ function drawDiagram() {
 
   const padding = 60;
   const lineWidth = w - 2 * padding;
-  const personABaseY = h * 0.2; // 人物Aの基準Y座標（上側から折り返す）
-  const personBBaseY = h * 0.8; // 人物Bの基準Y座標（下側から折り返す）
   const segmentGap = 25; // セグメント間の間隔
+
+  // 人数に応じてbaseYを動的に設定
+  const baseYPositions = state.peopleCount === 2
+    ? [h * 0.2, h * 0.8]  // 2人: 上と下
+    : [h * 0.15, h * 0.5, h * 0.85];  // 3人: 上、中、下
 
   const totalDistance = getTotalDistance();
   const minDistance = Math.min(...state.waypoints.map(w => w.distance));
@@ -1038,8 +1114,8 @@ function drawDiagram() {
     ctx.font = '12px Arial';
   });
 
-  // 交点を取得して期間境界を作成（出会い/追い越しの時刻で分割）
-  const intersections = findIntersections();
+  // 交点を取得して期間境界を作成（出会い/追い越しの時刻で分割） - 2人モードのみ
+  const intersections = state.peopleCount === 2 ? findIntersections() : [];
   const periodBoundaries = [0, ...intersections.map(i => i.time).sort((a, b) => a - b)];
   if (state.history.time.length > 0) {
     periodBoundaries.push(state.history.time[state.history.time.length - 1]);
@@ -1053,8 +1129,8 @@ function drawDiagram() {
 
   // 履歴から各人物の軌跡を期間ごとに描画
   if (state.history.time.length > 1) {
-    state.people.forEach((person, personIdx) => {
-      const baseY = personIdx === 0 ? personABaseY : personBBaseY;
+    getActivePeople().forEach((person, personIdx) => {
+      const baseY = baseYPositions[personIdx];
       const personRange = getPersonRange(person);
       let overallSegmentIndex = 0; // 全体でのセグメントインデックス（Y位置調整用）
 
@@ -1156,41 +1232,43 @@ function drawDiagram() {
     });
   }
 
-  // 交点（出会い・追い越し）に縦線を描画
-  let meetingCount = 0;
-  let overtakingCount = 0;
-  intersections.forEach((intersection) => {
-    const x = padding + ((intersection.position - minDistance) / totalDistance) * lineWidth;
+  // 交点（出会い・追い越し）に縦線を描画（2人モードのみ）
+  if (state.peopleCount === 2) {
+    let meetingCount = 0;
+    let overtakingCount = 0;
+    intersections.forEach((intersection) => {
+      const x = padding + ((intersection.position - minDistance) / totalDistance) * lineWidth;
 
-    // 色とラベルを交点タイプで分ける
-    const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
-    if (intersection.type === 'meeting') {
-      meetingCount++;
-    } else {
-      overtakingCount++;
-    }
-    const label = intersection.type === 'meeting'
-      ? `出会い（${meetingCount}回目）`
-      : `追い越し（${overtakingCount}回目）`;
+      // 色とラベルを交点タイプで分ける
+      const color = intersection.type === 'meeting' ? '#ff6b6b' : '#4facfe';
+      if (intersection.type === 'meeting') {
+        meetingCount++;
+      } else {
+        overtakingCount++;
+      }
+      const label = intersection.type === 'meeting'
+        ? `出会い（${meetingCount}回目）`
+        : `追い越し（${overtakingCount}回目）`;
 
-    // 縦線（点線）
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 5]);
-    ctx.beginPath();
-    ctx.moveTo(x, 50);
-    ctx.lineTo(x, h - 30);
-    ctx.stroke();
-    ctx.setLineDash([]);
+      // 縦線（点線）
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(x, 50);
+      ctx.lineTo(x, h - 30);
+      ctx.stroke();
+      ctx.setLineDash([]);
 
-    // 交点ラベル
-    ctx.fillStyle = color;
-    ctx.font = 'bold 11px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, x, h - 15);
-    ctx.font = '10px Arial';
-    ctx.fillText(`${intersection.position.toFixed(1)}m`, x, h - 3);
-  });
+      // 交点ラベル
+      ctx.fillStyle = color;
+      ctx.font = 'bold 11px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x, h - 15);
+      ctx.font = '10px Arial';
+      ctx.fillText(`${intersection.position.toFixed(1)}m`, x, h - 3);
+    });
+  }
 
   // 現在時刻表示
   ctx.fillStyle = '#333';
@@ -1205,6 +1283,58 @@ function toggleControls() {
   controls.classList.toggle('controls-hidden');
 }
 
+// ===== 人数モード切り替え =====
+function switchPeopleMode(count) {
+  if (state.isPlaying) {
+    pauseAnimation();
+  }
+
+  state.peopleCount = count;
+
+  // タブのアクティブ状態を更新
+  const tabs = document.querySelectorAll('.people-mode-tabs .tab-btn');
+  tabs.forEach((tab, index) => {
+    if (index === count - 2) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
+    }
+  });
+
+  // 人物Cの設定UIの表示/非表示
+  const personCControls = document.getElementById('person-c-controls');
+  if (count === 3) {
+    personCControls.style.display = 'block';
+    document.body.classList.add('three-people-mode');
+  } else {
+    personCControls.style.display = 'none';
+    document.body.classList.remove('three-people-mode');
+  }
+
+  // 地点選択ドロップダウンを更新
+  updateWaypointSelects();
+
+  // 人物Cの初期値を設定（3人モードの場合）
+  if (count === 3) {
+    const startWaypointC = document.getElementById('start-waypoint-c');
+    const endWaypointC = document.getElementById('end-waypoint-c');
+    if (startWaypointC && endWaypointC) {
+      startWaypointC.value = state.people[2].startWaypoint;
+      endWaypointC.value = state.people[2].endWaypoint;
+    }
+  }
+
+  // アニメーションをリセット
+  resetAnimation();
+}
+
+// ===== スライダー同期（人物C） =====
+function syncSpeedC() {
+  const val = document.getElementById('range-speed-c').value;
+  document.getElementById('input-speed-c').value = val;
+  updateSettings();
+}
+
 // ===== グローバルに公開 =====
 window.startAnimation = startAnimation;
 window.pauseAnimation = pauseAnimation;
@@ -1213,10 +1343,12 @@ window.updateSettings = updateSettings;
 window.syncMaxTime = syncMaxTime;
 window.syncSpeedA = syncSpeedA;
 window.syncSpeedB = syncSpeedB;
+window.syncSpeedC = syncSpeedC;
 window.updateTimeScale = updateTimeScale;
 window.toggleGuide = toggleGuide;
 window.toggleIntermittentSettings = toggleIntermittentSettings;
 window.toggleControls = toggleControls;
+window.switchPeopleMode = switchPeopleMode;
 window.addWaypoint = addWaypoint;
 window.removeWaypoint = removeWaypoint;
 
