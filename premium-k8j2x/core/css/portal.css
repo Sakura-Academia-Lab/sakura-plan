@@ -58,9 +58,43 @@ header {
     font-weight: 900;
     padding: 4px 12px;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     letter-spacing: 1px;
-    box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+}
+
+/* Logo Styles */
+.brand-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.logo-body {
+    fill: #aebbc9;
+}
+
+.logo-head {
+    fill: var(--pro-bg);
+}
+
+.logo-cheek {
+    fill: #fff;
+}
+
+.logo-beak {
+    fill: #e05a5a;
+}
+
+.logo-sakura {
+    fill: #ffcae0;
+}
+
+.logo-cap {
+    fill: var(--pro-gold);
+}
+
+font-size: 0.9rem;
+letter-spacing: 1px;
+box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
 }
 
 h1 {
@@ -377,6 +411,33 @@ footer {
 }
 
 @media (max-width: 768px) {
+    header {
+        padding: 15px 5%;
+    }
+
+    .logo-area {
+        gap: 8px;
+    }
+
+    .brand-logo {
+        width: 32px;
+        height: 32px;
+    }
+
+    header h1 {
+        font-size: 1rem;
+    }
+
+    .pro-badge {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
+
+    .app-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
     .pwa-install-btn {
         display: none;
     }
