@@ -92,11 +92,6 @@ header {
     fill: var(--pro-gold);
 }
 
-font-size: 0.9rem;
-letter-spacing: 1px;
-box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
-}
-
 h1 {
     font-size: 1.5rem;
     margin: 0;
