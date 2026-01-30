@@ -442,38 +442,110 @@ body {
   }
 }
 
+/* ===== コントロール切り替えボタン (モバイルのみ) ===== */
+.btn-toggle-controls {
+  display: none;
+  background: var(--accent-yellow);
+  color: var(--primary-navy);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-toggle-controls:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.btn-toggle-controls:active {
+  transform: scale(0.95);
+}
+
 /* ===== レスポンシブ (タブレット以下) ===== */
 @media (max-width: 768px) {
+  /* コントロール切り替えボタンを表示 */
+  .btn-toggle-controls {
+    display: block;
+  }
+
+  /* デフォルトでコントロールを非表示 */
+  #controls.controls-hidden {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
   #controls {
     top: auto;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
-    height: 40vh;
+    height: 50vh;
     border-right: none;
     border-top: 1px solid var(--border-color);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
+  /* コントロール非表示時のレイアウト */
+  #controls.controls-hidden ~ #animation-area {
+    bottom: 40vh;
+  }
+
+  #controls.controls-hidden ~ #chart-panel {
+    bottom: 0;
+    height: 40vh;
+  }
+
+  /* コントロール表示時のレイアウト */
   #animation-area {
     left: 0;
     right: 0;
     top: 44px;
-    bottom: calc(40vh + 30vh);
+    bottom: calc(50vh + 40vh);
   }
 
   #animation-bottom {
-    flex: 0 0 100px;
+    flex: 0 0 80px;
   }
 
   #chart-panel {
     top: auto;
-    bottom: 40vh;
+    bottom: 50vh;
     left: 0;
     right: 0;
     width: 100%;
-    height: 30vh;
+    height: 40vh;
     border-left: none;
     border-top: 1px solid var(--border-color);
+  }
+
+  /* タッチ操作改善 */
+  .header-controls button,
+  .btn-home,
+  .btn-help,
+  .btn-toggle-controls {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  input[type="range"] {
+    height: 44px;
+  }
+
+  input[type="number"],
+  select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .ctrl-label {
+    font-size: 14px;
   }
 }

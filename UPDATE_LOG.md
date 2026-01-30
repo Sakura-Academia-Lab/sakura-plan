@@ -125,5 +125,11 @@
 | 01:50 | `js/app.js` | 線分図配置改善、回数カウンター追加（3箇所） |
 | 01:55 | `apps/index.html` | 旅人算シミュレーター Ver 2.4 を公開、コメントアウトを解除して説明文を更新 |
 | 02:00 | `apps/index.html` | Update History に旅人算シミュレーター Ver 2.4 の公開情報を追加 |
+| 02:15 | `apps/premium-k8j2x/index.html` | **プレミアムポータルのUI改善** - 更新情報を最新1件のみ表示、PWA案内をアプリ一覧下に移動（スマホ版のみ）、各アプリにPCインストールボタン追加、Launch Appボタン削除、アプリ説明を左揃えに変更 |
+| 02:30 | `apps/premium-k8j2x/traveler-simulator/` | **Ver 2.5 スマホ版UI大幅改善** - 折りたたみ式コントロールパネル、タッチ操作最適化（最小44px）、モバイルレイアウト改善、設定ボタン追加 |
+| 02:30 | `index.html` | Ver 2.5 表示更新、CSS/JSバージョンパラメータを2.5に更新、設定切り替えボタン追加 |
+| 02:30 | `css/style.css` | モバイル用の折りたたみコントロール、タッチターゲット拡大、レイアウト最適化 |
+| 02:30 | `js/app.js` | toggleControls()関数追加 |
+| 02:30 | `apps/premium-k8j2x/index.html` | What's New に Ver 2.5 の更新情報を追加 |
 
 ---
