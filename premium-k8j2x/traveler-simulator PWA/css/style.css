@@ -39,12 +39,25 @@ body {
   padding: 0 15px;
   z-index: 150;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  gap: 20px;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 #app-header h1 {
   font-size: 16px;
   font-weight: bold;
   margin: 0;
+  white-space: nowrap;
+}
+
+.header-top-btns {
+  display: flex;
+  gap: 8px;
 }
 
 .btn-home {
@@ -473,6 +486,7 @@ body.three-people-mode .chart-container:nth-child(1) {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -503,19 +517,36 @@ body.three-people-mode .chart-container:nth-child(1) {
 
 /* ===== レスポンシブ (タブレット以下) ===== */
 @media (max-width: 768px) {
-  /* ヘッダーを2行に */
+
+  /* ヘッダーを2行に固定 */
   #app-header {
-    height: 120px;
-    flex-wrap: wrap;
-    padding: 10px 15px;
+    height: 100px;
+    /* 2行分を確保 */
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px 15px;
+    gap: 5px;
+  }
+
+  .header-row {
+    width: 100%;
+    justify-content: space-between;
     gap: 8px;
   }
 
+  .header-row.row-1 {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 5px;
+  }
+
   #app-header h1 {
-    order: -1;
-    width: 100%;
-    text-align: center;
     font-size: 14px;
+    flex: 1;
+    text-align: left;
+  }
+
+  .header-top-btns {
+    flex-shrink: 0;
   }
 
   /* コントロール切り替えボタンを表示 */
@@ -545,11 +576,11 @@ body.three-people-mode .chart-container:nth-child(1) {
   }
 
   /* コントロール非表示時のレイアウト */
-  #controls.controls-hidden ~ #animation-area {
+  #controls.controls-hidden~#animation-area {
     bottom: 40vh;
   }
 
-  #controls.controls-hidden ~ #chart-panel {
+  #controls.controls-hidden~#chart-panel {
     bottom: 0;
     height: 40vh;
   }
@@ -558,7 +589,8 @@ body.three-people-mode .chart-container:nth-child(1) {
   #animation-area {
     left: 0;
     right: 0;
-    top: 120px;
+    top: 100px;
+    /* ヘッダーの高さに合わせる */
     bottom: calc(50vh + 40vh);
   }
 
@@ -582,9 +614,15 @@ body.three-people-mode .chart-container:nth-child(1) {
   .btn-home,
   .btn-help,
   .btn-toggle-controls {
-    min-width: 44px;
-    min-height: 44px;
-    padding: 10px;
+    min-width: 40px;
+    /* 44pxだと少し大きいかもしれないので微調整 */
+    min-height: 36px;
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .btn-toggle-controls {
+    font-size: 1.2rem;
   }
 
   input[type="range"] {

@@ -30,21 +30,27 @@
       style="display:none;visibility:hidden"></iframe></noscript>
 
   <header id="app-header">
-    <a href="../index.html" class="btn-home">🏠 ホーム</a>
-    <div class="header-controls">
-      <button class="btn-play" onclick="startAnimation()">▶</button>
-      <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
-      <button class="btn-reset" onclick="resetAnimation()">↻</button>
-      <select id="time-scale" onchange="updateTimeScale()">
-        <option value="0.5">0.5x</option>
-        <option value="1" selected>1x</option>
-        <option value="2">2x</option>
-        <option value="5">5x</option>
-      </select>
+    <div class="header-row row-1">
+      <h1 class="app-title">旅人算シミュレーター <small>Ver 2.5</small></h1>
+      <div class="header-top-btns">
+        <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
+        <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
+      </div>
     </div>
-    <h1 style="font-size: 16px; margin: 0;">旅人算シミュレーター <small style="font-size: 10px; opacity: 0.7;">Ver 2.5</small></h1>
-    <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
-    <button class="btn-toggle-controls" onclick="toggleControls()" title="設定を表示/非表示">⚙️</button>
+    <div class="header-row row-2">
+      <a href="../index.html" class="btn-home">🏠 ホーム</a>
+      <div class="header-controls">
+        <button class="btn-play" onclick="startAnimation()">▶</button>
+        <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
+        <button class="btn-reset" onclick="resetAnimation()">↻</button>
+        <select id="time-scale" onchange="updateTimeScale()">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="5">5x</option>
+        </select>
+      </div>
+    </div>
   </header>
 
   <aside id="controls" class="controls-hidden">
