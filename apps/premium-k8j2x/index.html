@@ -207,6 +207,7 @@
             line-height: 1.6;
             margin-bottom: 30px;
             flex-grow: 1;
+            text-align: left;
         }
 
         .pro-btn {
@@ -339,6 +340,49 @@
         details[open] summary.more-news-btn {
             margin-bottom: 10px;
         }
+
+        /* --- Install Guide Section --- */
+        .install-guide {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
+        }
+
+        /* --- PWA Install Button --- */
+        .pwa-install-btn {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .pwa-install-btn:hover {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .pwa-install-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Hide PWA install button on mobile (below 768px) */
+        @media (max-width: 768px) {
+            .pwa-install-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -377,20 +421,20 @@
                     <span class="news-tag">Update</span>
                     <span class="news-content">旅人算シミュレーター Ver 2.4 - 交点回数表示の追加、UIレイアウトの最適化（比率3:7）を反映。</span>
                 </li>
-                <li class="news-item">
-                    <span class="news-date">2026.01.30</span>
-                    <span class="news-tag">Update</span>
-                    <span class="news-content">旅人算シミュレーター Ver 2.2-2.3 - 再生制御ボタンのヘッダー移動、ドロップダウン背景修正、線分図の配置改善。</span>
-                </li>
-                <li class="news-item">
-                    <span class="news-date">2026.01.30</span>
-                    <span class="news-tag">Update</span>
-                    <span class="news-content">旅人算シミュレーター Ver 2.1 - 再生時間（10-300秒）を自由に設定可能になりました。</span>
-                </li>
             </ul>
             <details class="more-news">
                 <summary class="more-news-btn">▼ 過去の更新を表示</summary>
                 <ul class="news-list">
+                    <li class="news-item">
+                        <span class="news-date">2026.01.30</span>
+                        <span class="news-tag">Update</span>
+                        <span class="news-content">旅人算シミュレーター Ver 2.2-2.3 - 再生制御ボタンのヘッダー移動、ドロップダウン背景修正、線分図の配置改善。</span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.01.30</span>
+                        <span class="news-tag">Update</span>
+                        <span class="news-content">旅人算シミュレーター Ver 2.1 - 再生時間（10-300秒）を自由に設定可能になりました。</span>
+                    </li>
                     <li class="news-item">
                         <span class="news-date">2026.01.30</span>
                         <span class="news-tag">Update</span>
@@ -406,36 +450,6 @@
         </section>
 
         <div class="app-grid">
-
-            <div class="pro-card"
-                style="grid-column: 1 / -1; cursor: default; background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(56, 189, 248, 0.05)); border: 1px solid rgba(56, 189, 248, 0.2);">
-                <div class="card-inner" style="align-items: flex-start; text-align: left; padding: 25px;">
-                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
-                        <span style="font-size: 2rem;">📲</span>
-                        <h3 style="margin: 0; color: var(--pro-accent); font-size: 1.2rem;">アプリ版 (PWA) のインストール方法</h3>
-                    </div>
-                    <p style="margin: 0 0 15px 0; color: var(--pro-text-muted); font-size: 0.9rem;">
-                        Sakura Academia Premiumの全アプリは、<strong>PWA (Progressive Web App)</strong> 技術に対応しています。<br>
-                        端末にインストールすることで、ホーム画面から即座に起動し、オフラインでも快適に学習できます。
-                    </p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.85rem; color: #cbd5e1;">
-                        <div style="flex: 1; min-width: 250px;">
-                            <strong style="color: #fff; display: block; margin-bottom: 5px;">🍎 iPhone / iPad
-                                (Safari)</strong>
-                            1. 各アプリを開く<br>
-                            2. 画面下部の「共有ボタン <span style="font-size: 1.1em">□↑</span>」をタップ<br>
-                            3. 「ホーム画面に追加」を選択
-                        </div>
-                        <div style="flex: 1; min-width: 250px;">
-                            <strong style="color: #fff; display: block; margin-bottom: 5px;">🤖 Android
-                                (Chrome)</strong>
-                            1. 各アプリを開く<br>
-                            2. 画面右上のメニュー「︙」をタップ<br>
-                            3. 「アプリをインストール」または「ホーム画面に追加」を選択
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- 3D Shape Slicer PRO -->
             <a href="./3D Shape Slicer PWA/index.html" class="pro-card">
@@ -464,7 +478,9 @@
                         アプリ版 (PWA) として動作する高機能版。<br>
                         オフライン対応、フルスクリーンモード搭載。
                     </div>
-                    <span class="pro-btn">Launch App</span>
+                    <button class="pwa-install-btn" onclick="event.preventDefault(); event.stopPropagation(); installPWA('./3D Shape Slicer PWA/index.html')">
+                        📥 PCにインストール
+                    </button>
                 </div>
             </a>
 
@@ -495,7 +511,9 @@
                         影の難問を3Dで可視化。<br>
                         プレミアム環境で集中して学習できます。
                     </div>
-                    <span class="pro-btn">Launch App</span>
+                    <button class="pwa-install-btn" onclick="event.preventDefault(); event.stopPropagation(); installPWA('./shadow-simulator/index.html')">
+                        📥 PCにインストール
+                    </button>
                 </div>
             </a>
 
@@ -526,16 +544,55 @@
                         複雑な動きも自由にシミュレーション。<br>
                         グラフと連動して理解を深めます。
                     </div>
-                    <span class="pro-btn">Launch App</span>
+                    <button class="pwa-install-btn" onclick="event.preventDefault(); event.stopPropagation(); installPWA('./traveler-simulator/index.html')">
+                        📥 PCにインストール
+                    </button>
                 </div>
             </a>
 
         </div>
+
+        <section class="install-guide">
+            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                <span style="font-size: 2rem;">📲</span>
+                <h3 style="margin: 0; color: var(--pro-accent); font-size: 1.2rem;">スマホ版アプリのインストール方法</h3>
+            </div>
+            <p style="margin: 0 0 15px 0; color: var(--pro-text-muted); font-size: 0.9rem;">
+                Sakura Academia Premiumの全アプリは、<strong>PWA (Progressive Web App)</strong> 技術に対応しています。<br>
+                スマホにインストールすることで、ホーム画面から即座に起動し、オフラインでも快適に学習できます。
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.85rem; color: #cbd5e1;">
+                <div style="flex: 1; min-width: 250px;">
+                    <strong style="color: #fff; display: block; margin-bottom: 5px;">🍎 iPhone / iPad (Safari)</strong>
+                    1. 各アプリを開く<br>
+                    2. 画面下部の「共有ボタン <span style="font-size: 1.1em">□↑</span>」をタップ<br>
+                    3. 「ホーム画面に追加」を選択
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <strong style="color: #fff; display: block; margin-bottom: 5px;">🤖 Android (Chrome)</strong>
+                    1. 各アプリを開く<br>
+                    2. 画面右上のメニュー「︙」をタップ<br>
+                    3. 「アプリをインストール」または「ホーム画面に追加」を選択
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
         &copy; 2026 Sakura Academia Premium
     </footer>
+
+    <script>
+        function installPWA(appUrl) {
+            // Open the app in a new window
+            window.open(appUrl, '_blank');
+
+            // Show installation instructions
+            setTimeout(() => {
+                alert('📥 PWAインストール手順\n\n1. 新しく開いたタブで、アドレスバー右側の「インストール」アイコンをクリック\n2. 「インストール」ボタンをクリック\n\nまたは:\n\nChrome: 右上の「︙」→「アプリをインストール」\nEdge: 右上の「…」→「アプリ」→「このサイトをアプリとしてインストール」');
+            }, 500);
+        }
+    </script>
 
 </body>
 
