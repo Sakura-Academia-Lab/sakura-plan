@@ -492,8 +492,8 @@ function drawTimeDistanceChart() {
   ctx.fillStyle = '#fafafa';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
-  // グリッド
-  const isMobileGraph = window.innerWidth <= 768;
+  // グリッド（モバイルは5分割、PCは10分割）
+  const isMobileGraph = window.innerWidth <= 768 || window.innerHeight <= 768;
   const gridDivisions = isMobileGraph ? 5 : 10;
   ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 1;
@@ -648,8 +648,8 @@ function drawDistanceDiffChart() {
   ctx.fillStyle = '#fafafa';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
-  // グリッド
-  const isMobileGraph = window.innerWidth <= 768;
+  // グリッド（モバイルは5分割、PCは10分割）
+  const isMobileGraph = window.innerWidth <= 768 || window.innerHeight <= 768;
   const gridDivisions = isMobileGraph ? 5 : 10;
   ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 1;

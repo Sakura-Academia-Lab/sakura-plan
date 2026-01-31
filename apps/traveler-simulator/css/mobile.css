@@ -224,14 +224,14 @@ body {
 @media (orientation: landscape) {
   .chart-container {
     min-height: 0 !important;
-    height: 50% !important;
+    height: 50% !important;              /* グラフの高さ（2つのグラフで50%ずつ） */
     flex: 1 1 50% !important;
   }
 
   .chart-title-vertical {
-    font-size: 11px !important;
-    writing-mode: vertical-rl !important;
-    white-space: nowrap !important;
+    font-size: 11px !important;          /* グラフタイトルのフォントサイズ */
+    writing-mode: vertical-rl !important;/* 縦書き表示 */
+    white-space: nowrap !important;      /* タイトルの改行を防ぐ */
   }
 }
 
