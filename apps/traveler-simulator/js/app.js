@@ -324,7 +324,7 @@ function animate() {
   // ヘッダーの時刻表示を更新
   const timeDisplay = document.getElementById('current-time-display');
   if (timeDisplay) {
-    timeDisplay.textContent = `${state.currentTime.toFixed(1)}秒`;
+    timeDisplay.textContent = `${state.currentTime.toFixed(2)}秒`;
   }
 
   // 終了判定
@@ -353,7 +353,7 @@ function resetAnimation() {
   // ヘッダーの時刻表示をリセット
   const timeDisplay = document.getElementById('current-time-display');
   if (timeDisplay) {
-    timeDisplay.textContent = '0.0秒';
+    timeDisplay.textContent = '0.00秒';
   }
 
   render();
@@ -380,9 +380,9 @@ function drawAnimation(positions) {
 
   // 背景（グラデーション）
   const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, '#87ceeb');
-  grad.addColorStop(0.5, '#e8f5e9');
-  grad.addColorStop(1, '#d7ccc8');
+  grad.addColorStop(0, '#0f172a');
+  grad.addColorStop(0.5, '#1e293b');
+  grad.addColorStop(1, '#0f172a');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
@@ -411,7 +411,7 @@ function drawAnimation(positions) {
   const roadWidth = w - 2 * padding;
 
   const isMobile = window.innerWidth <= 768;
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#94a3b8';
   ctx.font = '12px Arial';
   ctx.textAlign = 'center';
   // モバイル版では道路の上（青空エリア）に表示、PC版では道路の下に表示
@@ -467,11 +467,6 @@ function drawAnimation(positions) {
     }
   });
 
-  // 現在時刻表示
-  ctx.fillStyle = '#333';
-  ctx.font = 'bold 14px Arial';
-  ctx.textAlign = 'left';
-  ctx.fillText(`時刻: ${state.currentTime.toFixed(2)}秒`, 10, 20);
 }
 
 // ===== 時間-距離グラフ描画 =====
@@ -491,11 +486,11 @@ function drawTimeDistanceChart() {
   const graphH = h - marginTop - marginBottom;
 
   // 背景
-  ctx.fillStyle = '#fafafa';
+  ctx.fillStyle = '#1e293b';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
   // グリッド
-  ctx.strokeStyle = '#ddd';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
   ctx.lineWidth = 1;
   for (let i = 0; i <= 10; i++) {
     const x = marginLeft + (i / 10) * graphW;
@@ -511,12 +506,12 @@ function drawTimeDistanceChart() {
   }
 
   // 軸
-  ctx.strokeStyle = '#333';
+  ctx.strokeStyle = '#94a3b8';
   ctx.lineWidth = 2;
   ctx.strokeRect(marginLeft, marginTop, graphW, graphH);
 
   // 軸ラベル
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#94a3b8';
   ctx.font = '11px Arial';
   ctx.textAlign = 'center';
   ctx.fillText('時間 (秒)', w / 2, h - 10);
@@ -535,9 +530,9 @@ function drawTimeDistanceChart() {
     ctx.fillText(time.toFixed(1), x, marginTop + graphH + 15);
   }
   ctx.textAlign = 'right';
-  for (let i = 0; i <= 10; i++) {
-    const y = marginTop + graphH - (i / 10) * graphH;
-    const dist = (i / 10) * state.distance;
+  for (let i = 0; i <= 5; i++) {
+    const y = marginTop + graphH - (i / 5) * graphH;
+    const dist = (i / 5) * state.distance;
     ctx.fillText(dist.toFixed(0), marginLeft - 5, y + 4);
   }
 
@@ -639,11 +634,11 @@ function drawDistanceDiffChart() {
   const graphH = h - marginTop - marginBottom;
 
   // 背景
-  ctx.fillStyle = '#fafafa';
+  ctx.fillStyle = '#1e293b';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
   // グリッド
-  ctx.strokeStyle = '#ddd';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
   ctx.lineWidth = 1;
   for (let i = 0; i <= 10; i++) {
     const x = marginLeft + (i / 10) * graphW;
@@ -659,12 +654,12 @@ function drawDistanceDiffChart() {
   }
 
   // 軸
-  ctx.strokeStyle = '#333';
+  ctx.strokeStyle = '#94a3b8';
   ctx.lineWidth = 2;
   ctx.strokeRect(marginLeft, marginTop, graphW, graphH);
 
   // 軸ラベル
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#94a3b8';
   ctx.font = '11px Arial';
   ctx.textAlign = 'center';
   ctx.fillText('時間 (秒)', w / 2, h - 10);
@@ -683,9 +678,9 @@ function drawDistanceDiffChart() {
     ctx.fillText(time.toFixed(1), x, marginTop + graphH + 15);
   }
   ctx.textAlign = 'right';
-  for (let i = 0; i <= 10; i++) {
-    const y = marginTop + graphH - (i / 10) * graphH;
-    const dist = (i / 10) * state.distance;
+  for (let i = 0; i <= 5; i++) {
+    const y = marginTop + graphH - (i / 5) * graphH;
+    const dist = (i / 5) * state.distance;
     ctx.fillText(dist.toFixed(0), marginLeft - 5, y + 4);
   }
 
@@ -838,7 +833,7 @@ function drawDiagram() {
   ctx.clearRect(0, 0, w, h);
 
   // 背景
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#1e293b';
   ctx.fillRect(0, 0, w, h);
 
   const padding = 60;
@@ -846,13 +841,13 @@ function drawDiagram() {
   const isMobile = window.innerWidth <= 768;
 
   // 【モバイル調整】線分図の上下余白（数値を小さくすると余白が減る）
-  const personABaseY = isMobile ? h * 0.25 : h * 0.2; // 人物Aの基準Y座標（上側）：0.25を小さくすると上余白が減る
-  const personBBaseY = isMobile ? h * 0.7 : h * 0.8; // 人物Bの基準Y座標（下側）：0.7を大きくすると下余白が減る
+  const personABaseY = isMobile ? h * 0.15 : h * 0.2; // 人物Aの基準Y座標（上側）：0.15を小さくすると上余白が減る
+  const personBBaseY = isMobile ? h * 0.95 : h * 0.8; // 人物Bの基準Y座標（下側）：0.95を大きくすると下余白が減る
   const segmentGap = 25; // セグメント間の間隔
 
   // 【モバイル調整】ラベル位置（数値を小さくするとラベルが上に移動し、余白が減る）
   // 端点ラベル（共通）
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#fbbf24';
   ctx.font = '12px Arial';
   ctx.textAlign = 'center';
   const labelTopY = isMobile ? 15 : 20; // A地点/B地点のY座標
@@ -963,17 +958,33 @@ function drawDiagram() {
         }
       }
 
-      // 人物名ラベル（開始位置に応じて左右に配置）
+      // 人物名ラベルと速さ（開始位置に応じて左右に配置）
       ctx.fillStyle = person.color;
       ctx.font = 'bold 14px Arial';
+
+      // 動作モードの取得
+      let modeLabel = '往復';
+      if (person.mode === 'stopAtEdge') modeLabel = '停止';
+      if (person.mode === 'intermittent') {
+        const cycleTime = person.workTime + person.restTime;
+        const timeInCycle = state.currentTime % cycleTime;
+        modeLabel = timeInCycle < person.workTime ? '移動中' : '休憩中';
+      }
+
       if (person.startPos === 0) {
         // 左端から出発する場合は左側に表示
         ctx.textAlign = 'left';
         ctx.fillText(person.name, 10, baseY + 5);
+        // 速さ表示
+        ctx.font = '11px Arial';
+        ctx.fillText(`${person.speed}m/s (${modeLabel})`, 10, baseY + 20);
       } else {
         // 右端から出発する場合は右側に表示
         ctx.textAlign = 'right';
         ctx.fillText(person.name, w - 10, baseY + 5);
+        // 速さ表示
+        ctx.font = '11px Arial';
+        ctx.fillText(`${person.speed}m/s (${modeLabel})`, w - 10, baseY + 20);
       }
     });
   }
@@ -1014,11 +1025,6 @@ function drawDiagram() {
     ctx.fillText(`${intersection.position.toFixed(1)}m`, x, h - 3);
   });
 
-  // 現在時刻表示
-  ctx.fillStyle = '#333';
-  ctx.font = 'bold 13px Arial';
-  ctx.textAlign = 'right';
-  ctx.fillText(`時刻: ${state.currentTime.toFixed(2)}秒`, w - 10, h - 10);
 }
 
 // ===== コントロールパネルの表示/非表示切り替え（モバイル用） =====

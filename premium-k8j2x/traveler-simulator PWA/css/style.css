@@ -600,7 +600,7 @@ body {
   /* max-heightを減らすと線分図エリアが狭くなり、グラフが広くなる */
   #animation-bottom {
     flex: 1;
-    max-height: 300px;
+    max-height: 270px;
   }
 
   /* 【モバイル調整】グラフパネルの高さ */

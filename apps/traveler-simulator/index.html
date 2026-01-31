@@ -20,7 +20,10 @@
     })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>旅人算シミュレーター | 桜アカデミア</title>
+  <meta name="theme-color" content="#1e293b">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>旅人算シミュレーター Pro | 桜アカデミア</title>
 
   <link rel="stylesheet" href="css/style.css?v=2.7">
 </head>
@@ -31,7 +34,13 @@
 
   <header id="app-header">
     <div class="header-row row-1">
-      <h1 class="app-title">旅人算シミュレーター <small>Ver 2.7</small></h1>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg style="width: 24px; height: 24px;" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#fbbf24" stroke-width="5" />
+          <path d="M 30 50 Q 50 20 70 50 L 70 70 Q 50 90 30 70 Z" fill="#fbbf24" />
+        </svg>
+        <h1 class="app-title">旅人算シミュレーター <span style="color: var(--pro-gold);">Pro</span> <small>Ver 2.7</small></h1>
+      </div>
       <div class="header-top-btns">
         <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
         <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
@@ -40,7 +49,7 @@
     </div>
     <div class="header-row row-2">
       <div class="header-controls">
-        <span id="current-time-display" style="color: #fbbf24; font-weight: bold; font-size: 14px; margin-right: 10px;">0.0秒</span>
+        <span id="current-time-display" style="color: #fbbf24; font-weight: bold; font-size: 14px; margin-right: 10px;">0.00秒</span>
         <button class="btn-play" onclick="startAnimation()">▶</button>
         <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
         <button class="btn-reset" onclick="resetAnimation()">↻</button>
@@ -192,6 +201,21 @@
   </div>
 
   <script src="js/app.js?v=2.7"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW registered'))
+          .catch(err => console.log('SW registration failed', err));
+      });
+    }
+
+    // モバイル用コントロールトグル
+    function toggleControls() {
+      const controls = document.getElementById('controls');
+      controls.classList.toggle('controls-hidden');
+    }
+  </script>
 </body>
 
 </html>
