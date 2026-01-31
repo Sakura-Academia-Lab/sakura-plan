@@ -90,7 +90,7 @@ body {
     height: 40px !important;
 
     /* ★上下左右の余白（上下4px、左右10px）★ */
-    padding: 4px 10px !important;
+    padding: 2px 10px !important;
 
     /* ★グリッド要素間の間隔（6px推奨）★ */
     gap: 6px !important;
@@ -135,13 +135,28 @@ body {
     font-size: 7px !important;
   }
 
-  /* ★ガイド・ホームボタンのサイズ（横向きは小さめ）★ */
+  /* ★ガイド・ホームボタンのサイズ（横向きは小さめ）★
+   * 行番号: 138-145
+   */
   .header-row.row-1 .btn-help,
   .header-row.row-1 .btn-home {
     min-width: 32px !important;        /* ボタンの最小幅 */
-    min-height: 28px !important;       /* ボタンの最小高さ */
-    padding: 3px 6px !important;       /* ボタンの内側余白 */
+    min-height: 20px !important;       /* ボタンの最小高さ */
+    padding: 3px 5px !important;       /* ボタンの内側余白 */
+    font-size: 9px !important;         /* ボタンのフォントサイズ */
+  }
+
+  /* ★操作ボタン（▶⏸↻等）のサイズ調整★
+   * 行番号: 148-155
+   * ここで中央の操作ボタンの高さを調整できます
+   */
+  .header-row.row-2 button,
+  .header-row.row-2 select,
+  .header-row.row-2 span {
+    min-height: 24px !important;       /* ボタンの最小高さ（24px推奨） */
+    padding: 2px 6px !important;       /* ボタンの内側余白 */
     font-size: 10px !important;        /* ボタンのフォントサイズ */
+    line-height: 1.2 !important;       /* 行の高さ */
   }
 }
 
@@ -190,7 +205,7 @@ body {
     left: 0 !important;
     width: 50% !important;
     right: auto !important;
-    height: 40% !important;
+    height: 28% !important;
     border-right: 1px solid var(--border-color) !important;
   }
 }
@@ -218,7 +233,7 @@ body {
 @media (orientation: landscape) {
   #animation-bottom {
     position: fixed !important;
-    top: calc(40px + 40%) !important;
+    top: calc(20px + 34%) !important;
     left: 0 !important;
     width: 50% !important;
     bottom: 0 !important;

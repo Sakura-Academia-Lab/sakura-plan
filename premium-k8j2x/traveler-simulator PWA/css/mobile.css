@@ -135,13 +135,28 @@ body {
     font-size: 7px !important;
   }
 
-  /* ★ガイド・ホームボタンのサイズ（横向きは小さめ）★ */
+  /* ★ガイド・ホームボタンのサイズ（横向きは小さめ）★
+   * 行番号: 138-145
+   */
   .header-row.row-1 .btn-help,
   .header-row.row-1 .btn-home {
     min-width: 32px !important;        /* ボタンの最小幅 */
     min-height: 28px !important;       /* ボタンの最小高さ */
     padding: 3px 6px !important;       /* ボタンの内側余白 */
     font-size: 10px !important;        /* ボタンのフォントサイズ */
+  }
+
+  /* ★操作ボタン（▶⏸↻等）のサイズ調整★
+   * 行番号: 148-155
+   * ここで中央の操作ボタンの高さを調整できます
+   */
+  .header-row.row-2 button,
+  .header-row.row-2 select,
+  .header-row.row-2 span {
+    min-height: 24px !important;       /* ボタンの最小高さ（24px推奨） */
+    padding: 2px 6px !important;       /* ボタンの内側余白 */
+    font-size: 10px !important;        /* ボタンのフォントサイズ */
+    line-height: 1.2 !important;       /* 行の高さ */
   }
 }
 
