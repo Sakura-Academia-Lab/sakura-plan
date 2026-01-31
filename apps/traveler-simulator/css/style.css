@@ -575,11 +575,12 @@ body {
   }
 
   #animation-top {
-    flex: 1;
+    flex: 0 0 100px;
   }
 
   #animation-bottom {
-    flex: 0 0 220px;
+    flex: 1;
+    max-height: 250px;
   }
 
   #chart-panel {
