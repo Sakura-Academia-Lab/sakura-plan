@@ -520,8 +520,6 @@ function drawTimeDistanceChart() {
   ctx.font = '11px Arial';
   ctx.textAlign = 'center';
   // 横向きモバイルでは「時間（秒）」ラベルを非表示
-  const isLandscape = window.innerWidth > window.innerHeight;
-  const isMobile = window.innerWidth <= 768 || window.innerHeight <= 768;
   if (!(isLandscape && isMobile)) {
     ctx.fillText('時間 (秒)', w / 2, h - 10);
   }
@@ -678,8 +676,6 @@ function drawDistanceDiffChart() {
   ctx.font = '11px Arial';
   ctx.textAlign = 'center';
   // 横向きモバイルでは「時間（秒）」ラベルを非表示
-  const isLandscape = window.innerWidth > window.innerHeight;
-  const isMobile = window.innerWidth <= 768 || window.innerHeight <= 768;
   if (!(isLandscape && isMobile)) {
     ctx.fillText('時間 (秒)', w / 2, h - 10);
   }
