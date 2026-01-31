@@ -13,7 +13,7 @@ body {
 /* 横向き（ランドスケープ）専用レイアウト */
 @media (orientation: landscape) {
   body {
-    padding-top: 60px !important; /* 横向きはヘッダーのみ */
+    padding-top: 40px !important; /* 横向きはヘッダーのみ（1行40px） */
     overflow: hidden !important; /* 横向きはスクロール不要 */
   }
 }
@@ -71,45 +71,48 @@ body {
   font-size: 10px !important;
 }
 
-/* 2. 横向き（ランドスケープ）時の3ブロック構造化 */
+/* 2. 横向き（ランドスケープ）時の1行構造化 */
 @media (orientation: landscape) {
   #app-header {
     display: grid !important;
 
-    /* ★ヘッダー幅の調整★
-     * 左(タイトル) : 中(ボタン) : 右(余白) の比率
-     * 例: 1fr 2fr 1fr = タイトル25% : ボタン50% : 余白25%
-     * ボタンを左寄せにしたい場合: 0.5fr 2fr 1.5fr
-     * ボタンを右寄せにしたい場合: 1.5fr 2fr 0.5fr
+    /* ★ヘッダーの列構成★
+     * 左(タイトル) : 中(操作ボタン) : 右(ガイド・ホーム) の比率
+     * 例: 1fr 2fr 1fr = 左25% : 中50% : 右25%
+     * 操作ボタンを広くしたい場合: 0.8fr 2.4fr 0.8fr
+     * 右側を広くしたい場合: 1fr 2fr 1.2fr
      */
     grid-template-columns: 1fr 2fr 1fr !important;
 
     align-items: center !important;
 
-    /* ヘッダーの高さ（縦向きは88px、横向きは60px推奨） */
-    height: 60px !important;
+    /* ★ヘッダーの高さ（縦向きは88px、横向きは1行で40px推奨）★ */
+    height: 40px !important;
 
-    /* 上下左右の余白（上下6px、左右10px） */
-    padding: 6px 10px !important;
+    /* ★上下左右の余白（上下4px、左右10px）★ */
+    padding: 4px 10px !important;
 
-    /* グリッド要素間の間隔（8px推奨） */
-    gap: 8px !important;
+    /* ★グリッド要素間の間隔（6px推奨）★ */
+    gap: 6px !important;
   }
 
-  /* タイトルエリアを左端に配置 */
+  /* 左列: タイトル + ガイド・ホームボタン */
   .header-row.row-1 {
     grid-column: 1 !important;         /* 1列目に配置 */
+    display: flex !important;
     justify-content: flex-start !important; /* 左寄せ */
+    align-items: center !important;
     border-bottom: none !important;
     padding-bottom: 0 !important;
+    gap: 4px !important;               /* タイトルとボタンの間隔 */
   }
 
-  /* ボタンエリアを中央に配置 */
+  /* 中央列: 操作ボタンエリア */
   .header-row.row-2 {
     grid-column: 2 !important;         /* 2列目（中央）に配置 */
     display: flex !important;
 
-    /* ★ボタンの配置調整★
+    /* ★操作ボタンの配置調整★
      * center = 中央
      * flex-start = 左寄せ
      * flex-end = 右寄せ
@@ -121,22 +124,24 @@ body {
     flex: none !important;             /* flex:1 による押し出しを解除 */
   }
 
-  /* 右側エリア（将来の拡張用） */
-  .header-top-btns {
-    grid-column: 3 !important;         /* 3列目に配置 */
-    display: flex !important;
-    justify-content: flex-end !important; /* 右寄せ */
-  }
-
-  /* タイトルのフォントサイズ（9px推奨、縦向きは12px） */
+  /* ★タイトルのフォントサイズ（8px推奨、縦向きは12px）★ */
   #app-header h1 {
-    font-size: 9px !important;
+    font-size: 8px !important;
     white-space: nowrap !important;    /* タイトルの改行を防ぐ */
   }
 
-  /* バージョン番号のフォントサイズ（8px推奨、縦向きは10px） */
+  /* ★バージョン番号のフォントサイズ（7px推奨、縦向きは10px）★ */
   #app-header h1 small {
-    font-size: 8px !important;
+    font-size: 7px !important;
+  }
+
+  /* ★ガイド・ホームボタンのサイズ（横向きは小さめ）★ */
+  .header-row.row-1 .btn-help,
+  .header-row.row-1 .btn-home {
+    min-width: 32px !important;        /* ボタンの最小幅 */
+    min-height: 28px !important;       /* ボタンの最小高さ */
+    padding: 3px 6px !important;       /* ボタンの内側余白 */
+    font-size: 10px !important;        /* ボタンのフォントサイズ */
   }
 }
 
@@ -181,7 +186,7 @@ body {
 /* 横向き: 道路エリアを左側に配置 */
 @media (orientation: landscape) {
   #animation-area {
-    top: 60px !important;
+    top: 40px !important;
     left: 0 !important;
     width: 50% !important;
     right: auto !important;
@@ -213,7 +218,7 @@ body {
 @media (orientation: landscape) {
   #animation-bottom {
     position: fixed !important;
-    top: calc(60px + 40%) !important;
+    top: calc(40px + 40%) !important;
     left: 0 !important;
     width: 50% !important;
     bottom: 0 !important;
@@ -244,7 +249,7 @@ body {
 @media (orientation: landscape) {
   #chart-panel {
     position: fixed !important;
-    top: 60px !important;
+    top: 40px !important;
     left: 50% !important;
     right: 0 !important;
     bottom: 0 !important;
