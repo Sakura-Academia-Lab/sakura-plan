@@ -574,15 +574,18 @@ body {
     bottom: calc(40vh + 21vh);
   }
 
+  /* 【モバイル調整】道路エリアの高さ（数値を増やすと道路が広くなる） */
   #animation-top {
     flex: 0 0 100px;
   }
 
+  /* 【モバイル調整】線分図エリアの高さ（max-heightを変更すると線分図の最大高さが変わる） */
   #animation-bottom {
     flex: 1;
     max-height: 250px;
   }
 
+  /* 【モバイル調整】グラフパネルの高さ（heightを変更するとグラフの高さが変わる） */
   #chart-panel {
     top: auto;
     bottom: 40vh;
