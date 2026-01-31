@@ -810,18 +810,21 @@ function drawDiagram() {
 
   const padding = 60;
   const lineWidth = w - 2 * padding;
-  const personABaseY = h * 0.2; // 人物Aの基準Y座標（上側から折り返す）
-  const personBBaseY = h * 0.8; // 人物Bの基準Y座標（下側から折り返す）
+  const isMobile = window.innerWidth <= 768;
+  const personABaseY = isMobile ? h * 0.25 : h * 0.2; // 人物Aの基準Y座標（上側から折り返す）
+  const personBBaseY = isMobile ? h * 0.7 : h * 0.8; // 人物Bの基準Y座標（下側から折り返す）
   const segmentGap = 25; // セグメント間の間隔
 
   // 端点ラベル（共通）
   ctx.fillStyle = '#333';
   ctx.font = '12px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('A地点', padding, 20);
-  ctx.fillText('0m', padding, 35);
-  ctx.fillText('B地点', padding + lineWidth, 20);
-  ctx.fillText(`${state.distance}m`, padding + lineWidth, 35);
+  const labelTopY = isMobile ? 15 : 20;
+  const labelBottomY = isMobile ? 28 : 35;
+  ctx.fillText('A地点', padding, labelTopY);
+  ctx.fillText('0m', padding, labelBottomY);
+  ctx.fillText('B地点', padding + lineWidth, labelTopY);
+  ctx.fillText(`${state.distance}m`, padding + lineWidth, labelBottomY);
 
   // 交点を取得して期間境界を作成（出会い/追い越しの時刻で分割）
   const intersections = findIntersections();

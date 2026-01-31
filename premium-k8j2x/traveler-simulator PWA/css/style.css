@@ -587,8 +587,12 @@ body {
     bottom: calc(40vh + 21vh);
   }
 
+  #animation-top {
+    flex: 1;
+  }
+
   #animation-bottom {
-    flex: 0 0 200px;
+    flex: 0 0 220px;
   }
 
   #chart-panel {
