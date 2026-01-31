@@ -34,23 +34,23 @@
 
   <header id="app-header">
     <div class="header-row row-1">
-      <div class="header-left">
-        <h1 class="app-title">旅人算シミュレーター <span style="color: var(--pro-gold);">Pro</span> <small>Ver 2.8</small></h1>
-        <span class="header-spacer"></span>
-        <span id="current-time-display" style="color: #fbbf24; font-weight: bold; font-size: 14px;">0.00秒</span>
-        <button class="btn-play" onclick="startAnimation()">▶</button>
-        <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
-        <button class="btn-reset" onclick="resetAnimation()">↻</button>
-        <select id="time-scale" onchange="updateTimeScale()">
-          <option value="0.5">0.5x</option>
-          <option value="1" selected>1x</option>
-          <option value="2">2x</option>
-          <option value="5">5x</option>
-        </select>
-        <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
-        <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
-      </div>
+      <h1 class="app-title">旅人算シミュレーター <span style="color: var(--pro-gold);">Pro</span> <small>Ver 2.8</small></h1>
+      <span class="header-spacer"></span>
+      <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
       <a href="../index.html" class="btn-home" title="ホームに戻る">🏠</a>
+    </div>
+    <div class="header-row row-2">
+      <span id="current-time-display" style="color: #fbbf24; font-weight: bold; font-size: 14px;">0.00秒</span>
+      <button class="btn-play" onclick="startAnimation()">▶</button>
+      <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
+      <button class="btn-reset" onclick="resetAnimation()">↻</button>
+      <select id="time-scale" onchange="updateTimeScale()">
+        <option value="0.5">0.5x</option>
+        <option value="1" selected>1x</option>
+        <option value="2">2x</option>
+        <option value="5">5x</option>
+      </select>
+      <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
     </div>
   </header>
 
