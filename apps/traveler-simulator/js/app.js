@@ -481,7 +481,10 @@ function drawTimeDistanceChart() {
   const marginLeft = 50;
   const marginRight = 20;
   const marginTop = 15;
-  const marginBottom = 50;
+  // 横向きモバイルでは下マージンを削減してグラフを縦に広げる
+  const isLandscape = window.innerWidth > window.innerHeight;
+  const isMobile = window.innerWidth <= 768 || window.innerHeight <= 768;
+  const marginBottom = (isLandscape && isMobile) ? 25 : 50;
   const graphW = w - marginLeft - marginRight;
   const graphH = h - marginTop - marginBottom;
 
@@ -636,7 +639,10 @@ function drawDistanceDiffChart() {
   const marginLeft = 50;
   const marginRight = 20;
   const marginTop = 15;
-  const marginBottom = 50;
+  // 横向きモバイルでは下マージンを削減してグラフを縦に広げる
+  const isLandscape = window.innerWidth > window.innerHeight;
+  const isMobile = window.innerWidth <= 768 || window.innerHeight <= 768;
+  const marginBottom = (isLandscape && isMobile) ? 25 : 50;
   const graphW = w - marginLeft - marginRight;
   const graphH = h - marginTop - marginBottom;
 
