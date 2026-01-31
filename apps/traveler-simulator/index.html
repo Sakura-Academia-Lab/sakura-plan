@@ -21,9 +21,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#1e293b">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>旅人算シミュレーター Pro | 桜アカデミア</title>
+  <title>旅人算シミュレーター | 桜アカデミア</title>
 
   <link rel="stylesheet" href="css/style.css?v=2.7">
 </head>
@@ -39,7 +37,7 @@
           <circle cx="50" cy="50" r="45" fill="none" stroke="#fbbf24" stroke-width="5" />
           <path d="M 30 50 Q 50 20 70 50 L 70 70 Q 50 90 30 70 Z" fill="#fbbf24" />
         </svg>
-        <h1 class="app-title">旅人算シミュレーター <span style="color: var(--pro-gold);">Pro</span> <small>Ver 2.7</small></h1>
+        <h1 class="app-title">旅人算シミュレーター <small>Ver 2.7</small></h1>
       </div>
       <div class="header-top-btns">
         <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
@@ -202,14 +200,6 @@
 
   <script src="js/app.js?v=2.7"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW registered'))
-          .catch(err => console.log('SW registration failed', err));
-      });
-    }
-
     // モバイル用コントロールトグル
     function toggleControls() {
       const controls = document.getElementById('controls');
