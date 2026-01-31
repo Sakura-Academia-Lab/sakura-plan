@@ -320,8 +320,8 @@ body {
 
 .chart-container {
   flex: 0 0 auto;
-  min-height: 400px;
-  height: 50vh;
+  min-height: 360px;
+  height: 45vh;
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid var(--border-color);
