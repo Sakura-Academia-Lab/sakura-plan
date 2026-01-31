@@ -184,11 +184,11 @@ body {
  * 行番号: 106-131
  *
  * 【変更履歴】
- * - height: 40vh → 90vh に変更（ヘッダーに隠れないように）
+ * - height: 40vh → 85vh に変更（ヘッダーに隠れないように）
  * - 横向き時に2列グリッドレイアウトを追加（横幅を有効活用）
  *
  * 【調整可能な値】
- * - height: 90vh（縦向き・横向き共通、100vhだとヘッダーに隠れる）
+ * - height: 85vh（縦向き・横向き共通、100vhだとヘッダーに隠れる）
  * - padding: 20px（設定項目の周囲の余白）
  * - 横向きのgrid-template-columns: 1fr 1fr（2列の幅比率）
  * - 横向きのgap: 20px（列間の間隔）
@@ -200,7 +200,7 @@ body {
   left: 0 !important;
   right: 0 !important;
   width: 100% !important;
-  height: 90vh !important; /* ヘッダーを避けるため90vh（100vhだとヘッダーに隠れる） */
+  height: 85vh !important; /* ヘッダーを避けるため85vh（100vhだとヘッダーに隠れる） */
   border-right: none !important;
   border-top: 1px solid var(--border-color) !important;
   transition: transform 0.3s ease, opacity 0.3s ease !important;
