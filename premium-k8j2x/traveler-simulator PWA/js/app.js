@@ -2,8 +2,8 @@
 const state = {
   distance: 100,  // 両端の距離 (m)
   people: [
-    { name: '人物A', speed: 4, startPos: 0, color: '#ff5252', direction: 1, currentDirection: 1, mode: 'roundTrip', workTime: 3, restTime: 3 },
-    { name: '人物B', speed: 6, startPos: 100, color: '#4facfe', direction: -1, currentDirection: -1, mode: 'roundTrip', workTime: 3, restTime: 3 }
+    { name: 'P', speed: 4, startPos: 0, color: '#ff5252', direction: 1, currentDirection: 1, mode: 'roundTrip', workTime: 3, restTime: 3 },
+    { name: 'Q', speed: 6, startPos: 100, color: '#4facfe', direction: -1, currentDirection: -1, mode: 'roundTrip', workTime: 3, restTime: 3 }
   ],
   isPlaying: false,
   currentTime: 0,  // 秒
@@ -321,6 +321,12 @@ function animate() {
   drawTimeDistanceChart();
   drawDistanceDiffChart();
 
+  // ヘッダーの時刻表示を更新
+  const timeDisplay = document.getElementById('current-time-display');
+  if (timeDisplay) {
+    timeDisplay.textContent = `${state.currentTime.toFixed(1)}秒`;
+  }
+
   // 終了判定
   if (state.currentTime >= state.maxTime) {
     pauseAnimation();
@@ -343,6 +349,13 @@ function resetAnimation() {
   pauseAnimation();
   state.currentTime = 0;
   state.history = { time: [], positions: [[], []], distances: [] };
+
+  // ヘッダーの時刻表示をリセット
+  const timeDisplay = document.getElementById('current-time-display');
+  if (timeDisplay) {
+    timeDisplay.textContent = '0.0秒';
+  }
+
   render();
 }
 
@@ -397,11 +410,14 @@ function drawAnimation(positions) {
   const padding = 50;
   const roadWidth = w - 2 * padding;
 
+  const isMobile = window.innerWidth <= 768;
   ctx.fillStyle = '#94a3b8';
   ctx.font = '12px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('0m', padding, roadY + roadHeight / 2 + 20);
-  ctx.fillText(`${state.distance}m`, w - padding, roadY + roadHeight / 2 + 20);
+  // モバイル版では道路の上（青空エリア）に表示、PC版では道路の下に表示
+  const markerY = isMobile ? roadY - roadHeight / 2 - 10 : roadY + roadHeight / 2 + 20;
+  ctx.fillText('0m', padding, markerY);
+  ctx.fillText(`${state.distance}m`, w - padding, markerY);
 
   // 人物描画
   state.people.forEach((person, i) => {
@@ -421,22 +437,34 @@ function drawAnimation(positions) {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // 名前
-    ctx.fillStyle = '#333';
-    ctx.font = 'bold 11px Arial';
+    // ○の中に人物名を描画
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 12px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText(person.name, x, y + (i === 0 ? -20 : 30));
+    ctx.textBaseline = 'middle';
+    ctx.fillText(person.name, x, y);
 
-    // 速度表示と動作モード
-    ctx.font = '10px Arial';
-    let modeLabel = '往復';
-    if (person.mode === 'stopAtEdge') modeLabel = '停止';
-    if (person.mode === 'intermittent') {
-      const cycleTime = person.workTime + person.restTime;
-      const timeInCycle = state.currentTime % cycleTime;
-      modeLabel = timeInCycle < person.workTime ? '移動中' : '休憩中';
+    // 名前ラベル（PC版のみ、モバイルでは非表示）
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 11px Arial';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(person.name, x, y + (i === 0 ? -20 : 30));
     }
-    ctx.fillText(`${person.speed}m/s (${modeLabel})`, x, y + (i === 0 ? -30 : 40));
+
+    // 速度表示と動作モード（PC版のみ）
+    if (!isMobile) {
+      ctx.font = '10px Arial';
+      let modeLabel = '往復';
+      if (person.mode === 'stopAtEdge') modeLabel = '停止';
+      if (person.mode === 'intermittent') {
+        const cycleTime = person.workTime + person.restTime;
+        const timeInCycle = state.currentTime % cycleTime;
+        modeLabel = timeInCycle < person.workTime ? '移動中' : '休憩中';
+      }
+      ctx.fillText(`${person.speed}m/s (${modeLabel})`, x, y + (i === 0 ? -30 : 40));
+    }
   });
 
   // 現在時刻表示
