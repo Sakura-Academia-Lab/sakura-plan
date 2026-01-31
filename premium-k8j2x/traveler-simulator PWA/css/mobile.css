@@ -96,7 +96,7 @@ body {
     gap: 6px !important;
   }
 
-  /* 左列: タイトル + ガイド・ホームボタン */
+  /* 左列: タイトルのみ */
   .header-row.row-1 {
     grid-column: 1 !important;         /* 1列目に配置 */
     display: flex !important;
@@ -104,7 +104,6 @@ body {
     align-items: center !important;
     border-bottom: none !important;
     padding-bottom: 0 !important;
-    gap: 4px !important;               /* タイトルとボタンの間隔 */
   }
 
   /* 中央列: 操作ボタンエリア */
@@ -124,6 +123,15 @@ body {
     flex: none !important;             /* flex:1 による押し出しを解除 */
   }
 
+  /* 右列: ガイド・ホームボタン */
+  .header-row.row-3 {
+    grid-column: 3 !important;         /* 3列目（右側）に配置 */
+    display: flex !important;
+    justify-content: flex-end !important; /* 右寄せ */
+    align-items: center !important;
+    gap: 4px !important;               /* ボタン間の間隔 */
+  }
+
   /* ★タイトルのフォントサイズ（8px推奨、縦向きは12px）★ */
   #app-header h1 {
     font-size: 8px !important;
@@ -138,8 +146,8 @@ body {
   /* ★ガイド・ホームボタンのサイズ（横向きは小さめ）★
    * 行番号: 138-145
    */
-  .header-row.row-1 .btn-help,
-  .header-row.row-1 .btn-home {
+  .header-row.row-3 .btn-help,
+  .header-row.row-3 .btn-home {
     min-width: 32px !important;        /* ボタンの最小幅 */
     min-height: 28px !important;       /* ボタンの最小高さ */
     padding: 3px 6px !important;       /* ボタンの内側余白 */
