@@ -377,9 +377,9 @@ function drawAnimation(positions) {
   // 【モバイル調整】道路の位置と太さ
   // roadY: 道路の中心位置（h/2は中央、数値を変えると上下に移動）
   // roadHeight: 道路の太さ（数値を大きくすると道路が太くなる、小さくすると細くなる）
-  // ※灰色の余白 = 道路エリアの高さ（100px）- roadHeight
+  // ※灰色の余白 = 道路エリアの高さ（120px）- roadHeight
   const roadY = h / 2;
-  const roadHeight = 60;
+  const roadHeight = 50;
   ctx.fillStyle = '#888';
   ctx.fillRect(0, roadY - roadHeight / 2, w, roadHeight);
 
@@ -410,9 +410,10 @@ function drawAnimation(positions) {
     const y = roadY + (i === 0 ? -15 : 15);
 
     // 円
+    // 【モバイル調整】人物の○の大きさ（数値を大きくすると○が大きくなる）
     ctx.fillStyle = person.color;
     ctx.beginPath();
-    ctx.arc(x, y, 12, 0, Math.PI * 2);
+    ctx.arc(x, y, 10, 0, Math.PI * 2);
     ctx.fill();
 
     // 縁取り
@@ -580,7 +581,7 @@ function drawTimeDistanceChart() {
       // 交点マーカー
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.arc(ix, iy, 5, 0, Math.PI * 2);
+      ctx.arc(ix, iy, 4, 0, Math.PI * 2);
       ctx.fill();
 
       // 数値ラベル
@@ -720,7 +721,7 @@ function drawDistanceDiffChart() {
       // 交点マーカー
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.arc(ix, iy, 5, 0, Math.PI * 2);
+      ctx.arc(ix, iy, 4, 0, Math.PI * 2);
       ctx.fill();
 
       // 数値ラベル
@@ -921,7 +922,7 @@ function drawDiagram() {
               const lastX = padding + (lastPos / state.distance) * lineWidth;
               ctx.fillStyle = periodColor;
               ctx.beginPath();
-              ctx.arc(lastX, yOffset, 5, 0, Math.PI * 2);
+              ctx.arc(lastX, yOffset, 4, 0, Math.PI * 2);
               ctx.fill();
             }
 
