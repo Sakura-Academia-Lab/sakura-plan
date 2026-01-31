@@ -378,13 +378,21 @@ function drawAnimation(positions) {
   // クリア
   ctx.clearRect(0, 0, w, h);
 
-  // 背景（グラデーション）
+  // ★道路エリアの背景グラデーション★
+  // 行番号: 382-387
+  // 上から下へのグラデーション（上部濃い青 → 中央ネイビー → 下部濃い青）
   const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, '#0f172a');
-  grad.addColorStop(0.5, '#1e293b');
-  grad.addColorStop(1, '#0f172a');
+  grad.addColorStop(0, '#e0f2f7');    // 上部の色（濃い青 - ダークブルー）
+  grad.addColorStop(0.5, '#e0f2f7');  // 中央の色（ネイビー - やや明るい）
+  grad.addColorStop(1, '#e0f2f7');    // 下部の色（濃い青 - ダークブルー）
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
+
+  // 【色の変更例】
+  // 明るい青系: '#4facfe' → '#00f2fe' → '#4facfe'
+  // 夕焼け系: '#ff512f' → '#dd2476' → '#ff512f'
+  // 緑系: '#11998e' → '#38ef7d' → '#11998e'
+  // 紫系: '#7f00ff' → '#e100ff' → '#7f00ff'
 
   // 道路
   // 【モバイル調整】道路の位置と太さ
