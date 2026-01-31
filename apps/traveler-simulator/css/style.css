@@ -106,8 +106,8 @@ body {
 
 /* ===== ヘッダーコントロール ===== */
 .header-left button {
-  padding: 6px 12px;        /* 上下余白6px、左右余白12px（ボタンサイズ調整） */
-  font-size: 14px;          /* フォントサイズ */
+  padding: 6px 10px;        /* 上下余白6px、左右余白12px（ボタンサイズ調整） */
+  font-size: 12px;          /* フォントサイズ */
   border: none;
   border-radius: 4px;       /* 角丸の大きさ */
   cursor: pointer;
@@ -224,7 +224,6 @@ body {
 .btn-play,
 .btn-pause,
 .btn-reset {
-  flex: 1;
   padding: 10px;
   font-size: 13px;
   font-weight: bold;
