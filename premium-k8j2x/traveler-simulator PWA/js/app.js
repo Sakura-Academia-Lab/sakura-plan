@@ -382,9 +382,9 @@ function drawAnimation(positions) {
   // 行番号: 382-387
   // 上から下へのグラデーション（上部濃い青 → 中央ネイビー → 下部濃い青）
   const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, '#0f172a');    // 上部の色（濃い青 - ダークブルー）
-  grad.addColorStop(0.5, '#1e293b');  // 中央の色（ネイビー - やや明るい）
-  grad.addColorStop(1, '#0f172a');    // 下部の色（濃い青 - ダークブルー）
+  grad.addColorStop(0, '#e0f2f7');    // 上部の色（濃い青 - ダークブルー）
+  grad.addColorStop(0.5, '#e0f2f7');  // 中央の色（ネイビー - やや明るい）
+  grad.addColorStop(1, '#e0f2f7');    // 下部の色（濃い青 - ダークブルー）
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
