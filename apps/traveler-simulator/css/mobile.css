@@ -69,35 +69,30 @@ body {
 /* 横向き: ヘッダーを1行に圧縮 */
 @media (orientation: landscape) {
   #app-header {
-    height: 60px !important;
-    flex-direction: row !important;
+    height: 60px !important;           /* ヘッダーの高さ（縦向きは88px） */
+    flex-direction: row !important;    /* 横並びレイアウト */
     padding: 6px 10px !important;
-    gap: 8px !important;
+    gap: 8px !important;               /* 要素間の間隔 */
   }
 
   .header-row.row-1 {
-    flex: 0 0 auto !important;
+    flex: 0 0 auto !important;         /* タイトルエリア：固定幅 */
     border-bottom: none !important;
     padding-bottom: 0 !important;
   }
 
   .header-row.row-2 {
-    flex: 1 !important;
-    justify-content: flex-end !important;
+    flex: 1 !important;                /* ボタンエリア：残りのスペースを使用 */
+    justify-content: center !important;/* ボタンの配置（center=中央, flex-start=左, flex-end=右） */
   }
 
   #app-header h1 {
-    font-size: 9px !important;
-    white-space: nowrap !important;
+    font-size: 9px !important;         /* タイトルのフォントサイズ */
+    white-space: nowrap !important;    /* タイトルの改行を防ぐ */
   }
 
   #app-header h1 small {
-    font-size: 8px !important;
-  }
-
-  .header-row.row-2 {
-    flex: 1 !important;
-    justify-content: center !important;
+    font-size: 8px !important;         /* バージョン番号のフォントサイズ */
   }
 }
 
