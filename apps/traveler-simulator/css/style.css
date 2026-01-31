@@ -118,6 +118,8 @@ body {
 .header-left .btn-play {
   background: #4caf50;
   color: white;
+  min-width: 80px;
+  text-align: center;
 }
 
 .header-left .btn-play:hover {
@@ -127,6 +129,8 @@ body {
 .header-left .btn-pause {
   background: var(--accent-yellow);
   color: #333;
+  min-width: 80px;
+  text-align: center;
 }
 
 .header-left .btn-pause:hover {
@@ -136,6 +140,8 @@ body {
 .header-left .btn-reset {
   background: #9e9e9e;
   color: white;
+  min-width: 80px;
+  text-align: center;
 }
 
 .header-left .btn-reset:hover {
