@@ -490,11 +490,13 @@ function drawTimeDistanceChart() {
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
   // グリッド
+  const isMobileGraph = window.innerWidth <= 768;
+  const gridDivisions = isMobileGraph ? 5 : 10;
   ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 1;
-  for (let i = 0; i <= 10; i++) {
-    const x = marginLeft + (i / 10) * graphW;
-    const y = marginTop + (i / 10) * graphH;
+  for (let i = 0; i <= gridDivisions; i++) {
+    const x = marginLeft + (i / gridDivisions) * graphW;
+    const y = marginTop + (i / gridDivisions) * graphH;
     ctx.beginPath();
     ctx.moveTo(x, marginTop);
     ctx.lineTo(x, marginTop + graphH);
@@ -638,11 +640,13 @@ function drawDistanceDiffChart() {
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
   // グリッド
+  const isMobileGraph = window.innerWidth <= 768;
+  const gridDivisions = isMobileGraph ? 5 : 10;
   ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 1;
-  for (let i = 0; i <= 10; i++) {
-    const x = marginLeft + (i / 10) * graphW;
-    const y = marginTop + (i / 10) * graphH;
+  for (let i = 0; i <= gridDivisions; i++) {
+    const x = marginLeft + (i / gridDivisions) * graphW;
+    const y = marginTop + (i / gridDivisions) * graphH;
     ctx.beginPath();
     ctx.moveTo(x, marginTop);
     ctx.lineTo(x, marginTop + graphH);

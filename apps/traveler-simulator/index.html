@@ -32,16 +32,10 @@
 
   <header id="app-header">
     <div class="header-row row-1">
-      <h1 class="app-title">旅人算シミュレーター <small>Ver 2.8</small></h1>
-      <div class="header-top-btns">
-        <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
-        <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
-        <a href="../index.html" class="btn-home" title="ホームに戻る">🏠</a>
-      </div>
-    </div>
-    <div class="header-row row-2">
-      <div class="header-controls">
-        <span id="current-time-display" style="color: #fbbf24; font-weight: bold; font-size: 14px; margin-right: 10px;">0.00秒</span>
+      <div class="header-left">
+        <h1 class="app-title">旅人算シミュレーター <small>Ver 2.8</small></h1>
+        <span class="header-spacer"></span>
+        <span id="current-time-display" style="color: #fbbf24; font-weight: bold; font-size: 14px;">0.00秒</span>
         <button class="btn-play" onclick="startAnimation()">▶</button>
         <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
         <button class="btn-reset" onclick="resetAnimation()">↻</button>
@@ -51,7 +45,10 @@
           <option value="2">2x</option>
           <option value="5">5x</option>
         </select>
+        <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
+        <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
       </div>
+      <a href="../index.html" class="btn-home" title="ホームに戻る">🏠</a>
     </div>
   </header>
 
