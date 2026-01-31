@@ -187,12 +187,24 @@ body {
   left: 0 !important;
   right: 0 !important;
   width: 100% !important;
-  height: 40vh !important;
+  height: 100vh !important; /* 全画面表示 */
   border-right: none !important;
   border-top: 1px solid var(--border-color) !important;
   transition: transform 0.3s ease, opacity 0.3s ease !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+/* 横向き: 設定を2列レイアウトに */
+@media (orientation: landscape) {
+  #controls {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* 2列に分割 */
+    gap: 20px !important;
+    padding: 20px !important;
+  }
 }
 
 /* 【モバイル】道路エリア - 固定表示 */
