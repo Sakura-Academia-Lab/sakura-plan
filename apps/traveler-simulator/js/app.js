@@ -486,11 +486,11 @@ function drawTimeDistanceChart() {
   const graphH = h - marginTop - marginBottom;
 
   // 背景
-  ctx.fillStyle = '#1e293b';
+  ctx.fillStyle = '#fafafa';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
   // グリッド
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 1;
   for (let i = 0; i <= 10; i++) {
     const x = marginLeft + (i / 10) * graphW;
@@ -506,12 +506,12 @@ function drawTimeDistanceChart() {
   }
 
   // 軸
-  ctx.strokeStyle = '#94a3b8';
+  ctx.strokeStyle = '#333';
   ctx.lineWidth = 2;
   ctx.strokeRect(marginLeft, marginTop, graphW, graphH);
 
   // 軸ラベル
-  ctx.fillStyle = '#94a3b8';
+  ctx.fillStyle = '#333';
   ctx.font = '11px Arial';
   ctx.textAlign = 'center';
   ctx.fillText('時間 (秒)', w / 2, h - 10);
@@ -634,11 +634,11 @@ function drawDistanceDiffChart() {
   const graphH = h - marginTop - marginBottom;
 
   // 背景
-  ctx.fillStyle = '#1e293b';
+  ctx.fillStyle = '#fafafa';
   ctx.fillRect(marginLeft, marginTop, graphW, graphH);
 
   // グリッド
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 1;
   for (let i = 0; i <= 10; i++) {
     const x = marginLeft + (i / 10) * graphW;
@@ -654,12 +654,12 @@ function drawDistanceDiffChart() {
   }
 
   // 軸
-  ctx.strokeStyle = '#94a3b8';
+  ctx.strokeStyle = '#333';
   ctx.lineWidth = 2;
   ctx.strokeRect(marginLeft, marginTop, graphW, graphH);
 
   // 軸ラベル
-  ctx.fillStyle = '#94a3b8';
+  ctx.fillStyle = '#333';
   ctx.font = '11px Arial';
   ctx.textAlign = 'center';
   ctx.fillText('時間 (秒)', w / 2, h - 10);
@@ -841,8 +841,8 @@ function drawDiagram() {
   const isMobile = window.innerWidth <= 768;
 
   // 【モバイル調整】線分図の上下余白（数値を小さくすると余白が減る）
-  const personABaseY = isMobile ? h * 0.15 : h * 0.2; // 人物Aの基準Y座標（上側）：0.15を小さくすると上余白が減る
-  const personBBaseY = isMobile ? h * 0.85 : h * 0.8; // 人物Bの基準Y座標（下側）：0.85を小さくすると下に余白ができて見切れを防ぐ
+  const personABaseY = isMobile ? h * 0.2 : h * 0.2; // 人物Aの基準Y座標（上側）：0.2を小さくすると上余白が減る
+  const personBBaseY = isMobile ? h * 0.75 : h * 0.8; // 人物Bの基準Y座標（下側）：0.75を小さくすると下に余白ができて見切れを防ぐ
   const segmentGap = 25; // セグメント間の間隔
 
   // 【モバイル調整】ラベル位置（数値を小さくするとラベルが上に移動し、余白が減る）
