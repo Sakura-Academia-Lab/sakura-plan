@@ -32,17 +32,11 @@
 
   <header id="app-header">
     <div class="header-row row-1">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <svg style="width: 24px; height: 24px;" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#fbbf24" stroke-width="5" />
-          <path d="M 30 50 Q 50 20 70 50 L 70 70 Q 50 90 30 70 Z" fill="#fbbf24" />
-        </svg>
-        <h1 class="app-title">旅人算シミュレーター <small>Ver 2.7</small></h1>
-      </div>
+      <h1 class="app-title">旅人算シミュレーター <small>Ver 2.7</small></h1>
       <div class="header-top-btns">
         <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
         <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
-        <a href="../index.html" class="btn-home">🏠</a>
+        <a href="../index.html" class="btn-home" title="ホームに戻る">🏠</a>
       </div>
     </div>
     <div class="header-row row-2">
@@ -183,18 +177,7 @@
     <div id="guide-content">
       <button class="btn-close" onclick="toggleGuide()">✕</button>
       <h3>🔰 使い方ガイド</h3>
-      <div class="step"><span class="step-icon">1</span>
-        <div><strong>設定：</strong>速さや開始位置を調整します。</div>
-      </div>
-      <div class="step"><span class="step-icon">2</span>
-        <div><strong>再生：</strong>▶ボタンで動きを確認できます。</div>
-      </div>
-      <div class="step"><span class="step-icon">3</span>
-        <div><strong>グラフ：</strong>右側に軌跡と距離が表示されます。</div>
-      </div>
-      <div class="step"><span class="step-icon">4</span>
-        <div><strong>線分図：</strong>左下に現在の位置関係が表示されます。</div>
-      </div>
+      <div id="guide-steps"></div>
     </div>
   </div>
 
@@ -204,6 +187,66 @@
     function toggleControls() {
       const controls = document.getElementById('controls');
       controls.classList.toggle('controls-hidden');
+    }
+
+    // ガイド表示切り替え
+    function toggleGuide() {
+      const modal = document.getElementById('guide-modal');
+      const isVisible = modal.style.display !== 'none';
+
+      if (isVisible) {
+        modal.style.display = 'none';
+      } else {
+        // 画面サイズに応じてガイド内容を変更
+        updateGuideContent();
+        modal.style.display = 'block';
+      }
+    }
+
+    // ガイド内容を更新
+    function updateGuideContent() {
+      const isMobile = window.innerWidth <= 768;
+      const guideSteps = document.getElementById('guide-steps');
+
+      if (isMobile) {
+        // モバイル版のガイド
+        guideSteps.innerHTML = `
+          <div class="step"><span class="step-icon">1</span>
+            <div><strong>設定：</strong>⚙️ボタンから速さや開始位置を調整します。</div>
+          </div>
+          <div class="step"><span class="step-icon">2</span>
+            <div><strong>再生：</strong>▶ボタンで動きを確認できます。</div>
+          </div>
+          <div class="step"><span class="step-icon">3</span>
+            <div><strong>道路：</strong>上部に2人の移動がアニメーション表示されます。</div>
+          </div>
+          <div class="step"><span class="step-icon">4</span>
+            <div><strong>線分図：</strong>中央に現在の位置関係が表示されます。</div>
+          </div>
+          <div class="step"><span class="step-icon">5</span>
+            <div><strong>グラフ：</strong>下部に軌跡と2人の距離が表示されます。</div>
+          </div>
+        `;
+      } else {
+        // PC版のガイド
+        guideSteps.innerHTML = `
+          <div class="step"><span class="step-icon">1</span>
+            <div><strong>設定：</strong>左側で速さや開始位置を調整します。</div>
+          </div>
+          <div class="step"><span class="step-icon">2</span>
+            <div><strong>再生：</strong>上部の▶ボタンで動きを確認できます。</div>
+          </div>
+          <div class="step"><span class="step-icon">3</span>
+            <div><strong>道路：</strong>左上に2人の移動がアニメーション表示されます。</div>
+          </div>
+          <div class="step"><span class="step-icon">4</span>
+            <div><strong>線分図：</strong>左下に現在の位置関係が表示されます。</div>
+          </div>
+          <div class="step"><span class="step-icon">5</span>
+            <div><strong>グラフ：</strong>右側に時間-距離グラフと2人の間の距離が表示されます。</div>
+          </div>
+        `;
+      }
     }
   </script>
 </body>
