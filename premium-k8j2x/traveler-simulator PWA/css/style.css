@@ -171,7 +171,7 @@ body {
   left: 0;
   width: 280px;
   bottom: 0;
-  background: rgba(30, 41, 59, 0.95);
+  background: #ffffff;
   backdrop-filter: blur(10px);
   border-right: 1px solid var(--border-color);
   padding: 15px;
@@ -207,10 +207,10 @@ body {
   flex: 1;
   padding: 6px 8px;
   font-size: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #cccccc;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: #ffffff;
+  color: #333333;
 }
 
 .input-row input[type="range"] {
