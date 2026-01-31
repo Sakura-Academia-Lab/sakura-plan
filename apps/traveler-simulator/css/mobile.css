@@ -46,10 +46,15 @@ body {
   padding-bottom: 6px !important;
 }
 
+/* ===== ヘッダーボタン中央寄せの修正 ===== */
+
+/* 1. 縦向き（ポートレート）の Row-2 を確実に中央へ */
 .header-row.row-2 {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
 }
 
 .header-spacer {
@@ -66,24 +71,39 @@ body {
   font-size: 10px !important;
 }
 
-/* 横向き: ヘッダーを1行に圧縮 */
+/* 2. 横向き（ランドスケープ）時の3ブロック構造化 */
 @media (orientation: landscape) {
   #app-header {
+    display: grid !important;
+    /* 左(タイトル) : 中(ボタン) : 右(余白/他ボタン) を 1:2:1 の比率で分割 */
+    grid-template-columns: 1fr 2fr 1fr !important;
+    align-items: center !important;
     height: 60px !important;           /* ヘッダーの高さ（縦向きは88px） */
-    flex-direction: row !important;    /* 横並びレイアウト */
     padding: 6px 10px !important;
     gap: 8px !important;               /* 要素間の間隔 */
   }
 
+  /* タイトルエリアを左端に */
   .header-row.row-1 {
-    flex: 0 0 auto !important;         /* タイトルエリア：固定幅 */
+    grid-column: 1 !important;
+    justify-content: flex-start !important;
     border-bottom: none !important;
     padding-bottom: 0 !important;
   }
 
+  /* ボタンエリアを中央に */
   .header-row.row-2 {
-    flex: 1 !important;                /* ボタンエリア：残りのスペースを使用 */
+    grid-column: 2 !important;
+    display: flex !important;
     justify-content: center !important;/* ボタンの配置（center=中央, flex-start=左, flex-end=右） */
+    flex: none !important;             /* flex:1 による押し出しを解除 */
+  }
+
+  /* 右側のバランスをとるためのエリア（もしあれば） */
+  .header-top-btns {
+    grid-column: 3 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
   }
 
   #app-header h1 {
