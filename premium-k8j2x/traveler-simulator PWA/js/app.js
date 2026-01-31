@@ -461,9 +461,12 @@ function drawAnimation(positions) {
       ctx.fillText(person.name, x, y + (i === 0 ? -20 : 30));
     }
 
-    // 速度表示と動作モード（PC版のみ）
+    // ★速度表示と動作モード（人物の上に表示されるテキスト）★
+    // 行番号: 464-475
+    // PC版のみ表示、モバイル版では非表示
+    // 表示内容: "4m/s (往復)" のような速度と動作モード
     if (!isMobile) {
-      ctx.font = '10px Arial';
+      ctx.font = '10px Arial';        // フォントサイズ（10px推奨、大きくすると文字が大きくなる）
       let modeLabel = '往復';
       if (person.mode === 'stopAtEdge') modeLabel = '停止';
       if (person.mode === 'intermittent') {
@@ -471,6 +474,9 @@ function drawAnimation(positions) {
         const timeInCycle = state.currentTime % cycleTime;
         modeLabel = timeInCycle < person.workTime ? '移動中' : '休憩中';
       }
+      // テキスト描画位置: 人物Pは上に30px、人物Qは下に40px
+      // -30を変更すると人物Pの上のテキスト位置が変わる（数値を小さくすると上に移動）
+      // 40を変更すると人物Qの下のテキスト位置が変わる（数値を大きくすると下に移動）
       ctx.fillText(`${person.speed}m/s (${modeLabel})`, x, y + (i === 0 ? -30 : 40));
     }
   });
