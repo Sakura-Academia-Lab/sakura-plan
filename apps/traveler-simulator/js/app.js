@@ -374,6 +374,10 @@ function drawAnimation(positions) {
   ctx.fillRect(0, 0, w, h);
 
   // 道路
+  // 【モバイル調整】道路の位置と太さ
+  // roadY: 道路の中心位置（h/2は中央、数値を変えると上下に移動）
+  // roadHeight: 道路の太さ（数値を大きくすると道路が太くなる、小さくすると細くなる）
+  // ※灰色の余白 = 道路エリアの高さ（100px）- roadHeight
   const roadY = h / 2;
   const roadHeight = 60;
   ctx.fillStyle = '#888';
