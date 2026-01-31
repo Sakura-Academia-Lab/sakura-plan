@@ -38,13 +38,18 @@ body {
   padding: 0 15px;
   z-index: 150;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  gap: 20px;
 }
 
-.header-row {
+.header-left {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 #app-header h1 {
@@ -52,11 +57,6 @@ body {
   font-weight: bold;
   margin: 0;
   white-space: nowrap;
-}
-
-.header-top-btns {
-  display: flex;
-  gap: 8px;
 }
 
 .btn-home {
@@ -530,7 +530,7 @@ body {
     left: 0;
     right: 0;
     width: 100%;
-    height: 50vh;
+    height: 40vh;
     border-right: none;
     border-top: 1px solid var(--border-color);
     transition: transform 0.3s ease, opacity 0.3s ease;
@@ -540,12 +540,12 @@ body {
 
   /* コントロール非表示時のレイアウト */
   #controls.controls-hidden~#animation-area {
-    bottom: 40vh;
+    bottom: 30vh;
   }
 
   #controls.controls-hidden~#chart-panel {
     bottom: 0;
-    height: 40vh;
+    height: 30vh;
   }
 
   /* コントロール表示時のレイアウト */
@@ -554,20 +554,20 @@ body {
     right: 0;
     top: 100px;
     /* ヘッダーの高さに合わせる */
-    bottom: calc(50vh + 40vh);
+    bottom: calc(40vh + 30vh);
   }
 
   #animation-bottom {
-    flex: 0 0 320px;
+    flex: 0 0 200px;
   }
 
   #chart-panel {
     top: auto;
-    bottom: 50vh;
+    bottom: 40vh;
     left: 0;
     right: 0;
     width: 100%;
-    height: 40vh;
+    height: 30vh;
     border-left: none;
     border-top: 1px solid var(--border-color);
   }

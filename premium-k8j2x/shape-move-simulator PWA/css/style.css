@@ -39,13 +39,18 @@ body {
   padding: 0 15px;
   z-index: 150;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  gap: 20px;
 }
 
-.header-row {
+.header-left {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 #app-header h1 {
@@ -53,11 +58,6 @@ body {
   font-weight: bold;
   margin: 0;
   white-space: nowrap;
-}
-
-.header-top-btns {
-  display: flex;
-  gap: 8px;
 }
 
 .btn-help {

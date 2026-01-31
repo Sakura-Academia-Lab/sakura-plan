@@ -528,9 +528,9 @@ function drawAreaChart() {
     const maxArea = Math.max(...state.history.overlapAreas, 1);
 
     ctx.textAlign = 'right';
-    for (let i = 0; i <= 5; i++) {
-      const y = marginTop + graphH - (i / 5) * graphH;
-      const area = (i / 5) * maxArea;
+    for (let i = 0; i <= 10; i++) {
+      const y = marginTop + graphH - (i / 10) * graphH;
+      const area = (i / 10) * maxArea;
       ctx.fillText(area.toFixed(0), marginLeft - 5, y + 4);
     }
 

@@ -30,14 +30,7 @@
       style="display:none;visibility:hidden"></iframe></noscript>
 
   <header id="app-header">
-    <div class="header-row row-1">
-      <h1 class="app-title">図形の移動シミュレーター <small>Ver 1.0</small></h1>
-      <div class="header-top-btns">
-        <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
-        <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
-      </div>
-    </div>
-    <div class="header-row row-2">
+    <div class="header-left">
       <div class="header-controls">
         <button class="btn-play" onclick="startAnimation()">▶</button>
         <button class="btn-pause" onclick="pauseAnimation()">⏸</button>
@@ -49,6 +42,11 @@
           <option value="5">5x</option>
         </select>
       </div>
+      <h1 class="app-title">図形の移動シミュレーター <small>Ver 1.0</small></h1>
+    </div>
+    <div class="header-right">
+      <button class="btn-help" onclick="toggleGuide()">🔰 使い方</button>
+      <button class="btn-toggle-controls" onclick="toggleControls()" title="設定はここから">⚙️</button>
     </div>
   </header>
 
@@ -157,7 +155,7 @@
         <div><strong>重なり：</strong>重なった部分が黄色で表示されます。</div>
       </div>
       <div class="step"><span class="step-icon">4</span>
-        <div><strong>グラフ：</strong>右側に重なり面積の変化が表示されます。</div>
+        <div><strong>グラフ：</strong>下側に重なり面積の変化が表示されます。</div>
       </div>
     </div>
   </div>

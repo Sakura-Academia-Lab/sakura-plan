@@ -502,9 +502,9 @@ function drawTimeDistanceChart() {
     ctx.fillText(time.toFixed(1), x, marginTop + graphH + 15);
   }
   ctx.textAlign = 'right';
-  for (let i = 0; i <= 5; i++) {
-    const y = marginTop + graphH - (i / 5) * graphH;
-    const dist = (i / 5) * state.distance;
+  for (let i = 0; i <= 10; i++) {
+    const y = marginTop + graphH - (i / 10) * graphH;
+    const dist = (i / 10) * state.distance;
     ctx.fillText(dist.toFixed(0), marginLeft - 5, y + 4);
   }
 
@@ -650,9 +650,9 @@ function drawDistanceDiffChart() {
     ctx.fillText(time.toFixed(1), x, marginTop + graphH + 15);
   }
   ctx.textAlign = 'right';
-  for (let i = 0; i <= 5; i++) {
-    const y = marginTop + graphH - (i / 5) * graphH;
-    const dist = (i / 5) * state.distance;
+  for (let i = 0; i <= 10; i++) {
+    const y = marginTop + graphH - (i / 10) * graphH;
+    const dist = (i / 10) * state.distance;
     ctx.fillText(dist.toFixed(0), marginLeft - 5, y + 4);
   }
 
