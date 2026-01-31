@@ -106,14 +106,13 @@ body {
 
 /* ===== ヘッダーコントロール ===== */
 .header-left button {
-  padding: 4px 10px;
-  font-size: 16px;
+  padding: 6px 12px;
+  font-size: 14px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: 0.2s;
-  font-weight: bold;
-  min-width: 32px;
+  font-weight: normal;
 }
 
 .header-left .btn-play {
