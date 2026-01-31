@@ -1,4 +1,4 @@
-const CACHE_NAME = 'traveler-simulator-pro-v2.8';
+const CACHE_NAME = 'traveler-simulator-pro-v2.9';
 const ASSETS = [
     './',
     './index.html',
