@@ -3,16 +3,34 @@
 
 /* 強制的にモバイルレイアウトを適用 */
 body {
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-top: calc(88px + 120px); /* ヘッダー + 道路の高さ（縦向き） */
+  padding-bottom: 0; /* コントロールパネルは重ならないように */
+}
+
+/* 横向き（ランドスケープ）専用レイアウト */
+@media (orientation: landscape) {
+  body {
+    padding-top: 60px !important; /* 横向きはヘッダーのみ */
+    overflow: hidden !important; /* 横向きはスクロール不要 */
+  }
 }
 
 /* ヘッダーを2行に固定 */
 #app-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
   height: 88px !important;
   flex-direction: column !important;
   justify-content: center !important;
   padding: 8px 10px !important;
   gap: 6px !important;
+  z-index: 1000 !important;
 }
 
 .header-row {
@@ -46,6 +64,31 @@ body {
 
 #app-header h1 small {
   font-size: 10px !important;
+}
+
+/* 横向き: ヘッダーを1行に圧縮 */
+@media (orientation: landscape) {
+  #app-header {
+    height: 60px !important;
+    flex-direction: row !important;
+    padding: 6px 10px !important;
+    gap: 8px !important;
+  }
+
+  .header-row.row-1 {
+    flex: 0 0 auto !important;
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+  }
+
+  .header-row.row-2 {
+    flex: 1 !important;
+    justify-content: flex-end !important;
+  }
+
+  #app-header h1 {
+    font-size: 11px !important;
+  }
 }
 
 /* コントロール切り替えボタンを表示 */
@@ -86,6 +129,18 @@ body {
   flex-direction: row !important;
 }
 
+/* 横向き: 道路エリアを左側に配置 */
+@media (orientation: landscape) {
+  #animation-area {
+    top: 60px !important;
+    left: 0 !important;
+    width: 50% !important;
+    right: auto !important;
+    height: 40% !important;
+    border-right: 1px solid var(--border-color) !important;
+  }
+}
+
 #animation-top {
   flex: 1 !important;
   width: 100% !important;
@@ -94,39 +149,79 @@ body {
 
 /* 【モバイル】スクロール可能エリア - 線分図+グラフ */
 #animation-bottom {
-  position: fixed !important;
-  top: calc(88px + 120px) !important; /* ヘッダー + 道路 */
+  position: relative !important;
+  top: 0 !important;
   left: 0 !important;
   right: 0 !important;
+  width: 100% !important;
   height: 270px !important;
   border-top: 2px solid var(--border-color) !important;
   border-right: none !important;
   background: linear-gradient(to bottom, #87ceeb 0%, #e8f5e9 50%, #d7ccc8 100%) !important;
 }
 
+/* 横向き: 線分図を左下に配置 */
+@media (orientation: landscape) {
+  #animation-bottom {
+    position: fixed !important;
+    top: calc(60px + 40%) !important;
+    left: 0 !important;
+    width: 50% !important;
+    bottom: 0 !important;
+    height: 60% !important;
+    border-right: 1px solid var(--border-color) !important;
+  }
+}
+
 /* 【モバイル】グラフパネル - スクロール可能 */
 #chart-panel {
-  position: fixed !important;
-  top: calc(88px + 120px + 270px) !important; /* ヘッダー + 道路 + 線分図 */
+  position: relative !important;
+  top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  bottom: 40vh !important; /* 設定パネルの高さ */
   width: 100% !important;
   height: auto !important;
-  overflow-y: auto !important;
+  min-height: 600px !important; /* グラフを見やすくするための最小高さ */
   overflow-x: hidden !important;
-  -webkit-overflow-scrolling: touch !important;
   border-left: none !important;
   border-top: 1px solid var(--border-color) !important;
   display: flex !important;
   flex-direction: column !important;
   background: #ffffff !important;
+  margin-bottom: 20px !important; /* 下部に余白を追加 */
+}
+
+/* 横向き: グラフパネルを右側に配置 */
+@media (orientation: landscape) {
+  #chart-panel {
+    position: fixed !important;
+    top: 60px !important;
+    left: 50% !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 50% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin-bottom: 0 !important;
+    overflow-y: auto !important;
+    border-left: 1px solid var(--border-color) !important;
+    border-top: none !important;
+  }
 }
 
 .chart-container {
   min-height: 300px !important;
   height: auto !important;
   flex: 0 0 auto !important;
+}
+
+/* 横向き: グラフを均等に配置 */
+@media (orientation: landscape) {
+  .chart-container {
+    min-height: 0 !important;
+    height: 50% !important;
+    flex: 1 1 50% !important;
+  }
 }
 
 /* タッチ操作改善 */
