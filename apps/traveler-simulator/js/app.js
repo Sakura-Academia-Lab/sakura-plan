@@ -833,7 +833,7 @@ function drawDiagram() {
   ctx.clearRect(0, 0, w, h);
 
   // 背景
-  ctx.fillStyle = '#1e293b';
+  ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, w, h);
 
   const padding = 60;
@@ -842,7 +842,7 @@ function drawDiagram() {
 
   // 【モバイル調整】線分図の上下余白（数値を小さくすると余白が減る）
   const personABaseY = isMobile ? h * 0.15 : h * 0.2; // 人物Aの基準Y座標（上側）：0.15を小さくすると上余白が減る
-  const personBBaseY = isMobile ? h * 0.95 : h * 0.8; // 人物Bの基準Y座標（下側）：0.95を大きくすると下余白が減る
+  const personBBaseY = isMobile ? h * 0.85 : h * 0.8; // 人物Bの基準Y座標（下側）：0.85を小さくすると下に余白ができて見切れを防ぐ
   const segmentGap = 25; // セグメント間の間隔
 
   // 【モバイル調整】ラベル位置（数値を小さくするとラベルが上に移動し、余白が減る）

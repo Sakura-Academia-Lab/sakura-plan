@@ -1,11 +1,11 @@
 /* --- Premium Theme Variables --- */
 :root {
-  --pro-bg: #0f172a;
-  --pro-card-bg: #1e293b;
+  --pro-bg: #ffffff;
+  --pro-card-bg: #f5f5f5;
   --pro-gold: #fbbf24;
   --pro-gold-gradient: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
-  --pro-text: #f8fafc;
-  --pro-text-muted: #94a3b8;
+  --pro-text: #333333;
+  --pro-text-muted: #666666;
   --pro-accent: #38bdf8;
 
   --primary-navy: #1e293b;
@@ -15,7 +15,7 @@
   --person-a-color: #ff5252;
   --person-b-color: #38bdf8;
   --bg-light: var(--pro-bg);
-  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(0, 0, 0, 0.1);
 }
 
 /* ===== 基本レイアウト ===== */
@@ -54,10 +54,6 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-}
-
-.header-row.row-2 {
-  display: none;
 }
 
 #app-header h1 {
@@ -317,7 +313,7 @@ body {
   right: 0;
   width: 50vw;
   bottom: 0;
-  background: #0f172a;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   border-left: 1px solid var(--border-color);
@@ -357,7 +353,7 @@ body {
   align-items: center;
   justify-content: center;
   min-width: 30px;
-  background: #1e293b;
+  background: #f5f5f5;
   border-right: 1px solid var(--border-color);
 }
 
