@@ -87,7 +87,17 @@ body {
   }
 
   #app-header h1 {
-    font-size: 11px !important;
+    font-size: 9px !important;
+    white-space: nowrap !important;
+  }
+
+  #app-header h1 small {
+    font-size: 8px !important;
+  }
+
+  .header-row.row-2 {
+    flex: 1 !important;
+    justify-content: center !important;
   }
 }
 
@@ -221,6 +231,12 @@ body {
     min-height: 0 !important;
     height: 50% !important;
     flex: 1 1 50% !important;
+  }
+
+  .chart-title-vertical {
+    font-size: 11px !important;
+    writing-mode: vertical-rl !important;
+    white-space: nowrap !important;
   }
 }
 
