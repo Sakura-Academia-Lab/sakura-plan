@@ -451,6 +451,16 @@ function drawAnimation(positions) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(person.name, x, y);
+
+    // ★削除された要素（冗長なため削除）★
+    // 行番号: 455-481（以前の位置）
+    //
+    // 【削除内容】
+    // 1. 人物名の黒字ラベル（○の外に表示されていたPC版のみの"P", "Q"テキスト）
+    //    理由: ○の中に既に表示されているため不要
+    //
+    // 2. 速度・動作モード表示（"4m/s (往復)"等のテキスト）
+    //    理由: 線分図に既に速度が表示されているため不要
   });
 
 }
