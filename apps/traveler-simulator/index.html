@@ -178,6 +178,17 @@
     </div>
   </div>
 
+  <script>
+    // モバイルデバイス検出 - mobile.htmlへリダイレクト
+    (function() {
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth <= 768;
+      if (isMobileDevice || isSmallScreen) {
+        window.location.href = 'mobile.html';
+      }
+    })();
+  </script>
+
   <script src="js/app.js?v=2.8"></script>
   <script>
     // モバイル用コントロールトグル

@@ -1,0 +1,159 @@
+/* ===== モバイル専用スタイル ===== */
+/* このファイルはmobile.htmlでのみ読み込まれます */
+
+/* 強制的にモバイルレイアウトを適用 */
+body {
+  overflow: hidden;
+}
+
+/* ヘッダーを2行に固定 */
+#app-header {
+  height: 88px !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 8px 10px !important;
+  gap: 6px !important;
+}
+
+.header-row {
+  width: 100% !important;
+  gap: 6px !important;
+}
+
+.header-row.row-1 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding-bottom: 6px !important;
+}
+
+.header-row.row-2 {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.header-spacer {
+  display: none !important;
+}
+
+#app-header h1 {
+  font-size: 12px !important;
+  flex: 1 !important;
+  text-align: left !important;
+}
+
+#app-header h1 small {
+  font-size: 10px !important;
+}
+
+/* コントロール切り替えボタンを表示 */
+.btn-toggle-controls {
+  display: block !important;
+}
+
+/* デフォルトでコントロールを非表示 */
+#controls.controls-hidden {
+  transform: translateY(100%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+#controls {
+  position: fixed !important;
+  top: auto !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 40vh !important;
+  border-right: none !important;
+  border-top: 1px solid var(--border-color) !important;
+  transition: transform 0.3s ease, opacity 0.3s ease !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* 【モバイル】道路エリア - 固定表示 */
+#animation-area {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 88px !important;
+  height: 120px !important;
+  bottom: auto !important;
+  flex-direction: row !important;
+}
+
+#animation-top {
+  flex: 1 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 【モバイル】スクロール可能エリア - 線分図+グラフ */
+#animation-bottom {
+  position: fixed !important;
+  top: calc(88px + 120px) !important; /* ヘッダー + 道路 */
+  left: 0 !important;
+  right: 0 !important;
+  height: 270px !important;
+  border-top: 2px solid var(--border-color) !important;
+  border-right: none !important;
+  background: linear-gradient(to bottom, #87ceeb 0%, #e8f5e9 50%, #d7ccc8 100%) !important;
+}
+
+/* 【モバイル】グラフパネル - スクロール可能 */
+#chart-panel {
+  position: fixed !important;
+  top: calc(88px + 120px + 270px) !important; /* ヘッダー + 道路 + 線分図 */
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 40vh !important; /* 設定パネルの高さ */
+  width: 100% !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  border-left: none !important;
+  border-top: 1px solid var(--border-color) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+}
+
+.chart-container {
+  min-height: 300px !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
+}
+
+/* タッチ操作改善 */
+.header-controls button,
+.btn-home,
+.btn-help,
+.btn-toggle-controls {
+  min-width: 40px !important;
+  min-height: 36px !important;
+  padding: 5px 8px !important;
+  font-size: 12px !important;
+}
+
+.btn-toggle-controls {
+  font-size: 1.2rem !important;
+}
+
+input[type="range"] {
+  height: 44px !important;
+}
+
+input[type="number"],
+select {
+  min-height: 44px !important;
+  font-size: 16px !important;
+}
+
+.ctrl-label {
+  font-size: 14px !important;
+}

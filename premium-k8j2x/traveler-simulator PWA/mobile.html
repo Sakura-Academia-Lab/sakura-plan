@@ -23,9 +23,10 @@
   <meta name="theme-color" content="#1e293b">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>旅人算シミュレーター Pro | 桜アカデミア</title>
+  <title>旅人算シミュレーター Pro (Mobile) | 桜アカデミア</title>
 
   <link rel="stylesheet" href="css/style.css?v=2.8">
+  <link rel="stylesheet" href="css/mobile.css?v=2.8">
 </head>
 
 <body>
@@ -179,17 +180,6 @@
       <div id="guide-steps"></div>
     </div>
   </div>
-
-  <script>
-    // モバイルデバイス検出 - mobile.htmlへリダイレクト
-    (function() {
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const isSmallScreen = window.innerWidth <= 768;
-      if (isMobileDevice || isSmallScreen) {
-        window.location.href = 'mobile.html';
-      }
-    })();
-  </script>
 
   <script src="js/app.js?v=2.8"></script>
   <script>
