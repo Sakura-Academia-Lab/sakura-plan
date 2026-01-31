@@ -56,6 +56,10 @@ body {
   gap: 15px;
 }
 
+.header-row.row-2 {
+  display: none;
+}
+
 #app-header h1 {
   font-size: 16px;
   font-weight: bold;
@@ -514,14 +518,28 @@ body {
     padding-bottom: 5px;
   }
 
+  .header-row.row-2 {
+    display: flex;
+    justify-content: center;
+  }
+
   #app-header h1 {
-    font-size: 14px;
+    font-size: 12px;
     flex: 1;
     text-align: left;
   }
 
+  #app-header h1 small {
+    font-size: 10px;
+  }
+
   .header-top-btns {
     flex-shrink: 0;
+  }
+
+  .header-top-btns .btn-home {
+    padding: 4px 8px;
+    font-size: 14px;
   }
 
   /* コントロール切り替えボタンを表示 */
@@ -552,12 +570,12 @@ body {
 
   /* コントロール非表示時のレイアウト */
   #controls.controls-hidden~#animation-area {
-    bottom: 30vh;
+    bottom: 21vh;
   }
 
   #controls.controls-hidden~#chart-panel {
     bottom: 0;
-    height: 30vh;
+    height: 21vh;
   }
 
   /* コントロール表示時のレイアウト */
@@ -566,7 +584,7 @@ body {
     right: 0;
     top: 100px;
     /* ヘッダーの高さに合わせる */
-    bottom: calc(40vh + 30vh);
+    bottom: calc(40vh + 21vh);
   }
 
   #animation-bottom {
@@ -579,7 +597,7 @@ body {
     left: 0;
     right: 0;
     width: 100%;
-    height: 30vh;
+    height: 21vh;
     border-left: none;
     border-top: 1px solid var(--border-color);
   }
