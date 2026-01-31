@@ -75,44 +75,68 @@ body {
 @media (orientation: landscape) {
   #app-header {
     display: grid !important;
-    /* 左(タイトル) : 中(ボタン) : 右(余白/他ボタン) を 1:2:1 の比率で分割 */
+
+    /* ★ヘッダー幅の調整★
+     * 左(タイトル) : 中(ボタン) : 右(余白) の比率
+     * 例: 1fr 2fr 1fr = タイトル25% : ボタン50% : 余白25%
+     * ボタンを左寄せにしたい場合: 0.5fr 2fr 1.5fr
+     * ボタンを右寄せにしたい場合: 1.5fr 2fr 0.5fr
+     */
     grid-template-columns: 1fr 2fr 1fr !important;
+
     align-items: center !important;
-    height: 60px !important;           /* ヘッダーの高さ（縦向きは88px） */
+
+    /* ヘッダーの高さ（縦向きは88px、横向きは60px推奨） */
+    height: 60px !important;
+
+    /* 上下左右の余白（上下6px、左右10px） */
     padding: 6px 10px !important;
-    gap: 8px !important;               /* 要素間の間隔 */
+
+    /* グリッド要素間の間隔（8px推奨） */
+    gap: 8px !important;
   }
 
-  /* タイトルエリアを左端に */
+  /* タイトルエリアを左端に配置 */
   .header-row.row-1 {
-    grid-column: 1 !important;
-    justify-content: flex-start !important;
+    grid-column: 1 !important;         /* 1列目に配置 */
+    justify-content: flex-start !important; /* 左寄せ */
     border-bottom: none !important;
     padding-bottom: 0 !important;
   }
 
-  /* ボタンエリアを中央に */
+  /* ボタンエリアを中央に配置 */
   .header-row.row-2 {
-    grid-column: 2 !important;
+    grid-column: 2 !important;         /* 2列目（中央）に配置 */
     display: flex !important;
-    justify-content: center !important;/* ボタンの配置（center=中央, flex-start=左, flex-end=右） */
+
+    /* ★ボタンの配置調整★
+     * center = 中央
+     * flex-start = 左寄せ
+     * flex-end = 右寄せ
+     * space-between = 均等配置（両端揃え）
+     * space-around = 均等配置（余白あり）
+     */
+    justify-content: center !important;
+
     flex: none !important;             /* flex:1 による押し出しを解除 */
   }
 
-  /* 右側のバランスをとるためのエリア（もしあれば） */
+  /* 右側エリア（将来の拡張用） */
   .header-top-btns {
-    grid-column: 3 !important;
+    grid-column: 3 !important;         /* 3列目に配置 */
     display: flex !important;
-    justify-content: flex-end !important;
+    justify-content: flex-end !important; /* 右寄せ */
   }
 
+  /* タイトルのフォントサイズ（9px推奨、縦向きは12px） */
   #app-header h1 {
-    font-size: 9px !important;         /* タイトルのフォントサイズ */
+    font-size: 9px !important;
     white-space: nowrap !important;    /* タイトルの改行を防ぐ */
   }
 
+  /* バージョン番号のフォントサイズ（8px推奨、縦向きは10px） */
   #app-header h1 small {
-    font-size: 8px !important;         /* バージョン番号のフォントサイズ */
+    font-size: 8px !important;
   }
 }
 
