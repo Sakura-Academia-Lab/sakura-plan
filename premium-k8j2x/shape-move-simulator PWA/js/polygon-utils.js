@@ -46,11 +46,23 @@ function getOverlapArea(shape1, shape2) {
 
   let totalArea = 0;
 
+  // デバッグ: 交差領域の構造をログ出力（最初の1回のみ）
+  if (!getOverlapArea.logged && intersection.length > 0) {
+    console.log('Intersection structure:', JSON.stringify(intersection));
+    console.log('Intersection depth:', intersection.length, intersection[0]?.length, intersection[0]?.[0]?.length);
+    getOverlapArea.logged = true;
+  }
+
   // intersection は [[[[x,y], [x,y], ...]]] の形式
   intersection.forEach(multiPolygon => {
     multiPolygon.forEach(polygon => {
       polygon.forEach(ring => {
-        totalArea += calculatePolygonArea(ring);
+        const area = calculatePolygonArea(ring);
+        totalArea += area;
+        if (!getOverlapArea.areaLogged) {
+          console.log('Ring vertices:', ring.length, 'Area:', area);
+          getOverlapArea.areaLogged = true;
+        }
       });
     });
   });
