@@ -14,6 +14,11 @@ const state = {
     time: [],
     positions: [[], [], []],
     distances: { pq: [], qr: [], pr: [] }
+  },
+  distanceLineVisibility: {
+    pq: true,
+    qr: true,
+    pr: true
   }
 };
 
@@ -43,6 +48,9 @@ function init() {
 
   window.addEventListener('resize', handleResize);
   handleResize();
+
+  // 距離グラフの凡例クリックイベント
+  distanceDiffCanvas.addEventListener('click', handleDistanceChartClick);
 
   toggleIntermittentSettings();
   updateSettings();
@@ -700,56 +708,68 @@ function drawDistanceDiffChart() {
   // データ描画（3ペアの距離）
   if (state.history.time.length > 0) {
     // P-Q間の距離（赤）
-    ctx.strokeStyle = '#ff6b6b';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    for (let j = 0; j < state.history.time.length; j++) {
-      const t = state.history.time[j];
-      const dist = state.history.distances.pq[j];
-      const x = marginLeft + (t / state.maxTime) * graphW;
-      const y = marginTop + graphH - (dist / state.distance) * graphH;
-      if (j === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    if (state.distanceLineVisibility.pq) {
+      ctx.strokeStyle = '#ff6b6b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let j = 0; j < state.history.time.length; j++) {
+        const t = state.history.time[j];
+        const dist = state.history.distances.pq[j];
+        const x = marginLeft + (t / state.maxTime) * graphW;
+        const y = marginTop + graphH - (dist / state.distance) * graphH;
+        if (j === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
 
     // Q-R間の距離（青）
-    ctx.strokeStyle = '#4facfe';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    for (let j = 0; j < state.history.time.length; j++) {
-      const t = state.history.time[j];
-      const dist = state.history.distances.qr[j];
-      const x = marginLeft + (t / state.maxTime) * graphW;
-      const y = marginTop + graphH - (dist / state.distance) * graphH;
-      if (j === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    if (state.distanceLineVisibility.qr) {
+      ctx.strokeStyle = '#4facfe';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let j = 0; j < state.history.time.length; j++) {
+        const t = state.history.time[j];
+        const dist = state.history.distances.qr[j];
+        const x = marginLeft + (t / state.maxTime) * graphW;
+        const y = marginTop + graphH - (dist / state.distance) * graphH;
+        if (j === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
 
     // P-R間の距離（緑）
-    ctx.strokeStyle = '#10b981';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    for (let j = 0; j < state.history.time.length; j++) {
-      const t = state.history.time[j];
-      const dist = state.history.distances.pr[j];
-      const x = marginLeft + (t / state.maxTime) * graphW;
-      const y = marginTop + graphH - (dist / state.distance) * graphH;
-      if (j === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    if (state.distanceLineVisibility.pr) {
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let j = 0; j < state.history.time.length; j++) {
+        const t = state.history.time[j];
+        const dist = state.history.distances.pr[j];
+        const x = marginLeft + (t / state.maxTime) * graphW;
+        const y = marginTop + graphH - (dist / state.distance) * graphH;
+        if (j === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
 
-    // 凡例
+    // 凡例（クリッカブル）
     ctx.font = 'bold 10px Arial';
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#ff6b6b';
-    ctx.fillText('P-Q', marginLeft + 5, marginTop + 15);
-    ctx.fillStyle = '#4facfe';
-    ctx.fillText('Q-R', marginLeft + 45, marginTop + 15);
-    ctx.fillStyle = '#10b981';
-    ctx.fillText('P-R', marginLeft + 85, marginTop + 15);
+
+    // P-Q凡例
+    ctx.fillStyle = state.distanceLineVisibility.pq ? '#ff6b6b' : '#ccc';
+    ctx.fillText(state.distanceLineVisibility.pq ? '✓ P-Q' : '✗ P-Q', marginLeft + 5, marginTop + 15);
+
+    // Q-R凡例
+    ctx.fillStyle = state.distanceLineVisibility.qr ? '#4facfe' : '#ccc';
+    ctx.fillText(state.distanceLineVisibility.qr ? '✓ Q-R' : '✗ Q-R', marginLeft + 55, marginTop + 15);
+
+    // P-R凡例
+    ctx.fillStyle = state.distanceLineVisibility.pr ? '#10b981' : '#ccc';
+    ctx.fillText(state.distanceLineVisibility.pr ? '✓ P-R' : '✗ P-R', marginLeft + 105, marginTop + 15);
 
     // 現在時刻マーカー
     const x = marginLeft + (state.currentTime / state.maxTime) * graphW;
@@ -901,7 +921,7 @@ function drawDiagram() {
 
           if (hitLeftEdge || hitRightEdge || i === periodEndIdx) {
             // サブセグメント描画
-            const yDirection = (personIdx === 1) ? 0 : (personIdx === 0 ? 1 : -1);
+            const yDirection = (personIdx === 0) ? 1 : -1;  // Pは上、Q・Rは下に降りる
             const yOffset = baseY + (overallSegmentIndex % 3) * segmentGap * yDirection;
 
             ctx.strokeStyle = periodColor;
@@ -1019,6 +1039,36 @@ function drawDiagram() {
 function toggleControls() {
   const controls = document.getElementById('controls');
   controls.classList.toggle('controls-hidden');
+}
+
+// ===== 距離グラフの凡例クリック処理 =====
+function handleDistanceChartClick(event) {
+  const canvas = distanceDiffCanvas;
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  const marginLeft = 50;
+  const marginTop = 15;
+
+  // 凡例のクリック範囲を定義（Y座標は15付近、X座標は各凡例の位置）
+  if (y >= marginTop - 5 && y <= marginTop + 10) {
+    // P-Q凡例: marginLeft + 5 から約40pxの範囲
+    if (x >= marginLeft + 5 && x < marginLeft + 50) {
+      state.distanceLineVisibility.pq = !state.distanceLineVisibility.pq;
+      if (!state.isPlaying) render();
+    }
+    // Q-R凡例: marginLeft + 55 から約40pxの範囲
+    else if (x >= marginLeft + 55 && x < marginLeft + 100) {
+      state.distanceLineVisibility.qr = !state.distanceLineVisibility.qr;
+      if (!state.isPlaying) render();
+    }
+    // P-R凡例: marginLeft + 105 から約40pxの範囲
+    else if (x >= marginLeft + 105 && x < marginLeft + 150) {
+      state.distanceLineVisibility.pr = !state.distanceLineVisibility.pr;
+      if (!state.isPlaying) render();
+    }
+  }
 }
 
 // ===== グローバルに公開 =====
