@@ -755,6 +755,12 @@ function drawDistanceDiffChart() {
       ctx.stroke();
     }
 
+    // 説明テキスト
+    ctx.font = '9px Arial';
+    ctx.fillStyle = '#999';
+    ctx.textAlign = 'right';
+    ctx.fillText('※凡例をクリックで表示/非表示切替', marginLeft + graphW, marginTop + 8);
+
     // 凡例（クリッカブル）
     ctx.font = 'bold 10px Arial';
     ctx.textAlign = 'left';
