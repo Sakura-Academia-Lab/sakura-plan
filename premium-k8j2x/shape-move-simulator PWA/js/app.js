@@ -362,6 +362,11 @@ function animate() {
   // 重なり面積を計算
   const overlapArea = getOverlapArea(state.fixedShape, state.movingShape);
 
+  // デバッグ用ログ（最初の数フレームのみ）
+  if (state.history.time.length < 3) {
+    console.log('Time:', state.currentTime.toFixed(2), 'Overlap Area:', overlapArea.toFixed(2));
+  }
+
   // 履歴保存
   state.history.time.push(state.currentTime);
   state.history.overlapAreas.push(overlapArea);

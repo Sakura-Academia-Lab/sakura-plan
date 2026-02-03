@@ -6,10 +6,18 @@ function getIntersection(shape1, shape2) {
   const poly2 = shape2.toPolygonClippingFormat();
 
   try {
-    const result = polygonClipping.intersection(poly1, poly2);
+    // UMDビルドではwindow.polygonClippingとして公開される
+    const pc = window.polygonClipping || polygonClipping;
+    if (!pc) {
+      console.error('polygon-clipping library not loaded');
+      return [];
+    }
+    const result = pc.intersection(poly1, poly2);
     return result; // [[[[x,y], [x,y], ...]]] 形式
   } catch (e) {
     console.error('Intersection calculation error:', e);
+    console.error('poly1:', poly1);
+    console.error('poly2:', poly2);
     return [];
   }
 }
@@ -54,7 +62,16 @@ function getOverlapArea(shape1, shape2) {
 function drawIntersection(ctx, shape1, shape2, color = 'rgba(255, 215, 0, 0.7)') {
   const intersection = getIntersection(shape1, shape2);
 
-  if (!intersection || intersection.length === 0) return;
+  if (!intersection || intersection.length === 0) {
+    // デバッグ: 交差なし
+    return;
+  }
+
+  // デバッグ: 交差あり（最初の1回のみログ）
+  if (!drawIntersection.logged) {
+    console.log('Drawing intersection:', intersection);
+    drawIntersection.logged = true;
+  }
 
   ctx.fillStyle = color;
 
