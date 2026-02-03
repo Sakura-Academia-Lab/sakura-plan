@@ -23,7 +23,7 @@
   <meta name="theme-color" content="#1e293b">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>旅人算シミュレーター Pro | 桜アカデミア</title>
+  <title>旅人算シミュレーター Pro (3人版) | 桜アカデミア</title>
 
   <link rel="stylesheet" href="css/style.css?v=2.9">
 </head>
@@ -34,7 +34,7 @@
 
   <header id="app-header">
     <div class="header-left">
-      <h1 class="app-title">旅人算シミュレーター <span style="color: var(--pro-gold);">Pro</span> <small>Ver 2.9</small></h1>
+      <h1 class="app-title">旅人算シミュレーター <span style="color: var(--pro-gold);">Pro</span> (3人版) <small>Ver 2.9</small></h1>
       <span class="header-spacer"></span>
       <span id="current-time-display" style="color: #fbbf24; font-weight: bold; font-size: 14px;">0.00秒</span>
       <button class="btn-play" onclick="startAnimation()">▶</button>
@@ -52,8 +52,8 @@
   </header>
 
   <nav class="tab-navigation">
-    <a href="index.html" class="tab-button active">2人版</a>
-    <a href="index-3person.html" class="tab-button">3人版</a>
+    <a href="index.html" class="tab-button">2人版</a>
+    <a href="index-3person.html" class="tab-button active">3人版</a>
   </nav>
 
   <aside id="controls" class="controls-hidden">
@@ -151,6 +151,45 @@
       </div>
     </div>
 
+    <div class="ctrl-group">
+      <label class="ctrl-label" style="color: #10b981;">人物R</label>
+      <div class="input-row" style="margin-bottom: 8px;">
+        <label style="min-width: 50px;">速さ</label>
+        <input type="number" id="input-speed-c" value="5" min="1" max="10" step="0.5" onchange="updateSettings()">
+        <span style="font-size: 11px; color: #666;">m/秒</span>
+      </div>
+      <div class="input-row">
+        <input type="range" id="range-speed-c" min="1" max="10" value="5" step="0.5" oninput="syncSpeedC()">
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">開始</label>
+        <select id="start-c" onchange="updateSettings()">
+          <option value="0" selected>左端 (0m)</option>
+          <option value="distance">右端</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label style="min-width: 50px;">動作</label>
+        <select id="mode-c" onchange="toggleIntermittentSettings(); updateSettings();">
+          <option value="roundTrip">往復</option>
+          <option value="stopAtEdge">端で停止</option>
+          <option value="intermittent">間欠移動</option>
+        </select>
+      </div>
+      <div id="intermittent-c" class="intermittent-settings" style="display: none;">
+        <div class="input-row" style="margin-top: 8px;">
+          <label style="min-width: 80px; font-size: 11px;">移動時間</label>
+          <input type="number" id="work-time-c" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
+        <div class="input-row">
+          <label style="min-width: 80px; font-size: 11px;">休憩時間</label>
+          <input type="number" id="rest-time-c" value="3" min="1" max="10" step="0.5" onchange="updateSettings()">
+          <span style="font-size: 11px; color: #666;">秒</span>
+        </div>
+      </div>
+    </div>
+
   </aside>
 
   <div id="animation-area">
@@ -168,7 +207,7 @@
       <canvas id="time-distance-chart"></canvas>
     </div>
     <div class="chart-container">
-      <div class="chart-title-vertical">2人の間の距離</div>
+      <div class="chart-title-vertical">各人物間の距離</div>
       <canvas id="distance-diff-chart"></canvas>
     </div>
   </div>
@@ -193,7 +232,7 @@
     })();
   </script>
 
-  <script src="js/app.js?v=2.9"></script>
+  <script src="js/app-3person.js?v=2.9"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -238,13 +277,13 @@
             <div><strong>再生：</strong>▶ボタンで動きを確認できます。</div>
           </div>
           <div class="step"><span class="step-icon">3</span>
-            <div><strong>道路：</strong>上部に2人の移動がアニメーション表示されます。</div>
+            <div><strong>道路：</strong>上部に3人の移動がアニメーション表示されます。</div>
           </div>
           <div class="step"><span class="step-icon">4</span>
             <div><strong>線分図：</strong>中央に現在の位置関係が表示されます。</div>
           </div>
           <div class="step"><span class="step-icon">5</span>
-            <div><strong>グラフ：</strong>下部に軌跡と2人の距離が表示されます。</div>
+            <div><strong>グラフ：</strong>下部に軌跡と各人物間の距離が表示されます。</div>
           </div>
         `;
       } else {
@@ -257,13 +296,13 @@
             <div><strong>再生：</strong>上部の▶ボタンで動きを確認できます。</div>
           </div>
           <div class="step"><span class="step-icon">3</span>
-            <div><strong>道路：</strong>左上に2人の移動がアニメーション表示されます。</div>
+            <div><strong>道路：</strong>左上に3人の移動がアニメーション表示されます。</div>
           </div>
           <div class="step"><span class="step-icon">4</span>
             <div><strong>線分図：</strong>左下に現在の位置関係が表示されます。</div>
           </div>
           <div class="step"><span class="step-icon">5</span>
-            <div><strong>グラフ：</strong>右側に時間-距離グラフと2人の間の距離が表示されます。</div>
+            <div><strong>グラフ：</strong>右側に時間-距離グラフと各人物間の距離が表示されます。</div>
           </div>
         `;
       }

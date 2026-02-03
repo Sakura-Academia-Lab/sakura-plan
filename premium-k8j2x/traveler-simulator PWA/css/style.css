@@ -646,3 +646,59 @@ body {
     font-size: 14px;
   }
 }
+
+/* ===== タブナビゲーション ===== */
+.tab-navigation {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 140;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab-button {
+  flex: 0 0 auto;
+  padding: 10px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--pro-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.tab-button:hover {
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--pro-text);
+}
+
+.tab-button.active {
+  color: var(--pro-gold);
+  border-bottom-color: var(--pro-gold);
+  background: rgba(251, 191, 36, 0.05);
+}
+
+/* タブがある場合のレイアウト調整 */
+body.has-tabs #controls,
+body.has-tabs #animation-area,
+body.has-tabs #chart-panel {
+  top: 84px; /* 44px (header) + 40px (tabs) */
+}
+
+@media (max-width: 768px) {
+  .tab-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
