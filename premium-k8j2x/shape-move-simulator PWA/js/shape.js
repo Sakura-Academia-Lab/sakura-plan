@@ -76,7 +76,7 @@ class Shape {
     const abs = this.getAbsoluteVertices();
     // 閉じた多角形にする（最初の点を末尾に追加）
     const closed = [...abs, abs[0]];
-    return [closed]; // [[[x1,y1], [x2,y2], ...]]
+    return [[closed]]; // [[[[x1,y1], [x2,y2], ...]]] - polygon-clipping形式
   }
 
   // Canvas描画
