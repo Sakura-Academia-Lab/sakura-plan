@@ -1,9 +1,12 @@
-const CACHE_NAME = 'traveler-simulator-pro-v2.9';
+const CACHE_NAME = 'traveler-simulator-pro-v3.1';
 const ASSETS = [
     './',
     './index.html',
+    './index-3person.html',
+    './mobile.html',
     './css/style.css',
     './js/app.js',
+    './js/app-3person.js',
     './manifest.json',
     './icons/icon-192.png'
 ];
