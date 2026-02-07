@@ -53,17 +53,17 @@ function getOverlapArea(shape1, shape2) {
     getOverlapArea.logged = true;
   }
 
-  // intersection は [[[[x,y], [x,y], ...]]] の形式
+  // polygon-clippingの結果形式: [ [ [[x,y], [x,y], ...] ] ]
+  // つまり: MultiPolygon > Polygon (= ring配列)
   intersection.forEach(multiPolygon => {
     multiPolygon.forEach(polygon => {
-      polygon.forEach(ring => {
-        const area = calculatePolygonArea(ring);
-        totalArea += area;
-        if (!getOverlapArea.areaLogged) {
-          console.log('Ring vertices:', ring.length, 'Area:', area);
-          getOverlapArea.areaLogged = true;
-        }
-      });
+      // polygon自体が頂点の配列（外側リング）
+      const area = calculatePolygonArea(polygon);
+      totalArea += area;
+      if (!getOverlapArea.areaLogged) {
+        console.log('Polygon vertices:', polygon.length, 'Area:', area);
+        getOverlapArea.areaLogged = true;
+      }
     });
   });
 
