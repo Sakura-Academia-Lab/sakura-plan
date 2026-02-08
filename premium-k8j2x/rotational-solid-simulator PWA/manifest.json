@@ -1,0 +1,21 @@
+{
+    "name": "図形の回転体シミュレーター Pro",
+    "short_name": "回転体 Pro",
+    "description": "2D図形を回転させて3Dの回転体を作成・可視化",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#1e293b",
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

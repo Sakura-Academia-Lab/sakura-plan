@@ -1,0 +1,125 @@
+:root {
+    --main-orange: #e67e22;
+    --red-pen: #e74c3c;
+    --bg-gray: #f0f3f5;
+    --border-gray: #dcdde1;
+    --sidebar-bg: #2c3e50;
+    --sidebar-hover: #34495e;
+}
+
+body {
+    font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    background: var(--bg-gray);
+    margin: 0;
+    display: flex;
+}
+
+/* サイドバー */
+#sidebar {
+    width: 250px;
+    background: var(--sidebar-bg);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    overflow-y: auto;
+    padding: 0;
+    z-index: 100;
+}
+.sidebar-header { padding: 15px; background: #1a252f; border-bottom: 1px solid #3e4f5f; }
+.sidebar-header h1 { font-size: 16px; margin: 0; }
+.nav-group-header { font-size: 13px; font-weight: bold; padding: 12px 15px; cursor: pointer; background: #34495e; border-bottom: 1px solid #2c3e50; display: flex; justify-content: space-between; }
+.nav-item { padding: 10px 20px; cursor: pointer; font-size: 12px; color: #bdc3c7; border-bottom: 1px solid #34495e; }
+.nav-item.active { background: var(--main-orange); color: white; font-weight: bold; }
+
+/* メインレイアウト */
+#main-content { margin-left: 250px; flex-grow: 1; padding: 15px; }
+.controls { display: flex; justify-content: space-between; background: white; padding: 8px 15px; border-radius: 8px; margin-bottom: 15px; }
+.tabs { display: flex; gap: 4px; }
+.tab { padding: 6px 12px; border: 1px solid var(--border-gray); background: white; cursor: pointer; border-radius: 4px; font-size: 12px; }
+.tab.active { background: var(--main-orange); color: white; }
+.btn-print { background: #27ae60; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
+
+/* A4 用紙設定 */
+.page {
+    width: 210mm;
+    height: 296mm;
+    padding: 10mm 15mm;
+    margin: 0 auto 20px;
+    background: white;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--main-orange);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+.color-exp { border-bottom-color: var(--red-pen); }
+.chapter-label { font-size: 11px; color: #7f8c8d; }
+.main-title { font-size: 20px; font-weight: bold; margin-top: 3px; }
+.info-box { display: flex; gap: 10px; align-items: flex-end; }
+.info-item { border-bottom: 1px solid #333; height: 30px; display: flex; align-items: flex-end; font-size: 11px; }
+.date-item { width: 70px; }
+.name-item { width: 130px; }
+
+.method-box {
+    background: #fdf2e9;
+    padding: 8px 12px;
+    border-left: 4px solid var(--main-orange);
+    margin-bottom: 15px;
+    font-size: 12px;
+}
+
+.problems { list-style: none; padding: 0; margin: 0; }
+.problem-item, .exp-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    border-bottom: 1px dashed var(--border-gray);
+    padding: 8px 0;
+    min-height: 55px;
+}
+
+/* ★ 5問以下の設定（暗算Bなど） */
+.few-problems .problem-item, 
+.few-problems .exp-top {
+    min-height: 90px;
+}
+.few-problems .exp-annotation {
+    min-height: 70px;
+}
+
+/* ★ 2題構成（レベル5）専用：問題用紙も解説用紙も同じ幅・高さに固定 */
+.ultra-few .problem-item, 
+.ultra-few .exp-top {
+    min-height: 110mm; /* A4の約半分弱。これで2問目が真ん中付近に来る */
+    align-items: flex-start;
+    padding-top: 20px;
+}
+.ultra-few .exp-annotation {
+    min-height: 100mm; /* 解説側の書き込みスペース */
+}
+
+.p-num { width: 40px; color: #95a5a6; font-size: 14px; flex-shrink: 0; }
+.p-content { flex-grow: 1; text-align: left; padding: 0 10px; }
+
+.answer-box-empty { width: 110px; height: 45px; border: 1px solid #333; flex-shrink: 0; }
+.ans-box-filled { width: 110px; height: 45px; border: 2px solid var(--red-pen); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ans-text { color: var(--red-pen); font-weight: bold; font-size: 18px; }
+
+.exp-unit { margin-bottom: 5px; }
+.exp-annotation { padding: 4px 0 8px 40px; min-height: 35px; }
+.handwritten-note { font-family: 'Kiwi Maru', serif; color: var(--red-pen); font-size: 13px; display: block; position: relative; padding-left: 18px; line-height: 1.4; }
+.handwritten-note::before { content: '▶'; position: absolute; left: 0; top: 2px; font-size: 9px; }
+
+@media print {
+    #sidebar, .controls { display: none !important; }
+    #main-content { margin-left: 0; padding: 0; }
+    .page { margin: 0; box-shadow: none; width: 100%; border: none; }
+    .page-break { page-break-after: always; }
+}

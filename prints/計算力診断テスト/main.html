@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>中学受験 計算力完成システム 2.0</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="sidebar">
+    <div class="sidebar-header">
+        <h1>計算力完成プリント</h1>
+        <p>Thought Partner Generated</p>
+    </div>
+    <div id="menu-container"></div>
+</div>
+
+<div id="main-content">
+    <div class="controls">
+        <div class="tabs" id="pattern-tabs">
+            <button class="tab active" onclick="setPattern(0)">パターンA</button>
+            <button class="tab" onclick="setPattern(1)">パターンB</button>
+            <button class="tab" onclick="setPattern(2)">パターンC</button>
+            <button class="tab" onclick="setPattern(3)">パターンD</button>
+            <button class="tab" onclick="setPattern(4)">パターンE</button>
+        </div>
+        <div class="actions">
+            <button class="btn-print" onclick="window.print()">印刷用レイアウトを表示</button>
+        </div>
+    </div>
+    <div id="sheet-area"></div>
+</div>
+
+<script>
+    window.curriculumData = [];
+    let activeUnitIdx = 0;
+    let activePatternIdx = 0;
+    let openLevels = new Set(); 
+
+    function addData(unitData) {
+        window.curriculumData.push(unitData);
+        if(window.curriculumData.length === 1) {
+            openLevels.add(unitData.chapter);
+            renderMenu();
+            renderSheet();
+        } else {
+            renderMenu();
+        }
+    }
+
+    function formatLevelName(chapterName) {
+        return chapterName.replace(/第(\d+)章/, "レベル$1");
+    }
+
+    function renderMenu() {
+        const container = document.getElementById('menu-container');
+        container.innerHTML = '';
+        let lastChapter = "";
+        let currentWrapper = null;
+
+        window.curriculumData.forEach((unit, idx) => {
+            const chapterName = unit.chapter; 
+
+            if(chapterName !== lastChapter) {
+                lastChapter = chapterName;
+                const displayLevel = formatLevelName(chapterName);
+                const isOpen = openLevels.has(chapterName);
+
+                const header = document.createElement('div');
+                header.className = 'nav-group-header';
+                header.innerHTML = `
+                    <span>${displayLevel}</span>
+                    <span class="toggle-icon">${isOpen ? '▼' : '▶'}</span>
+                `;
+                
+                header.onclick = () => {
+                    if(openLevels.has(chapterName)) {
+                        openLevels.delete(chapterName);
+                    } else {
+                        openLevels.add(chapterName);
+                    }
+                    renderMenu();
+                };
+                container.appendChild(header);
+
+                currentWrapper = document.createElement('div');
+                currentWrapper.className = 'nav-level-wrapper';
+                currentWrapper.style.display = isOpen ? 'block' : 'none';
+                container.appendChild(currentWrapper);
+            }
+
+            const item = document.createElement('div');
+            item.className = `nav-item ${idx === activeUnitIdx ? 'active' : ''}`;
+            item.innerText = unit.title;
+            item.onclick = (e) => {
+                e.stopPropagation();
+                activeUnitIdx = idx;
+                renderMenu();
+                renderSheet();
+            };
+            currentWrapper.appendChild(item);
+        });
+    }
+
+    function setPattern(idx) {
+        activePatternIdx = idx;
+        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+        renderSheet();
+    }
+
+    function renderSheet() {
+        if (window.curriculumData.length === 0) return;
+        const unit = window.curriculumData[activeUnitIdx];
+        const pattern = unit.patterns[activePatternIdx];
+        const area = document.getElementById('sheet-area');
+        const label = String.fromCharCode(65 + activePatternIdx);
+
+        // 問題数に応じたレイアウト選択
+        let layoutClass = '';
+        if (pattern.problems.length <= 2) {
+            layoutClass = 'ultra-few'; // レベル5用：110mm余白
+        } else if (pattern.problems.length <= 5) {
+            layoutClass = 'few-problems'; // 暗算Bなど：90px余白
+        }
+
+        area.innerHTML = `
+            <div class="page page-break">
+                <div class="header">
+                    <div class="title-area">
+                        <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
+                        <div class="main-title">${unit.title} <span class="pattern-label">【${label}】</span></div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-item date-item">月　日</div>
+                        <div class="info-item name-item">名前</div>
+                    </div>
+                </div>
+                <div class="method-box">目標：${unit.method}</div>
+                <ul class="problems ${layoutClass}">
+                    ${pattern.problems.map((p, i) => `
+                        <li class="problem-item">
+                            <span class="p-num">(${i+1})</span>
+                            <div class="p-content">\\(${p}\\)</div>
+                            <div class="answer-box-empty"></div>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+
+            <div class="page">
+                <div class="header color-exp">
+                    <div class="title-area">
+                        <span class="chapter-label">解答と指導ポイント</span>
+                        <div class="main-title">${unit.title} <span class="pattern-label">【${label}】解説</span></div>
+                    </div>
+                </div>
+                <div class="explanation-container ${layoutClass}">
+                    ${pattern.problems.map((p, i) => `
+                        <div class="exp-unit">
+                            <div class="exp-top">
+                                <span class="p-num">(${i+1})</span>
+                                <div class="p-content">\\(${p}\\)</div>
+                                <div class="ans-box-filled">
+                                    <span class="ans-text">${pattern.answers[i]}</span>
+                                </div>
+                            </div>
+                            <div class="exp-annotation">
+                                ${pattern.annotations[i] ? `<span class="handwritten-note">${pattern.annotations[i]}</span>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        if (window.MathJax) MathJax.typeset(); 
+    }
+</script>
+
+<script src="ch1_u1_add32.js"></script>
+<script src="ch1_u2_mul21.js"></script>
+<script src="ch1_u3_frac_addsub.js"></script>
+<script src="ch1_u4_mixed_addsub.js"></script>
+<script src="ch1_u5_dec_to_frac.js"></script>
+<script src="ch1_u6_test_sim.js"></script>
+<script src="ch2_1_distributive.js"></script>
+<script src="ch2_2_mixed_calc.js"></script>
+<script src="ch2_3_decomposition.js"></script>
+<script src="ch2_4_test_sim.js"></script>
+<script src="ch3_1_frac_rev.js"></script>
+<script src="ch3_2_int_rev_comp.js"></script>
+<script src="ch3_3_mixed_rev_comp.js"></script>
+<script src="ch3_4_test_sim.js"></script>
+<script src="ch4_1_mental_a.js"></script>
+<script src="ch4_2_mental_b.js"></script>
+<script src="ch4_4_test_sim.js"></script>
+<script src="ch5_1_advanced_rev.js"></script>
+<script src="ch5_2_advanced_mix.js"></script>
+<script src="ch5_3_test_sim.js"></script>
+
+</body>
+</html>

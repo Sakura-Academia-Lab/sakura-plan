@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-YV5WWWG39Z');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通過算シミュレーター Pro | Sakura Academia</title>
+    <link rel="stylesheet" href="../core/css/portal.css?v=2.4">
+    <link rel="stylesheet" href="./css/style.css?v=1.0">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e293b">
+</head>
+
+<body class="has-tabs">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- ========================================
+         ヘッダーセクション
+    ======================================== -->
+    <header id="app-header">
+        <div class="header-left">
+            <button class="btn-play" onclick="startAnimation()">▶ 再生</button>
+            <button class="btn-pause" onclick="pauseAnimation()">Ⅱ 停止</button>
+            <button class="btn-reset" onclick="resetAnimation()">↺ 戻す</button>
+            <span class="header-spacer"></span>
+            <span id="current-time-display">0.00秒</span>
+        </div>
+        <div class="header-top-btns">
+            <a href="../index.html" class="btn-home">Premium Home</a>
+            <button class="btn-help" onclick="toggleGuide()">使い方</button>
+        </div>
+    </header>
+
+    <!-- ========================================
+         タブナビゲーション
+    ======================================== -->
+    <nav class="tab-navigation">
+        <a href="#" class="tab-button active">通過算</a>
+    </nav>
+
+    <main>
+        <!-- ========================================
+             コントロールパネル（左サイド）
+        ======================================== -->
+        <aside id="controls">
+            <!-- 鉄道Aの設定 -->
+            <div class="ctrl-group">
+                <span class="ctrl-label">列車 A (赤)</span>
+                <div class="input-row">
+                    <label>長さ(m):</label>
+                    <input type="number" id="train-a-length" value="100" step="10" onchange="updateSettings()">
+                </div>
+                <div class="input-row">
+                    <label>速度(km/h):</label>
+                    <input type="number" id="train-a-speed" value="72" step="1" onchange="updateSettings()">
+                </div>
+            </div>
+
+            <!-- 鉄道B/対象物の設定 -->
+            <div class="ctrl-group">
+                <span class="ctrl-label">列車 B / 対象物 (青)</span>
+                <div class="input-row">
+                    <label>モード:</label>
+                    <select id="target-mode" onchange="updateSettings()">
+                        <option value="train">列車 (移動可能)</option>
+                        <option value="station">駅・プラットホーム</option>
+                        <option value="tunnel">トンネル</option>
+                        <option value="bridge">鉄橋</option>
+                        <option value="person">電柱・立っている人</option>
+                    </select>
+                </div>
+                <div class="input-row">
+                    <label>長さ(m):</label>
+                    <input type="number" id="train-b-length" value="100" step="10" onchange="updateSettings()">
+                </div>
+                <div class="input-row" id="train-b-speed-row">
+                    <label>速度(km/h):</label>
+                    <input type="number" id="train-b-speed" value="36" step="1" onchange="updateSettings()">
+                </div>
+                <div class="input-row" id="train-b-direction-row">
+                    <label>方向:</label>
+                    <select id="train-b-direction" onchange="updateSettings()">
+                        <option value="same">同じ方向</option>
+                        <option value="opposite">反対方向</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 全体設定 -->
+            <div class="ctrl-group">
+                <span class="ctrl-label">シミュレーション設定</span>
+                <div class="input-row">
+                    <label>開始距離(m):</label>
+                    <input type="number" id="start-distance" value="200" step="10" onchange="updateSettings()">
+                </div>
+                <div class="input-row">
+                    <label>再生速度:</label>
+                    <select id="time-scale" onchange="updateTimeScale()">
+                        <option value="0.2">0.2x (ゆっくり)</option>
+                        <option value="0.5">0.5x</option>
+                        <option value="1.0" selected>1.0x (標準)</option>
+                        <option value="2.0">2.0x</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========================================
+             アニメーションエリア
+        ======================================== -->
+        <section id="animation-area">
+            <div id="animation-top">
+                <canvas id="animation-canvas"></canvas>
+            </div>
+            <div id="animation-bottom">
+                <canvas id="diagram-canvas"></canvas>
+            </div>
+        </section>
+
+        <!-- ========================================
+             グラフパネル（右サイド）
+        ======================================== -->
+        <section id="chart-panel">
+            <div class="chart-container">
+                <div class="chart-title-vertical">時間-距離</div>
+                <canvas id="time-distance-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title-vertical">2つの距離</div>
+                <canvas id="distance-diff-chart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================
+         ガイドモーダル
+    ======================================== -->
+    <div id="guide-modal" style="display:none;">
+        <div id="guide-overlay" onclick="toggleGuide()"></div>
+        <div id="guide-content">
+            <button class="btn-close" onclick="toggleGuide()">&times;</button>
+            <h3>通過算シミュレーターの使い方</h3>
+            <div class="step">
+                <div class="step-icon">1</div>
+                <div><strong>設定を調整</strong>：列車の長さや速度、対象物の種類を選びます。</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">2</div>
+                <div><strong>再生ボタン</strong>：アニメーションが開始され、グラフがリアルタイムに描画されます。</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">3</div>
+                <div><strong>グラフを確認</strong>：いつ、どの位置で通過が完了するかを視覚的に理解できます。</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/app.js?v=1.0"></script>
+    <script>
+        // PWAの登録
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-YV5WWWG39Z');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>図形の回転体シミュレーター Pro | Sakura Academia</title>
+    <link rel="stylesheet" href="../core/css/portal.css?v=2.4">
+    <link rel="stylesheet" href="./css/style.css?v=1.0">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e293b">
+
+    <!-- Three.js CDN -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+
+<body class="has-tabs">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <header id="app-header">
+        <div class="header-left">
+            <button class="btn-play" onclick="startRotation()">▶ 回転開始</button>
+            <button class="btn-pause" onclick="stopRotation()">Ⅱ 停止</button>
+            <button class="btn-reset" onclick="resetSolid()">↺ リセット</button>
+            <span class="header-spacer"></span>
+            <span id="rotation-display">0°</span>
+        </div>
+        <div class="header-top-btns">
+            <a href="../index.html" class="btn-home">Premium Home</a>
+            <button class="btn-help" onclick="toggleGuide()">使い方</button>
+        </div>
+    </header>
+
+    <nav class="tab-navigation">
+        <a href="#" class="tab-button active">回転体</a>
+    </nav>
+
+    <main>
+        <aside id="controls">
+            <div class="ctrl-group">
+                <span class="ctrl-label">基本図形の選択</span>
+                <div class="input-row">
+                    <select id="preset-shape" onchange="applyPreset()">
+                        <option value="rectangle">長方形</option>
+                        <option value="right-triangle">直角三角形</option>
+                        <option value="isosceles-triangle">二等辺三角形</option>
+                        <option value="semicircle">半円</option>
+                        <option value="trapezoid">台形</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="ctrl-group">
+                <span class="ctrl-label">サイズの調整</span>
+                <div class="input-row">
+                    <label>幅 (W):</label>
+                    <input type="number" id="shape-width" value="50" step="5" onchange="updateShape()">
+                </div>
+                <div class="input-row">
+                    <label>高さ (H):</label>
+                    <input type="number" id="shape-height" value="100" step="5" onchange="updateShape()">
+                </div>
+                <div class="input-row">
+                    <label>回転軸離隔:</label>
+                    <input type="number" id="shape-offset" value="0" step="5" onchange="updateShape()">
+                </div>
+            </div>
+
+            <div class="ctrl-group">
+                <span class="ctrl-label">表示設定</span>
+                <div class="input-row">
+                    <label>不透明度:</label>
+                    <input type="range" id="opacity-range" min="0" max="1" step="0.1" value="0.7"
+                        oninput="updateOpacity()">
+                </div>
+                <div class="input-row">
+                    <label><input type="checkbox" id="show-wireframe" onchange="updateWireframe()"> ワイヤーフレーム</label>
+                </div>
+            </div>
+        </aside>
+
+        <section id="animation-area">
+            <div id="animation-top">
+                <!-- 3D View (Three.js) -->
+                <div id="three-container"></div>
+            </div>
+            <div id="animation-bottom">
+                <!-- 2D Editor / Profile View -->
+                <canvas id="profile-canvas"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <div id="guide-modal" style="display:none;">
+        <div id="guide-overlay" onclick="toggleGuide()"></div>
+        <div id="guide-content">
+            <button class="btn-close" onclick="toggleGuide()">&times;</button>
+            <h3>回転体シミュレーターの使い方</h3>
+            <div class="step">
+                <div class="step-icon">1</div>
+                <div><strong>図形を選ぶ</strong>：長方形や三角形など、回転させる図形を選びます。</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">2</div>
+                <div><strong>サイズを変える</strong>：幅や高さを変えると、リアルタイムに図形が変化します。</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">3</div>
+                <div><strong>回転させる</strong>：回転させるとどのような立体ができるか、3Dで確認できます。</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/app.js?v=1.0"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
+</body>
+
+</html>

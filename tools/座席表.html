@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>座席表作成 v116 (究極・完全復元版)</title>
+    <style>
+        /* =========================================
+           🔧 デザイン微調整用の変数（ここを書き換えてカスタマイズ可能）
+           ========================================= */
+        :root {
+            --bg-color: #f8fafc;      /* 背景の色（薄いグレー） */
+            --panel-bg: #ffffff;      /* パネルの色（白） */
+            --text-main: #334155;     /* 文字のメイン色（濃いグレー） */
+            --accent-primary: #3b82f6; /* アクセントカラー（青） */
+            --border-color: #cbd5e1;  /* 枠線の色（薄いグレー） */
+
+            /* --- 机のサイズ（画面上のスライダーで変わります） --- */
+            --seat-width: 100px;      /* 机の横幅（標準100px） */
+            --seat-height: 70px;      /* 机の縦幅（標準70px） */
+
+            /* --- サイドバーの設定 --- */
+            --sidebar-width: 340px;   /* 左側のメニューの横幅 */
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+            margin: 0; background-color: var(--bg-color); color: var(--text-main);
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        /* --- ヘッダー（v104を完全継承） --- */
+        header {
+            background: var(--panel-bg); padding: 8px 15px 0 15px;
+            border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 8px; z-index: 200;
+        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+        .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
+
+        .group-control-area {
+            display: flex; align-items: center; gap: 5px; background: #eff6ff; 
+            padding: 4px 10px; border-radius: 6px; border: 1px solid #bfdbfe;
+        }
+        .group-select { font-weight: bold; padding: 4px; border-radius: 4px; border: 1px solid var(--accent-primary); color: #1e40af; max-width: 180px; }
+        
+        .tab-bar { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 0; align-items: flex-end; }
+        .tab {
+            padding: 8px 20px; background: #e2e8f0; border-radius: 8px 8px 0 0;
+            cursor: grab; font-weight: bold; color: #64748b; border: 1px solid var(--border-color); border-bottom: none;
+            user-select: none; white-space: nowrap; display: flex; align-items: center; gap: 8px; position: relative;
+            transition: background 0.1s;
+        }
+        .tab.active {
+            background: #fff; color: var(--accent-primary); border-top: 3px solid var(--accent-primary);
+            margin-bottom: -1px; z-index: 2; padding-top: 5px; cursor: default;
+        }
+        .tab.db-tab { background: #334155; color: #fff; border: none; cursor: pointer; }
+        .tab.db-tab.active { background: #0f172a; border-top: 3px solid #000; }
+        .tab-close { width: 16px; height: 16px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; justify-content: center; align-items: center; font-size: 10px; opacity: 0; transition: 0.2s; cursor: pointer; margin-left: 5px; }
+        .tab:hover .tab-close { opacity: 1; }
+        .add-tab-btn { padding: 6px 12px; background: #f1f5f9; border-radius: 6px; cursor: pointer; border: 1px solid var(--border-color); font-weight: bold; margin-left: 5px; }
+
+        /* --- メインコンテナ --- */
+        .main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .sidebar { width: var(--sidebar-width); background: #fff; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 100; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        .sidebar-content { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow: hidden; }
+
+        .canvas-area { flex: 1; background-color: #fff; position: relative; display: flex; flex-direction: column; }
+        .canvas-top-bar { height: 50px; flex-shrink: 0; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 150; }
+        
+        .toolbar-group { display: flex; gap: 2px; align-items: center; margin-right: 8px; border-right: 1px solid var(--border-color); padding-right: 8px; flex-shrink: 0; }
+        .toolbar-label { font-size: 0.7rem; color: #64748b; margin-right: 4px; font-weight: bold; display:flex; align-items:center; gap:2px; white-space: nowrap; }
+        
+        .tool-btn { padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; border: 1px solid var(--border-color); cursor: pointer; background: #fff; color: #475569; position: relative; white-space: nowrap; flex-shrink: 0; }
+        .tool-btn:hover { background: #e2e8f0; transform: translateY(-1px); }
+        .tool-btn.active { background: var(--accent-primary); color: #fff; border-color: #1d4ed8; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+
+        .canvas-scroll { flex: 1; overflow: auto; position: relative; background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px); background-size: 20px 20px; }
+        
+        /* ハンコモード時のカーソル */
+        body[data-stamp="true"] .canvas-scroll, body[data-stamp="true"] .desk, body[data-stamp="true"] .student-card { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="rgba(239, 68, 68, 0.2)" stroke="%23dc2626" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="%23dc2626"/></svg>') 16 16, crosshair !important; }
+
+        button { padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-color); background: #fff; cursor: pointer; font-weight: bold; font-size: 0.9rem; white-space: nowrap; }
+        button.primary { background: #1e293b; color: #fff; border-color: #0f172a; }
+        button.danger { background: #fef2f2; color: #ef4444; border-color: #fca5a5; }
+
+        textarea { width: 100%; height: 100px; padding: 5px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.85rem; }
+        input, select { padding: 5px; border-radius: 4px; border: 1px solid var(--border-color); width: 100%; font-size: 0.9rem; }
+        
+        .adv-settings { background: #f1f5f9; padding: 10px; border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem; }
+        .mode-switch-container { display: flex; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
+        .mode-btn { flex: 1; padding: 8px 4px; border: none; background: #f1f5f9; cursor: pointer; font-weight: bold; color: #64748b; font-size: 0.85rem; }
+        .mode-btn.active { background: var(--accent-primary); color: white; }
+
+        /* --- 📏 机とカードの設計（ここがサイズ連動の要） --- */
+        .desk {
+            width: var(--seat-width); height: var(--seat-height);
+            border: 1px solid #94a3b8; border-radius: 4px;
+            position: absolute; background: #fff;
+            display: flex; justify-content: center; align-items: center; z-index: 10;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.05); transition: width 0.1s, height 0.1s, top 0.2s, left 0.2s;
+        }
+        body[data-mode="layout"] .desk { cursor: move; border: 2px dashed var(--accent-primary); background: #eff6ff; z-index: 50; }
+
+        .student-card {
+            width: 100%; height: 100%; position: relative;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: grab; user-select: none; box-sizing: border-box; padding: 2px;
+        }
+        .student-card.is-trial { background: #fff7ed; border: 1px dashed #f97316; border-radius: 3px; }
+        
+        /* 名前とかな： calc命令で机の幅に応じて自動で大きくなる */
+        .student-card .name { 
+            font-weight: 800; line-height: 1.1; 
+            font-size: calc(var(--seat-width) * 0.16); /* 名前のフォント：机の幅の16% */
+            text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 95%;
+        }
+        .student-card .kana { 
+            font-size: calc(var(--seat-width) * 0.09); /* ふりがな：机の幅の9% */
+            color: #475569; margin-bottom: 2px; display: block; 
+        }
+
+        /* バッジ（四隅のマーク）：これもサイズ連動 */
+        .corner-badge {
+            position: absolute; 
+            width: calc(var(--seat-width) * 0.18); height: calc(var(--seat-width) * 0.18);
+            display: flex; justify-content: center; align-items: center;
+            font-size: calc(var(--seat-width) * 0.1); font-weight: bold;
+            border: 1px solid #cbd5e1; background: #fff; color: #334155;
+            z-index: 20; border-radius: 3px;
+        }
+        .badge-tl { top: -6px; left: -6px; } .badge-tr { top: -6px; right: -6px; } 
+        .badge-bl { bottom: -6px; left: -6px; display: none; } .badge-br { bottom: -6px; right: -6px; } 
+        body.show-courses .badge-bl { display: flex; }
+
+        .badge-male { background: #dbeafe; color: #1e40af; } .badge-female { background: #fce7f3; color: #9d174d; }
+        .badge-sep-red { border: 2px solid #ef4444; color: #b91c1c; } .badge-sep-blue { border: 2px solid #3b82f6; color: #1e40af; } .badge-sep-yellow { border: 2px solid #eab308; color: #854d0e; }
+        .badge-grp-g1 { background: #ffedd5; color: #c2410c; } .badge-grp-g2 { background: #f3e8ff; color: #7e22ce; } .badge-grp-g3 { background: #cffafe; color: #0e7490; } .badge-grp-g4 { background: #fce7f3; color: #9d174d; }
+        .badge-pref-front { background: #ddd6fe; color: #4c1d95; } .badge-pref-back { background: #fed7aa; color: #7c2d12; }
+
+        #db-view { display: none; padding: 20px; overflow: auto; background: #f8fafc; width: 100%; height: 100%; }
+        #db-view.active { display: block; }
+        table.db-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 0.9rem; }
+        table.db-table th, table.db-table td { border: 1px solid var(--border-color); padding: 8px; }
+
+        #stockpile-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; margin-top: 5px; border-top: 2px solid #e2e8f0; padding-top: 5px; min-height: 150px; }
+        #stockpile { flex: 1; overflow-y: auto; border: 2px solid var(--border-color); background: #f1f5f9; padding: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; align-content: flex-start; border-radius: 6px; }
+        .stock-item { height: 50px; background: #fff; border: 1px solid var(--border-color); border-radius: 4px; }
+        
+        #room-container { position: absolute; transform-origin: center center; transition: transform 0.3s; }
+        
+        /* --- 教壇エリア（黒板＋教室名）連動設定 --- */
+        .front-area-container {
+            position: absolute; width: 500px; height: 40px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            top: 20px; z-index: 5;
+        }
+        .blackboard { width: 300px; height: 30px; background: #14532d; color: white; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .class-name-box { width: 130px; height: 30px; border: 1px solid #000; background: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.8rem; }
+
+        #room-container.mirrored { transform: rotate(180deg); }
+        #room-container.mirrored .desk, #room-container.mirrored .front-area-container { transform: rotate(-180deg); }
+
+        #student-trash { margin-top: 20px; padding: 20px; border: 2px dashed #f87171; background: #fef2f2; color: #ef4444; text-align: center; border-radius: 6px; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
+        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 4px; padding: 16px; position: fixed; z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%); }
+        #toast.show { visibility: visible; }
+
+        /* ヘルプ（ガイド）画面 */
+        #help-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center; }
+        #help-content { background:white; width:800px; max-height:90vh; overflow-y:auto; padding:30px; border-radius:10px; position:relative; }
+        #help-content h2 { margin-top: 0; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; color: #1e3a8a; }
+        #help-content h3 { margin-top: 25px; color: #1e40af; border-left: 5px solid #3b82f6; padding-left: 10px; background: #eff6ff; padding: 5px 10px; }
+        .help-close { position:absolute; top:15px; right:20px; font-size:24px; cursor:pointer; color: #64748b; }
+
+        /* =========================================
+           🖨️ 印刷エンジン（指示反映・余白極小・縮小なし版）
+           ========================================= */
+        @media print {
+            @page { size: A4 landscape; margin: 0mm; } /* 余白をゼロにして紙をフル活用 */
+            html, body { width: 100%; height: 100%; margin: 0; padding: 0; background: white; }
+            header, .sidebar, .canvas-top-bar, #toast, .main-container { display: none !important; }
+            
+            #print-area { display: block !important; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: white; }
+            
+            .print-page { 
+                width: 297mm; height: 210mm; page-break-after: always;
+                display: flex; flex-direction: column; align-items: center;
+                position: relative; overflow: hidden; padding: 0mm;
+            }
+            .print-page.student { justify-content: center; } /* 生徒側：中央配置 */
+            .print-page.teacher { justify-content: flex-start; padding-top: 5px; } /* 先生側：上に詰める */
+
+            .print-title { display: none !important; } /* タイトルヘッダーを完全に消去 */
+            .print-room { position: relative; border: none !important; margin: 0 auto; background: #fff; } /* 教室の外枠もなし */
+            
+            .desk { border: 2px solid #000 !important; background: #fff !important; }
+            .class-name-box { border: 2px solid #000 !important; background: #fff !important; color: #000 !important; }
+
+            /* 指示：生徒用はふりがな無し */
+            .print-page.student .kana { display: none !important; }
+            .print-page.teacher .kana { display: block !important; color: #000 !important; }
+            .print-page.student .corner-badge { display: none !important; }
+            
+            /* 先生側の位置関係修正：教壇セットを下（教卓側）へ */
+            .print-page.teacher .front-area-container { top: auto !important; bottom: 5px !important; flex-direction: row-reverse; }
+            .print-page.teacher .corner-badge { border: 1px solid #000 !important; color: #000 !important; font-weight: bold; background: #fff !important; }
+        }
+    </style>
+</head>
+<body data-mode="seating">
+
+<div id="toast">通知</div>
+
+<div id="help-modal">
+    <div id="help-content">
+        <span class="help-close" onclick="document.getElementById('help-modal').style.display='none'">&times;</span>
+        <h2>📖 座席表作成 v116 究極マニュアル</h2>
+        <p>Excelの名簿から一瞬できれいな座席表を作れるツールです。v104の全機能を保持しています。</p>
+        
+        <h3>1. 名簿の準備 (🗃 DBモード)</h3>
+        <p>Excelなどの名簿をコピーして貼り付け、「一括登録」します。番号が同じ生徒は自動で上書き更新されます。</p>
+
+        <h3>2. 机を並べる (📐 モード)</h3>
+        <p>「並べ直す」で行列を指定します。<strong>「机のサイズ」</strong>の数字を大きくすると、名前の文字サイズも自動で大きくなります！大きさを戻す時は「リセット」ボタンで100x70に戻ります。</p>
+
+        <h3>3. 席を自動で決める (📛 モード)</h3>
+        <p>ツールバーの「赤(離)」や「固(固定)」をスタンプ（ハンコ）のように生徒に押せます。その条件を守ったまま「ランダム」や「五十音」で自動席替えができます。</p>
+
+        <h3>4. 印刷する (🖨 印刷)</h3>
+        <p>余白を限界まで削っているので、大きくした机も紙いっぱいに迫力満点に印刷されます。<br>
+        <strong>生徒用：</strong>名前だけでスッキリ。ふりがな無し。<br>
+        <strong>先生用：</strong>全情報あり。教卓から見た配置（180度回転）で出力されます。</p>
+        <button class="primary" onclick="document.getElementById('help-modal').style.display='none'">閉じる</button>
+    </div>
+</div>
+
+<header>
+    <div class="header-top">
+        <div style="font-weight: bold; font-size:1.2rem;">座席表作成 v116</div>
+        <div class="header-actions">
+            <div class="group-control-area">
+                📅 <select id="groupSelect" class="group-select" onchange="app.switchGroup(this.value)"></select>
+                <button onclick="app.addGroup()">新規</button>
+                <button onclick="app.duplicateGroup()">複製</button>
+                <button onclick="app.renameGroup()">名前</button>
+                <button onclick="app.deleteGroup()" class="danger">削除</button>
+            </div>
+            <button onclick="document.getElementById('help-modal').style.display='flex'" class="info">ガイド</button>
+            <button onclick="app.downloadData()" class="success">保存</button>
+            <button onclick="document.getElementById('fileLoader').click()" class="success">読込</button>
+            <input type="file" id="fileLoader" style="display:none" onchange="app.loadFromFile(this)">
+            <button onclick="app.printLayouts()" class="primary" style="padding:4px 12px;">🖨 印刷</button>
+        </div>
+    </div>
+    <div class="tab-bar" id="tabBar"></div>
+</header>
+
+<div class="main-container">
+    <div id="db-view">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <h2>🗃 生徒データベース</h2>
+            <textarea id="dbInput" placeholder="番号 氏名 氏名かな 性別 コース"></textarea>
+            <div style="margin: 10px 0; display:flex; gap:10px;">
+                <button class="primary" onclick="app.importToDB()">一括登録</button>
+                <button class="danger" onclick="app.clearDB()">全削除</button>
+            </div>
+            <table class="db-table">
+                <thead><tr><th>No.</th><th>氏名</th><th>ふりがな</th><th>性別</th><th>操作</th></tr></thead>
+                <tbody id="dbTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="class-view" style="display: flex; flex: 1;">
+        <div class="sidebar">
+            <div style="padding: 10px; border-bottom: 1px solid #eee; background: #f8fafc;">
+                <div class="mode-switch-container">
+                    <button id="btn-seating" class="mode-btn active" onclick="app.setMode('seating')">📛 生徒配置</button>
+                    <button id="btn-layout" class="mode-btn" onclick="app.setMode('layout')">📐 机配置</button>
+                    <button id="btn-entry" class="mode-btn" onclick="app.setMode('entry')">📝 生徒登録</button>
+                </div>
+            </div>
+
+            <div id="side-seating" class="sidebar-content">
+                <div class="adv-settings">
+                    <strong>⚙ 自動席替えロジック (v104完全復元)</strong>
+                    <div style="margin-top:5px;">
+                        男女配置: <select id="genderRule" style="width:100%;">
+                            <option value="none">指定なし</option>
+                            <option value="checker">市松模様</option>
+                            <option value="split_fb_m_front">男子前・女子後</option>
+                            <option value="split_fb_f_front">女子前・男子後</option>
+                        </select>
+                    </div>
+                    <div style="margin-top:8px; padding:8px; background:#fff; border:1px solid #cbd5e1; border-radius:4px;">
+                        <label style="font-weight:bold;">🤝 コース改行</label>
+                        <select id="groupSortOrder">
+                            <option value="row_priority">行優先 (横)</option>
+                            <option value="col_priority">列優先 (縦)</option>
+                        </select>
+                        <div class="setting-row"><label><input type="checkbox" id="groupNewLine"> 切れ目で改行</label></div>
+                    </div>
+                    <div style="display:flex; gap:5px; margin-top:8px;">
+                        <button onclick="app.autoSeat('kana')" style="flex:1;">五十音順</button>
+                        <button onclick="app.autoSeat('random')" style="flex:1;">ランダム</button>
+                    </div>
+                </div>
+                <div id="stockpile-area">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong>待機中</strong>
+                        <button onclick="app.resetAllocations()" class="danger" style="padding:2px 4px; font-size:0.7rem;">全員外す</button>
+                    </div>
+                    <div id="stockpile"></div>
+                </div>
+            </div>
+
+            <div id="side-layout" class="sidebar-content" style="display:none;">
+                <label>教室名 <input type="text" id="classNameInput" onchange="app.renameClass()"></label>
+                <div class="adv-settings">
+                    <strong>📐 机のサイズ変更 (文字も自動で拡大)</strong>
+                    <div style="display:flex; gap:5px; margin-top:5px; align-items:center; flex-wrap: wrap;">
+                        W: <input type="number" id="seatWidthInput" value="100" style="width:60px;" oninput="app.updateSeatSize()"> 
+                        H: <input type="number" id="seatHeightInput" value="70" style="width:60px;" oninput="app.updateSeatSize()">
+                        <button onclick="app.resetSeatSize()" style="font-size:0.7rem; padding:2px 5px;">リセット</button>
+                    </div>
+                </div>
+                <hr>
+                <label>行列指定リセット
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <input type="number" id="rowsInput" value="5" style="width:50px;">行 × <input type="number" id="colsInput" value="6" style="width:50px;">列
+                    </div>
+                </label>
+                <button onclick="app.initDesks()" style="margin-top:5px;">並べ直す</button>
+                <div id="trash-area" style="padding:20px; border:2px dashed #f87171; text-align:center; color:#f87171;">🗑 机を削除</div>
+            </div>
+
+            <div id="side-entry" class="sidebar-content" style="display:none;">
+                <div style="padding:10px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:6px;">
+                    <strong>番号で追加</strong>
+                    <textarea id="importInput" style="height:60px; margin-top:5px;"></textarea>
+                    <button onclick="app.importStudents()" class="primary" style="margin-top:5px;">追加</button>
+                </div>
+                <div style="padding:10px; background:#fff7ed; border:1px solid #fdba74; border-radius:6px; margin-top:10px;">
+                    <strong>✨ 体験生を追加</strong>
+                    <input type="text" id="trialName" placeholder="氏名" style="margin-top:5px;">
+                    <input type="text" id="trialKana" placeholder="ふりがな" style="margin-top:5px;">
+                    <select id="trialGender" style="margin-top:5px;"><option value="male">男</option><option value="female">女</option></select>
+                    <button onclick="app.addTrialStudent()" class="primary" style="margin-top:5px; background:#f97316;">追加</button>
+                </div>
+                <div id="student-trash">🗑 ドラッグで削除</div>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div class="canvas-top-bar">
+                <div style="display:flex; align-items:center;">
+                    <label class="toggle-label"><input type="checkbox" id="toggleCourseDisplay" onchange="app.toggleCourseDisplay(this.checked)"> コース表示</label>
+                    <div class="toolbar-group">
+                        <span class="toolbar-label">離(枠)</span>
+                        <button class="tool-btn" onclick="app.setStamp('color', 'red')">赤</button>
+                        <button class="tool-btn" onclick="app.setStamp('color', 'blue')">青</button>
+                        <button class="tool-btn" onclick="app.setStamp('color', 'yellow')">黄</button>
+                        <button class="tool-btn" onclick="app.setStamp('color', 'none')">無</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <span class="toolbar-label">場所</span>
+                        <button class="tool-btn" onclick="app.setStamp('pref', 'fixed')">固</button>
+                        <button class="tool-btn" onclick="app.setStamp('pref', 'front')">前</button>
+                        <button class="tool-btn" onclick="app.setStamp('pref', 'none')">解</button>
+                    </div>
+                </div>
+                <button onclick="app.toggleMirror()" class="tool-btn">👁 視点</button>
+            </div>
+            <div class="canvas-scroll" id="canvasScroll">
+                <div id="room-container">
+                    <div class="front-area-container" id="frontArea">
+                        <div class="class-name-box" id="canvasClassBox">教室名</div>
+                        <div class="blackboard">前</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="print-area" style="display:none;"></div>
+
+<script>
+/** ClassLayout Pro v116 Official (Final Integrated) */
+const esc = (str) => (str||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const app = {
+    db: [], groups: [], activeClassId: null, mode: 'seating', view: 'class', stampMode: null, 
+
+    init() {
+        this.loadLocalData();
+        if (this.groups.length === 0) this.addGroup('デフォルト日程');
+        if (!this.activeGroupId && this.groups.length > 0) this.activeGroupId = this.groups[0].id;
+        this.renderGroups(); this.renderTabs(); this.renderDB();
+        this.setMode(this.mode);
+        setTimeout(() => this.renderClass(), 100);
+        this.setupDragDrop();
+    },
+
+    loadLocalData() {
+        const stored = localStorage.getItem('clp_v50');
+        if (stored) { try { const data = JSON.parse(stored); this.db = data.db || []; this.groups = data.groups || []; this.activeGroupId = data.activeGroupId; } catch(e) {} }
+    },
+
+    saveData() { localStorage.setItem('clp_v50', JSON.stringify({ db: this.db, groups: this.groups, activeGroupId: this.activeGroupId })); },
+    
+    showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.className = "show"; setTimeout(() => { t.className = ""; }, 3000); },
+
+    get currentGroup() { return this.groups.find(g => g.id === this.activeGroupId); },
+    get classes() { return this.currentGroup ? this.currentGroup.classes : []; },
+    get activeClassId() { return this.currentGroup ? this.currentGroup.activeClassId : null; },
+    set activeClassId(val) { if(this.currentGroup) this.currentGroup.activeClassId = val; },
+
+    setMode(m) {
+        this.mode = m; this.clearStamp(); document.body.setAttribute('data-mode', m);
+        ['layout', 'seating', 'entry'].forEach(k => {
+            document.getElementById(`side-${k}`).style.display = (m === k) ? (m==='seating'?'flex':'block') : 'none';
+            document.getElementById(`btn-${k}`).className = `mode-btn ${m === k ? 'active' : ''}`;
+        });
+        this.renderClass();
+    },
+
+    setStamp(type, value) {
+        if (this.stampMode && this.stampMode.type === type && this.stampMode.value === value) { this.clearStamp(); return; }
+        this.stampMode = { type, value };
+        document.querySelectorAll('.tool-btn').forEach(b => { if(b.onclick && b.onclick.toString().includes(value)) b.classList.add('active'); else b.classList.remove('active'); });
+        document.body.setAttribute('data-stamp', 'true');
+    },
+    clearStamp() { this.stampMode = null; document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active')); document.body.removeAttribute('data-stamp'); },
+
+    applyStamp(studentId) {
+        if (!this.stampMode) return;
+        const cls = this.classes.find(c => c.id === this.activeClassId);
+        const s = cls.students.find(x => x.id === studentId);
+        if (s) { s[this.stampMode.type] = this.stampMode.value; this.saveData(); this.renderClass(); }
+    },
+
+    updateSeatSize() {
+        const w = document.getElementById('seatWidthInput').value;
+        const h = document.getElementById('seatHeightInput').value;
+        if(w < 40 || h < 30) return;
+        document.documentElement.style.setProperty('--seat-width', w + 'px');
+        document.documentElement.style.setProperty('--seat-height', h + 'px');
+        this.renderClass();
+    },
+    resetSeatSize() {
+        document.getElementById('seatWidthInput').value = 100;
+        document.getElementById('seatHeightInput').value = 70;
+        this.updateSeatSize();
+        this.showToast("サイズを戻しました");
+    },
+
+    toggleCourseDisplay(show) { if(show) document.body.classList.add('show-courses'); else document.body.classList.remove('show-courses'); },
+
+    addTrialStudent() {
+        const cls = this.classes.find(c => c.id === this.activeClassId);
+        const name = document.getElementById('trialName').value.trim();
+        const kana = document.getElementById('trialKana').value.trim();
+        if(!name) return;
+        cls.students.push({ id:`t_${Date.now()}`, no:`T-${Date.now()}`, name, kana, gender:document.getElementById('trialGender').value, group:'none', color:'none', pref:'none', isTrial:true });
+        this.saveData(); this.renderClass();
+        document.getElementById('trialName').value=''; document.getElementById('trialKana').value='';
+    },
+
+    renderClass() {
+        if(this.view!=='class')return; const cls=this.classes.find(c=>c.id===this.activeClassId); if(!cls)return;
+        document.getElementById('classNameInput').value=cls.name;
+        document.getElementById('canvasClassBox').innerText = cls.name;
+
+        const room=document.getElementById('room-container');
+        Array.from(room.children).forEach(c=>{if(c.classList.contains('desk'))c.remove()});
+        const sW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--seat-width'));
+        const sH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--seat-height'));
+        let mx=0,my=0; cls.desks.forEach(d=>{mx=Math.max(mx,d.x+sW);my=Math.max(my,d.y+sH)});
+        room.style.width=(mx+100)+'px'; room.style.height=(my+100)+'px';
+        document.getElementById('frontArea').style.left = ((mx + 100 - 500) / 2) + 'px';
+
+        cls.desks.forEach(d=>{
+            const el=document.createElement('div'); el.className='desk'; el.style.left=d.x+'px'; el.style.top=d.y+'px';
+            const sId=cls.allocations[d.id];
+            if(sId){
+                const s=cls.students.find(st=>st.id===sId);
+                if(s){
+                    const card=createStudentCard(s); card.draggable=true; card.ondragstart=e=>e.dataTransfer.setData('studentId',s.id);
+                    card.onclick=(e)=>{e.stopPropagation(); this.applyStamp(s.id);};
+                    el.appendChild(card);
+                }
+            }
+            if(this.mode==='layout'){
+                el.draggable=true; el.ondragstart=e=>{e.dataTransfer.setData('type','desk'); e.dataTransfer.setData('id',d.id); const r=el.getBoundingClientRect(); e.dataTransfer.setData('diffX',e.clientX-r.left); e.dataTransfer.setData('diffY',e.clientY-r.top);};
+            }
+            el.ondragover=e=>e.preventDefault();
+            el.ondrop=e=>{
+                if(this.mode==='seating'){
+                    const sid=e.dataTransfer.getData('studentId');
+                    if(sid){ Object.keys(cls.allocations).forEach(k=>{if(cls.allocations[k]===sid)delete cls.allocations[k]}); cls.allocations[d.id]=sid; this.saveData(); this.renderClass();}
+                }
+            };
+            room.appendChild(el);
+        });
+        const st=document.getElementById('stockpile'); st.innerHTML='';
+        const used=Object.values(cls.allocations);
+        cls.students.filter(s=>!used.includes(s.id)).forEach(s=>{
+            const box=document.createElement('div'); box.className='stock-item';
+            const card=createStudentCard(s); card.draggable=true; card.ondragstart=e=>e.dataTransfer.setData('studentId',s.id);
+            box.appendChild(card); st.appendChild(box);
+        });
+    },
+
+    autoSeat(type) {
+        const cls = this.classes.find(c => c.id === this.activeClassId);
+        const rule = document.getElementById('genderRule').value;
+        const groupOrder = document.getElementById('groupSortOrder').value; 
+        let desks = [...cls.desks];
+        if (groupOrder === 'col_priority') desks.sort((a,b) => (Math.abs(a.x - b.x) > 20) ? a.x - b.x : a.y - b.y);
+        else desks.sort((a,b) => (Math.abs(a.y - b.y) > 20) ? a.y - b.y : a.x - b.x);
+        let pool = [...cls.students].sort((a,b)=> (type==='kana'?(a.kana||a.name).localeCompare(b.kana||b.name,'ja'):Math.random()-0.5));
+        cls.allocations = {};
+        desks.forEach((d,i) => { if(pool[i]) cls.allocations[d.id] = pool[i].id; });
+        this.saveData(); this.renderClass();
+    },
+
+    printLayouts() {
+        const cls = this.classes.find(x => x.id === this.activeClassId); 
+        const area = document.getElementById('print-area'); area.innerHTML = '';
+        const sW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--seat-width'));
+        const sH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--seat-height'));
+        let minX=Infinity, maxX=-Infinity, minY=Infinity, maxY=-Infinity;
+        cls.desks.forEach(d => {
+            minX = Math.min(minX, d.x); maxX = Math.max(maxX, d.x + sW);
+            minY = Math.min(minY, d.y); maxY = Math.max(maxY, d.y + sH);
+        });
+        const w = maxX - minX + 100, h = maxY - minY + 100;
+        
+        // Compute printable page size (A4 landscape) and scale to fit with small margins
+        const PX_PER_MM = 96 / 25.4;
+        const PAGE_W_MM = 297, PAGE_H_MM = 210, MARGIN_MM = 3;
+        const pageWpx = PAGE_W_MM * PX_PER_MM;
+        const pageHpx = PAGE_H_MM * PX_PER_MM;
+        const maxW = pageWpx - 2 * MARGIN_MM * PX_PER_MM;
+        const maxH = pageHpx - 2 * MARGIN_MM * PX_PER_MM;
+        const maxScale = 1.6;
+        const scale = Math.min(maxW / w, maxH / (h + 120), maxScale);
+        
+        ['student', 'teacher'].forEach(type => {
+            const page = document.createElement('div'); page.className = `print-page ${type}`;
+            // Compute scaled sizes and positions to avoid transform-based pagination issues
+            const scaledW = Math.round(w * scale);
+            const scaledH = Math.round((h + 120) * scale);
+            const scaledSeatW = Math.round(sW * scale);
+            const scaledSeatH = Math.round(sH * scale);
+            const frontLeft = Math.round(((w - 500) / 2) * scale);
+            const desksHtml = cls.desks.map(d => {
+                const s = cls.allocations[d.id] ? cls.students.find(x => x.id === cls.allocations[d.id]) : null;
+                let rx = d.x - minX, ry = d.y - minY;
+                if (type === 'teacher') { rx = (maxX - minX) - rx - sW; ry = (maxY - minY) - ry - sH; }
+                const left = Math.round((rx + 50) * scale);
+                const top = Math.round((ry + 70) * scale);
+                const cardHtml = s ? createStudentCard(s).outerHTML : '';
+                return `<div class="desk" style="left:${left}px; top:${top}px; width:${scaledSeatW}px; height:${scaledSeatH}px">${cardHtml}</div>`;
+            }).join('');
+            page.innerHTML = `
+                <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;">
+                    <div class="print-room" style="width:${scaledW}px; height:${scaledH}px; --seat-width: ${scaledSeatW}px; --seat-height: ${scaledSeatH}px;">
+                        <div class="front-area-container" style="left:${frontLeft}px;">
+                            <div class="class-name-box">${esc(cls.name)}</div>
+                            <div class="blackboard">前</div>
+                        </div>
+                        ${desksHtml}
+                    </div>
+                </div>
+            `;
+            area.appendChild(page);
+        });
+        window.print();
+    },
+
+    importToDB() {
+        const txt = document.getElementById('dbInput').value;
+        txt.split('\n').forEach(l => {
+            const c = l.trim().split(/[\t\s]+/); if(c.length < 2) return;
+            let gender = c[4] || 'none';
+            if (gender === '男') gender = 'male';
+            else if (gender === '女') gender = 'female';
+            const s = { no:c[0], name:c[1]+(c[2]?' '+c[2]:''), kana:c[3]||'', gender, group:'none' };
+            const idx = this.db.findIndex(x => x.no === s.no); if(idx >= 0) this.db[idx] = s; else this.db.push(s);
+        });
+        this.saveData(); this.renderDB();
+    },
+    renderDB() {
+        const genderText = (g) => g === 'male' ? '男' : g === 'female' ? '女' : g;
+        document.getElementById('dbTableBody').innerHTML = this.db.map(s => `<tr><td>${s.no}</td><td>${s.name}</td><td>${s.kana}</td><td>${genderText(s.gender)}</td><td>-</td><td><button onclick="app.delFromDB('${s.no}')">削除</button></td></tr>`).join('');
+    },
+    addGroup(n='日程'){ const id='g_'+Date.now(); const cId='c_'+Date.now(); this.groups.push({id, name:n, classes:[{id:cId, name:'1組', desks:[], students:[], allocations:{}}], activeClassId:cId}); this.activeGroupId=id; this.saveData(); this.renderGroups(); this.renderTabs(); },
+    renderGroups(){ document.getElementById('groupSelect').innerHTML = this.groups.map(g => `<option value="${g.id}" ${g.id===this.activeGroupId?'selected':''}>${g.name}</option>`).join(''); },
+    renderTabs(){ const b = document.getElementById('tabBar'); b.innerHTML = `<div class="tab db-tab" onclick="app.switchView('db')">🗃 DB</div>` + this.classes.map(c => `<div class="tab ${c.id===this.activeClassId?'active':''}" onclick="app.switchView('class','${c.id}')">${esc(c.name)}<span class="tab-close" onclick="app.deleteClass('${c.id}',event)">✕</span></div>`).join(''); },
+    switchView(v, id){ this.view=v; if(id) this.activeClassId=id; document.getElementById('db-view').classList.toggle('active', v==='db'); document.getElementById('class-view').style.display = v==='class'?'flex':'none'; this.renderTabs(); this.renderClass(); },
+    importStudents(){
+        const cls = this.classes.find(c => c.id === this.activeClassId);
+        document.getElementById('importInput').value.split('\n').forEach(no => {
+            const s = this.db.find(x => x.no === no.trim());
+            if(s && !cls.students.find(x => x.no === s.no)) cls.students.push({...s, id:`s_${Date.now()}_${Math.random()}`, color:'none', pref:'none'});
+        });
+        this.saveData(); this.renderClass();
+    },
+    renameClass(){ this.classes.find(c => c.id === this.activeClassId).name = document.getElementById('classNameInput').value; this.saveData(); this.renderTabs(); this.renderClass(); },
+    setupDragDrop() {
+        const sc = document.getElementById('canvasScroll'); sc.ondragover = e => e.preventDefault();
+        sc.ondrop = e => {
+            if(this.mode !== 'layout') return;
+            const id = e.dataTransfer.getData('id'), dx = e.dataTransfer.getData('diffX'), dy = e.dataTransfer.getData('diffY');
+            const cls = this.classes.find(c => c.id === this.activeClassId);
+            const d = cls.desks.find(x => x.id === id); const r = document.getElementById('room-container').getBoundingClientRect();
+            d.x = Math.max(0, Math.round((e.clientX - r.left - dx)/20)*20); d.y = Math.max(0, Math.round((e.clientY - r.top - dy)/20)*20);
+            this.saveData(); this.renderClass();
+        };
+    },
+    initDesks() {
+        const cls = this.classes.find(c => c.id === this.activeClassId);
+        const r = document.getElementById('rowsInput').value;
+        const c = document.getElementById('colsInput').value;
+        cls.allocations = {}; cls.desks = []; 
+        const sW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--seat-width'));
+        const sH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--seat-height'));
+        for(let i=0;i<r;i++) for(let j=0;j<c;j++) cls.desks.push({id:`d_${i}_${j}`, x:50+j*(sW+20), y:120+i*(sH+20)});
+        this.saveData(); this.renderClass();
+    },
+    resetAllocations(){if(confirm("全員外しますか？")){this.classes.find(x=>x.id===this.activeClassId).allocations={};this.saveData();this.renderClass();}},
+    toggleMirror(){ document.getElementById('room-container').classList.toggle('mirrored'); },
+    downloadData(){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify({db:this.db, groups:this.groups})],{type:'application/json'})); a.download='座席表.json'; a.click(); },
+    loadFromFile(f){ const r=new FileReader(); r.onload=e=>{ const d=JSON.parse(e.target.result); this.db=d.db; this.groups=d.groups; this.saveData(); this.init(); }; r.readAsText(f.files[0]); }
+};
+
+function createStudentCard(s) {
+    const d = document.createElement('div'); d.className = 'student-card' + (s.isTrial ? ' is-trial' : '');
+    const n = document.createElement('div'); n.className = 'name'; n.innerText = s.name;
+    const k = document.createElement('div'); k.className = 'kana'; k.innerText = s.kana||'';
+    d.appendChild(k); d.appendChild(n);
+    if(s.gender && s.gender !== 'none'){
+        const b = document.createElement('div'); b.className = `corner-badge badge-tl ${s.gender==='male'?'badge-male':'badge-female'}`;
+        b.innerText = s.gender==='male'?'男':'女'; d.appendChild(b);
+    }
+    if(s.color && s.color !== 'none'){
+        const b = document.createElement('div'); b.className = `corner-badge badge-tr badge-sep-${s.color}`;
+        b.innerText = '離'; d.appendChild(b);
+    }
+    if(s.pref === 'front'){ const b = document.createElement('div'); b.className = `corner-badge badge-br badge-pref-front`; b.innerText = '前'; d.appendChild(b); }
+    return d;
+}
+app.init();
+</script>
+</body>
+</html>

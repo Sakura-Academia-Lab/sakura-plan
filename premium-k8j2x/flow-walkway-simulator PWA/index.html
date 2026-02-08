@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PRPCBPS2');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YV5WWWG39Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-YV5WWWG39Z');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流水算・動く歩道シミュレーター Pro | Sakura Academia</title>
+    <link rel="stylesheet" href="../core/css/portal.css?v=2.4">
+    <link rel="stylesheet" href="./css/style.css?v=1.0">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e293b">
+</head>
+
+<body class="has-tabs">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRPCBPS2" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <header id="app-header">
+        <div class="header-left">
+            <button class="btn-play" onclick="startAnimation()">▶ 再生</button>
+            <button class="btn-pause" onclick="pauseAnimation()">Ⅱ 停止</button>
+            <button class="btn-reset" onclick="resetAnimation()">↺ 戻す</button>
+            <span class="header-spacer"></span>
+            <span id="current-time-display">0.00秒</span>
+        </div>
+        <div class="header-top-btns">
+            <a href="../index.html" class="btn-home">Premium Home</a>
+            <button class="btn-help" onclick="toggleGuide()">使い方</button>
+        </div>
+    </header>
+
+    <nav class="tab-navigation">
+        <button id="tab-flow" class="tab-button active" onclick="switchMode('flow')">流水算</button>
+        <button id="tab-walkway" class="tab-button" onclick="switchMode('walkway')">動く歩道</button>
+    </nav>
+
+    <main>
+        <aside id="controls">
+            <div class="ctrl-group">
+                <span class="ctrl-label" id="main-obj-label">ボートの設定</span>
+                <div class="input-row">
+                    <label>静水時の速さ:</label>
+                    <input type="number" id="base-speed" value="10" step="1" onchange="updateSettings()">
+                </div>
+            </div>
+
+            <div class="ctrl-group">
+                <span class="ctrl-label" id="env-obj-label">川の設定</span>
+                <div class="input-row">
+                    <label id="env-speed-label">流速:</label>
+                    <input type="number" id="env-speed" value="2" step="0.5" onchange="updateSettings()">
+                </div>
+            </div>
+
+            <div class="ctrl-group">
+                <span class="ctrl-label">シミュレーション設定</span>
+                <div class="input-row">
+                    <label>距離(m):</label>
+                    <input type="number" id="distance" value="200" step="10" onchange="updateSettings()">
+                </div>
+                <div class="input-row">
+                    <label>モード:</label>
+                    <select id="movement-mode" onchange="updateSettings()">
+                        <option value="downstream">下り (追い風)</option>
+                        <option value="upstream">上り (向かい風)</option>
+                        <option value="roundtrip">往復</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <section id="animation-area">
+            <div id="animation-top">
+                <canvas id="animation-canvas"></canvas>
+            </div>
+            <div id="animation-bottom">
+                <canvas id="diagram-canvas"></canvas>
+            </div>
+        </section>
+
+        <section id="chart-panel">
+            <div class="chart-container">
+                <div class="chart-title-vertical">時間-距離</div>
+                <canvas id="time-distance-chart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <div id="guide-modal" style="display:none;">
+        <div id="guide-overlay" onclick="toggleGuide()"></div>
+        <div id="guide-content">
+            <button class="btn-close" onclick="toggleGuide()">&times;</button>
+            <h3 id="guide-title">流水算シミュレーターの使い方</h3>
+            <div class="step">
+                <div class="step-icon">1</div>
+                <div id="guide-step-1"><strong>流速を設定</strong>：川の流れの速さを調整します。</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">2</div>
+                <div><strong>ボートの速さ</strong>：静水時の速さを設定します。</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">3</div>
+                <div><strong>再生</strong>：実際の速さがどのように変化するか確認しましょう。</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/app.js?v=1.0"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
+</body>
+
+</html>

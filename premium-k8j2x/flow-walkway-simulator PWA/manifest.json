@@ -1,0 +1,21 @@
+{
+    "name": "流水算・動く歩道シミュレーター Pro",
+    "short_name": "流水算 Pro",
+    "description": "流水算と動く歩道をタブで切り替えてシミュレーション",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#1e293b",
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
