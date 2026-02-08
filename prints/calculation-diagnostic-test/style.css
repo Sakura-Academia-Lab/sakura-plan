@@ -118,8 +118,58 @@ body {
 .handwritten-note::before { content: '▶'; position: absolute; left: 0; top: 2px; font-size: 9px; }
 
 @media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    body { margin: 0; padding: 0; background: white; }
     #sidebar, .controls { display: none !important; }
     #main-content { margin-left: 0; padding: 0; }
-    .page { margin: 0; box-shadow: none; width: 100%; border: none; }
-    .page-break { page-break-after: always; }
+
+    .page {
+        margin: 0;
+        width: 210mm;
+        height: 297mm;
+        padding: 10mm 15mm;
+        box-shadow: none;
+        border: none;
+        overflow: hidden;
+    }
+
+    .page-break {
+        page-break-after: always;
+        break-after: page;
+    }
+
+    /* 印刷時：10問が収まるように間隔を詰める */
+    .problem-item, .exp-top {
+        min-height: 46px !important;
+        padding: 5px 0 !important;
+    }
+    .exp-annotation {
+        min-height: 18px !important;
+        padding: 2px 0 3px 40px !important;
+    }
+    .exp-unit {
+        margin-bottom: 2px !important;
+    }
+
+    /* 5問以下 */
+    .few-problems .problem-item,
+    .few-problems .exp-top {
+        min-height: 75px !important;
+    }
+    .few-problems .exp-annotation {
+        min-height: 55px !important;
+    }
+
+    /* 2問以下 */
+    .ultra-few .problem-item,
+    .ultra-few .exp-top {
+        min-height: 100mm !important;
+    }
+    .ultra-few .exp-annotation {
+        min-height: 80mm !important;
+    }
 }
