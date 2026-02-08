@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prints - 桜アカデミア</title>
+    <style>
+        :root {
+            --primary-navy: #1a2a44;
+            --accent-sakura: #ffcae0;
+            --text-gray: #555555;
+            --bg-light: #fdfdfd;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-gray);
+            background-color: var(--bg-light);
+            text-align: center;
+        }
+
+        header {
+            padding: 60px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        header h1 {
+            color: var(--primary-navy);
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .category-desc {
+            color: #888;
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .prints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .print-card {
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-decoration: none;
+            color: var(--primary-navy);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .print-card:hover {
+            border-color: var(--accent-sakura);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .print-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .print-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .print-desc {
+            font-size: 0.9rem;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .badge {
+            background: #e3f2fd;
+            color: #1a73e8;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        footer {
+            padding: 40px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Prints</h1>
+        <p class="category-desc">
+            学習をサポートするプリント・テスト教材集です。
+        </p>
+    </header>
+
+    <main>
+        <div class="prints-grid">
+            <!-- Calculation Diagnostic Test -->
+            <a href="./calculation-diagnostic-test/main.html" class="print-card">
+                <span class="badge">Web Test</span>
+                <div class="print-icon">🧮</div>
+                <div class="print-title">計算力診断テスト</div>
+                <div class="print-desc">
+                    計算の正確さとスピードを診断するためのWebテストです。<br>
+                    各単元の理解度を確認できます。
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 桜アカデミア
+    </footer>
+</body>
+
+</html>
