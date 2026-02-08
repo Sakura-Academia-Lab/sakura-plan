@@ -38,7 +38,20 @@
     window.curriculumData = [];
     let activeUnitIdx = 0;
     let activePatternIdx = 0;
-    let openLevels = new Set(); 
+    let openLevels = new Set();
+
+    // annotations内のLaTeX記法を\(と\)で自動的に囲む
+    function wrapAnnotationMath(text) {
+        if (!text) return '';
+        // 日本語・記号で区切り、バックスラッシュコマンドを含む部分を数式として処理
+        const segments = text.split(/([\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff\u3000-\u303f★☆・。、「」（）！？\s]+)/);
+        return segments.map(seg => {
+            if (seg.includes('\\') && /[a-z]/.test(seg)) {
+                return `\\(${seg.trim()}\\)`;
+            }
+            return seg;
+        }).join('');
+    }
 
     function addData(unitData) {
         window.curriculumData.push(unitData);
@@ -168,7 +181,7 @@
                                 </div>
                             </div>
                             <div class="exp-annotation">
-                                ${pattern.annotations[i] ? `<span class="handwritten-note">${pattern.annotations[i]}</span>` : ''}
+                                ${pattern.annotations[i] ? `<span class="handwritten-note">${wrapAnnotationMath(pattern.annotations[i])}</span>` : ''}
                             </div>
                         </div>
                     `).join('')}
