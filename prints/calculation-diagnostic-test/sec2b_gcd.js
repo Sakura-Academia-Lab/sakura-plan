@@ -1,6 +1,7 @@
 addData({
   id: "sec2b",
   chapter: "第2部：構造視力",
+  section: "訓練",
   title: "最大公約数の暗算（1回で約分するために）",
   method: "約分は1回で終わらせる！そのために最大公約数を瞬時に見つける力をつけよう。",
   patterns: [

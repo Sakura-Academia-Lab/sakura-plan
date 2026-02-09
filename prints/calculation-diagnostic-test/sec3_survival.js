@@ -1,6 +1,7 @@
 addData({
   id: "sec3_survival",
   chapter: "第3部：持久力・整理力",
+  section: "サバイバルテスト",
   title: "【サバイバル・ストリーク 30】持久力・整理力",
   method: "制限時間3分。手順の多い逆算や四則混合。正確なメモ書きと手順の維持が問われる。",
   patternLabels: ["セットA", "セットB", "セットC"],

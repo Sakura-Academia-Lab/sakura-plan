@@ -38,7 +38,8 @@
     window.curriculumData = [];
     let activeUnitIdx = 0;
     let activePatternIdx = 0;
-    let openLevels = new Set();
+    let openChapters = new Set();
+    let openSections = new Set();
 
     // annotations内のLaTeX記法を\(と\)で自動的に囲む
     function wrapAnnotationMath(text) {
@@ -56,7 +57,8 @@
     function addData(unitData) {
         window.curriculumData.push(unitData);
         if(window.curriculumData.length === 1) {
-            openLevels.add(unitData.chapter);
+            openChapters.add(unitData.chapter);
+            if(unitData.section) openSections.add(unitData.chapter + '|' + unitData.section);
             renderMenu();
             renderSheet();
         } else {
@@ -71,50 +73,84 @@
     function renderMenu() {
         const container = document.getElementById('menu-container');
         container.innerHTML = '';
-        let lastChapter = "";
-        let currentWrapper = null;
 
+        // Group units by chapter and section
+        const hierarchy = {};
         window.curriculumData.forEach((unit, idx) => {
-            const chapterName = unit.chapter; 
+            const chapter = unit.chapter;
+            const section = unit.section || '未分類';
+            if (!hierarchy[chapter]) hierarchy[chapter] = {};
+            if (!hierarchy[chapter][section]) hierarchy[chapter][section] = [];
+            hierarchy[chapter][section].push({ unit, idx });
+        });
 
-            if(chapterName !== lastChapter) {
-                lastChapter = chapterName;
-                const displayLevel = formatLevelName(chapterName);
-                const isOpen = openLevels.has(chapterName);
+        // Render hierarchy
+        Object.keys(hierarchy).forEach(chapter => {
+            const isChapterOpen = openChapters.has(chapter);
 
-                const header = document.createElement('div');
-                header.className = 'nav-group-header';
-                header.innerHTML = `
-                    <span>${displayLevel}</span>
-                    <span class="toggle-icon">${isOpen ? '▼' : '▶'}</span>
+            // Chapter header
+            const chapterHeader = document.createElement('div');
+            chapterHeader.className = 'nav-group-header';
+            chapterHeader.innerHTML = `
+                <span>${formatLevelName(chapter)}</span>
+                <span class="toggle-icon">${isChapterOpen ? '▼' : '▶'}</span>
+            `;
+            chapterHeader.onclick = () => {
+                if(openChapters.has(chapter)) {
+                    openChapters.delete(chapter);
+                } else {
+                    openChapters.add(chapter);
+                }
+                renderMenu();
+            };
+            container.appendChild(chapterHeader);
+
+            if (!isChapterOpen) return;
+
+            // Chapter wrapper
+            const chapterWrapper = document.createElement('div');
+            chapterWrapper.className = 'nav-level-wrapper';
+            container.appendChild(chapterWrapper);
+
+            // Sections within chapter
+            Object.keys(hierarchy[chapter]).forEach(section => {
+                const sectionKey = chapter + '|' + section;
+                const isSectionOpen = openSections.has(sectionKey);
+
+                // Section header
+                const sectionHeader = document.createElement('div');
+                sectionHeader.className = 'nav-section-header';
+                sectionHeader.innerHTML = `
+                    <span>${section}</span>
+                    <span class="toggle-icon">${isSectionOpen ? '▼' : '▶'}</span>
                 `;
-                
-                header.onclick = () => {
-                    if(openLevels.has(chapterName)) {
-                        openLevels.delete(chapterName);
+                sectionHeader.onclick = (e) => {
+                    e.stopPropagation();
+                    if(openSections.has(sectionKey)) {
+                        openSections.delete(sectionKey);
                     } else {
-                        openLevels.add(chapterName);
+                        openSections.add(sectionKey);
                     }
                     renderMenu();
                 };
-                container.appendChild(header);
+                chapterWrapper.appendChild(sectionHeader);
 
-                currentWrapper = document.createElement('div');
-                currentWrapper.className = 'nav-level-wrapper';
-                currentWrapper.style.display = isOpen ? 'block' : 'none';
-                container.appendChild(currentWrapper);
-            }
+                if (!isSectionOpen) return;
 
-            const item = document.createElement('div');
-            item.className = `nav-item ${idx === activeUnitIdx ? 'active' : ''}`;
-            item.innerText = unit.title;
-            item.onclick = (e) => {
-                e.stopPropagation();
-                activeUnitIdx = idx;
-                renderMenu();
-                renderSheet();
-            };
-            currentWrapper.appendChild(item);
+                // Units within section
+                hierarchy[chapter][section].forEach(({ unit, idx }) => {
+                    const unitItem = document.createElement('div');
+                    unitItem.className = `nav-item ${idx === activeUnitIdx ? 'active' : ''}`;
+                    unitItem.innerText = unit.title;
+                    unitItem.onclick = (e) => {
+                        e.stopPropagation();
+                        activeUnitIdx = idx;
+                        renderMenu();
+                        renderSheet();
+                    };
+                    chapterWrapper.appendChild(unitItem);
+                });
+            });
         });
     }
 

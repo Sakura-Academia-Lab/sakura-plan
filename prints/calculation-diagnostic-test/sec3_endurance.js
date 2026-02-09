@@ -1,6 +1,7 @@
 addData({
   id: "sec3",
   chapter: "第3部：持久力・整理力",
+  section: "訓練",
   title: "複雑な処理と作法",
   method: "帯分数はそのまま計算、逆算は逆からたどる、混合計算は順序を整理してから。焦らず着実に。",
   patterns: [

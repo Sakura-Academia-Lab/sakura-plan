@@ -1,6 +1,7 @@
 addData({
   id: "sec1",
   chapter: "第1部：反射神経",
+  section: "訓練",
   title: "瞬発力と定数感覚のチェック",
   method: "→ の問題は変換（小数↔分数）、それ以外は計算。考える前に手が動くことが目標！",
   patterns: [
