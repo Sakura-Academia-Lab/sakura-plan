@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>計算脳・精密診断テスト ～処理の質と回路の太さを測る～</title>
+    <title>計算力・自動化トレーニング ～反射神経・構造視力・持久力を鍛える～</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
@@ -12,12 +12,15 @@
 
 <div id="sidebar">
     <div class="sidebar-header">
-        <h1>計算脳・精密診断テスト</h1>
-        <p>処理の質と回路の太さを測る</p>
+        <h1>計算力・自動化トレーニング</h1>
+        <p>反射神経・構造視力・持久力を鍛える</p>
     </div>
     <div id="menu-container"></div>
     <div class="nav-item criteria-menu" onclick="showCriteria()">
         📊 判定基準を見る
+    </div>
+    <div class="nav-item passport-menu" onclick="showPassport()">
+        📝 攻略パスポート
     </div>
 
     <div class="batch-print-section">
@@ -405,9 +408,14 @@
         document.title = '計算脳・自動化レベル判定基準';
     }
 
+    function showPassport() {
+        // 攻略パスポート（記録用紙）を新しいタブで開く
+        window.open('record-passport.html', '_blank');
+    }
+
     function printAllStageUnits(stage) {
         // 指定されたステージのすべてのユニットを取得
-        const stageUnits = allData.filter(unit => unit.chapter === stage);
+        const stageUnits = window.curriculumData.filter(unit => unit.chapter === stage);
 
         if (stageUnits.length === 0) {
             alert(`${stage}のユニットが見つかりません`);
