@@ -16,8 +16,13 @@
         <p>処理の質と回路の太さを測る</p>
     </div>
     <div id="menu-container"></div>
+    <div class="nav-item criteria-menu" onclick="showCriteria()">
+        📊 判定基準を見る
+    </div>
+</div>
 
-    <div class="criteria-section">
+<div id="criteria-content" style="display:none;">
+    <div class="criteria-section-main">
         <h2>📊 計算脳・自動化レベル判定基準</h2>
         <p class="criteria-intro">制限時間3分・35問の「連続正解・チャレンジ」の結果（到達記録）に基づき、生徒の計算回路がどの段階にあるかを4段階で判定します。</p>
 
@@ -247,6 +252,8 @@
                     unitItem.onclick = (e) => {
                         e.stopPropagation();
                         activeUnitIdx = idx;
+                        // コントロールパネルを再表示
+                        document.querySelector('.controls').style.display = 'flex';
                         renderMenu();
                         renderSheet();
                     };
@@ -355,7 +362,28 @@
                 </div>
             </div>
         `;
-        if (window.MathJax) MathJax.typeset(); 
+        if (window.MathJax) MathJax.typeset();
+    }
+
+    function showCriteria() {
+        // メニュー項目のアクティブ状態を更新
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        document.querySelector('.criteria-menu').classList.add('active');
+
+        // コントロールパネルを非表示
+        document.querySelector('.controls').style.display = 'none';
+
+        // メインエリアに判定基準を表示
+        const area = document.getElementById('sheet-area');
+        const criteriaContent = document.getElementById('criteria-content').innerHTML;
+        area.innerHTML = `
+            <div class="page criteria-page">
+                ${criteriaContent}
+            </div>
+        `;
+
+        // ページタイトルを更新
+        document.title = '計算脳・自動化レベル判定基準';
     }
 </script>
 
