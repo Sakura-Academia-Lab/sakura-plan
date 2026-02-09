@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ストリーク・チャレンジ 攻略パスポート</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif;
+            background: #f0f0f0;
+            padding: 0;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .page {
+                page-break-after: always;
+                margin: 0;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+
+        .page {
+            width: 277mm;
+            height: 190mm;
+            background: white;
+            margin: 20px auto;
+            padding: 15mm;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ステージ別の背景グラデーション */
+        .stage1 {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #f0f8ff 100%);
+        }
+
+        .stage2 {
+            background: linear-gradient(135deg, #fff8e6 0%, #ffffff 50%, #f0fff4 100%);
+        }
+
+        .stage3 {
+            background: linear-gradient(135deg, #f5f0ff 0%, #ffffff 50%, #fffaf0 100%);
+        }
+
+        /* ヘッダー */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #333;
+        }
+
+        .stage1 .header { border-bottom-color: #ff6b6b; }
+        .stage2 .header { border-bottom-color: #ffa500; }
+        .stage3 .header { border-bottom-color: #9370db; }
+
+        .title-area h1 {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+
+        .stage1 .title-area h1 { color: #ff6b6b; }
+        .stage2 .title-area h1 { color: #ffa500; }
+        .stage3 .title-area h1 { color: #9370db; }
+
+        .title-area .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .info-boxes {
+            display: flex;
+            gap: 15px;
+        }
+
+        .info-box {
+            border: 2px solid #333;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .info-box label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .info-box input {
+            border: none;
+            border-bottom: 1px solid #333;
+            width: 120px;
+            font-size: 14px;
+            background: transparent;
+        }
+
+        /* メインコンテンツ：2カラム */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: calc(100% - 120px);
+        }
+
+        .left-panel, .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* セクション共通 */
+        .section {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            background: white;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .stage1 .section-title { color: #ff6b6b; }
+        .stage2 .section-title { color: #ffa500; }
+        .stage3 .section-title { color: #9370db; }
+
+        /* 記録ログテーブル */
+        .record-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .record-table th {
+            background: #f5f5f5;
+            border: 1px solid #333;
+            padding: 5px 3px;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .record-table td {
+            border: 1px solid #999;
+            padding: 6px 3px;
+            text-align: center;
+        }
+
+        .record-table .set-column {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* 成長グラフ */
+        .graph-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .graph-svg {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #333;
+            background: white;
+        }
+
+        .graph-grid line {
+            stroke: #e0e0e0;
+            stroke-width: 1;
+        }
+
+        .graph-grid .major-line {
+            stroke: #666;
+            stroke-width: 1.5;
+        }
+
+        .graph-label {
+            font-size: 10px;
+            fill: #333;
+        }
+
+        .rank-line {
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+            opacity: 0.6;
+        }
+
+        .rank-line.s-rank { stroke: #ffd700; }
+        .rank-line.a-rank { stroke: #c0c0c0; }
+        .rank-line.b-rank { stroke: #cd7f32; }
+
+        .rank-label {
+            font-size: 11px;
+            font-weight: bold;
+            fill: #666;
+        }
+
+        /* 弱点発見マップ */
+        .weakness-map {
+            flex: 1;
+        }
+
+        .weakness-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .weakness-table th {
+            background: #f5f5f5;
+            border: 1px solid #333;
+            padding: 6px 4px;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .weakness-table td {
+            border: 1px solid #999;
+            padding: 6px 5px;
+            vertical-align: middle;
+        }
+
+        .weakness-table .q-numbers {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            width: 22%;
+        }
+
+        .weakness-table .weakness-name {
+            font-weight: bold;
+            width: 30%;
+        }
+
+        .weakness-table .drill-name {
+            color: #0066cc;
+            font-weight: bold;
+            width: 48%;
+        }
+
+        .stage1 .weakness-table th { background: #ffe6e6; }
+        .stage2 .weakness-table th { background: #fff4e6; }
+        .stage3 .weakness-table th { background: #f0e6ff; }
+
+        /* 運用ルール */
+        .rules {
+            position: absolute;
+            bottom: 15mm;
+            left: 15mm;
+            right: 15mm;
+            background: #fffacd;
+            border: 2px solid #ffa500;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 11px;
+        }
+
+        .rules-title {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #ff6600;
+        }
+
+        .rules-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .rule-number {
+            font-weight: bold;
+            font-size: 16px;
+            color: #ff6600;
+            margin-right: 5px;
+        }
+
+        .rule-text {
+            line-height: 1.4;
+        }
+
+        /* 印刷ボタン */
+        .no-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .print-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .print-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <button class="no-print print-btn" onclick="window.print()">🖨️ 印刷する</button>
+
+    <!-- ========== 第1ステージ：反射神経 ========== -->
+    <div class="page stage1">
+        <div class="header">
+            <div class="title-area">
+                <h1>🔥 第1ステージ：反射神経の森 攻略パスポート</h1>
+                <p class="subtitle">一瞬で答えが見える力を鍛えよう！</p>
+            </div>
+            <div class="info-boxes">
+                <div class="info-box">
+                    <label>名前：</label>
+                    <input type="text" />
+                </div>
+                <div class="info-box">
+                    <label>目標スコア：</label>
+                    <input type="text" style="width: 60px;" /> 問
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 左パネル -->
+            <div class="left-panel">
+                <!-- 記録ログ -->
+                <div class="section">
+                    <div class="section-title">📝 記録ログ（10回分）</div>
+                    <table class="record-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 8%;">回</th>
+                                <th style="width: 20%;">実施日</th>
+                                <th style="width: 15%;">挑戦セット</th>
+                                <th style="width: 17%;">到達記録</th>
+                                <th style="width: 20%;">ぶつかったカベ</th>
+                                <th style="width: 20%;">判定</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 成長グラフ -->
+                <div class="section graph-container">
+                    <div class="section-title">📈 成長グラフ</div>
+                    <svg class="graph-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+                        <!-- グリッド -->
+                        <g class="graph-grid">
+                            <!-- 横線（問題数） -->
+                            <line x1="40" y1="170" x2="380" y2="170" class="major-line"/>
+                            <line x1="40" y1="150" x2="380" y2="150"/>
+                            <line x1="40" y1="130" x2="380" y2="130" class="major-line"/>
+                            <line x1="40" y1="110" x2="380" y2="110"/>
+                            <line x1="40" y1="90" x2="380" y2="90" class="major-line"/>
+                            <line x1="40" y1="70" x2="380" y2="70"/>
+                            <line x1="40" y1="50" x2="380" y2="50" class="major-line"/>
+                            <line x1="40" y1="30" x2="380" y2="30"/>
+                            <line x1="40" y1="10" x2="380" y2="10" class="major-line"/>
+
+                            <!-- 縦線（回数） -->
+                            <line x1="40" y1="10" x2="40" y2="170" class="major-line"/>
+                            <line x1="74" y1="10" x2="74" y2="170"/>
+                            <line x1="108" y1="10" x2="108" y2="170"/>
+                            <line x1="142" y1="10" x2="142" y2="170"/>
+                            <line x1="176" y1="10" x2="176" y2="170"/>
+                            <line x1="210" y1="10" x2="210" y2="170"/>
+                            <line x1="244" y1="10" x2="244" y2="170"/>
+                            <line x1="278" y1="10" x2="278" y2="170"/>
+                            <line x1="312" y1="10" x2="312" y2="170"/>
+                            <line x1="346" y1="10" x2="346" y2="170"/>
+                            <line x1="380" y1="10" x2="380" y2="170" class="major-line"/>
+                        </g>
+
+                        <!-- ランクボーダーライン -->
+                        <line x1="40" y1="50" x2="380" y2="50" class="rank-line s-rank"/>
+                        <text x="385" y="52" class="rank-label" fill="#ffd700">S達人</text>
+
+                        <line x1="40" y1="90" x2="380" y2="90" class="rank-line a-rank"/>
+                        <text x="385" y="92" class="rank-label" fill="#c0c0c0">A上級</text>
+
+                        <line x1="40" y1="130" x2="380" y2="130" class="rank-line b-rank"/>
+                        <text x="385" y="132" class="rank-label" fill="#cd7f32">B中級</text>
+
+                        <!-- 軸ラベル -->
+                        <text x="5" y="12" class="graph-label">35問</text>
+                        <text x="5" y="52" class="graph-label">30問</text>
+                        <text x="5" y="92" class="graph-label">20問</text>
+                        <text x="5" y="132" class="graph-label">10問</text>
+                        <text x="10" y="172" class="graph-label">0問</text>
+
+                        <text x="35" y="185" class="graph-label">1回</text>
+                        <text x="69" y="185" class="graph-label">2回</text>
+                        <text x="103" y="185" class="graph-label">3回</text>
+                        <text x="137" y="185" class="graph-label">4回</text>
+                        <text x="171" y="185" class="graph-label">5回</text>
+                        <text x="205" y="185" class="graph-label">6回</text>
+                        <text x="239" y="185" class="graph-label">7回</text>
+                        <text x="273" y="185" class="graph-label">8回</text>
+                        <text x="307" y="185" class="graph-label">9回</text>
+                        <text x="338" y="185" class="graph-label">10回</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 右パネル -->
+            <div class="right-panel">
+                <div class="section weakness-map">
+                    <div class="section-title">🔍 弱点発見マップ：カベの正体</div>
+                    <table class="weakness-table">
+                        <thead>
+                            <tr>
+                                <th>カベの番号<br>(Q No.)</th>
+                                <th>君の弱点はここだ！</th>
+                                <th>おすすめ訓練メニュー</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="q-numbers">1, 8, 15,<br>22, 29</td>
+                                <td class="weakness-name">神の数<br>(0.125)</td>
+                                <td class="drill-name">🛠️ ドリル①：<br>小数・分数変換</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">2, 9, 16,<br>23, 30</td>
+                                <td class="weakness-name">平方数<br>(12×12)</td>
+                                <td class="drill-name">🛠️ ドリル②：<br>平方数・立方数</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">3, 10, 17,<br>24, 31</td>
+                                <td class="weakness-name">3.14の段</td>
+                                <td class="drill-name">🛠️ ドリル③：<br>3.14の暗記</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">4, 11, 18,<br>25, 32</td>
+                                <td class="weakness-name">素数もどき<br>(57)</td>
+                                <td class="drill-name">🛠️ ドリル④：<br>約数発見・倍数判定</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">5, 12, 19,<br>26, 33</td>
+                                <td class="weakness-name">黄金ペア<br>(25×4)</td>
+                                <td class="drill-name">🛠️ ドリル⑤：<br>相性の良い数</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">6, 13, 20,<br>27, 34</td>
+                                <td class="weakness-name">補数<br>(1000-N)</td>
+                                <td class="drill-name">🛠️ ドリル⑥：<br>引き算の瞬発力</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">7, 14, 21,<br>28, 35</td>
+                                <td class="weakness-name">瞬発暗算</td>
+                                <td class="drill-name">🛠️ ドリル⑦：<br>2桁の暗算</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <div class="rules-title">📋 使い方ガイド</div>
+            <div class="rules-list">
+                <div class="rule-item">
+                    <span class="rule-number">1.</span>
+                    <span class="rule-text"><strong>スタート：</strong>3分間、全力で解く！</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">2.</span>
+                    <span class="rule-text"><strong>ストップ：</strong>時間が来たら、解けた最後の問題の下に線を引く。</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">3.</span>
+                    <span class="rule-text"><strong>チェック：</strong>丸付けをして、最初に間違えた問題（カベ）の番号を記録。</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">4.</span>
+                    <span class="rule-text"><strong>診断：</strong>右の表でカベの番号を探す。それが君がやるべき訓練メニューだ！</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 第2ステージ：構造視力 ========== -->
+    <div class="page stage2">
+        <div class="header">
+            <div class="title-area">
+                <h1>🏗️ 第2ステージ：構造の塔 攻略パスポート</h1>
+                <p class="subtitle">計算の仕組みを見抜く力を鍛えよう！</p>
+            </div>
+            <div class="info-boxes">
+                <div class="info-box">
+                    <label>名前：</label>
+                    <input type="text" />
+                </div>
+                <div class="info-box">
+                    <label>目標スコア：</label>
+                    <input type="text" style="width: 60px;" /> 問
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 左パネル -->
+            <div class="left-panel">
+                <!-- 記録ログ -->
+                <div class="section">
+                    <div class="section-title">📝 記録ログ（10回分）</div>
+                    <table class="record-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 8%;">回</th>
+                                <th style="width: 20%;">実施日</th>
+                                <th style="width: 15%;">挑戦セット</th>
+                                <th style="width: 17%;">到達記録</th>
+                                <th style="width: 20%;">ぶつかったカベ</th>
+                                <th style="width: 20%;">判定</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 成長グラフ -->
+                <div class="section graph-container">
+                    <div class="section-title">📈 成長グラフ</div>
+                    <svg class="graph-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+                        <!-- グリッド -->
+                        <g class="graph-grid">
+                            <!-- 横線（問題数） -->
+                            <line x1="40" y1="170" x2="380" y2="170" class="major-line"/>
+                            <line x1="40" y1="150" x2="380" y2="150"/>
+                            <line x1="40" y1="130" x2="380" y2="130" class="major-line"/>
+                            <line x1="40" y1="110" x2="380" y2="110"/>
+                            <line x1="40" y1="90" x2="380" y2="90" class="major-line"/>
+                            <line x1="40" y1="70" x2="380" y2="70"/>
+                            <line x1="40" y1="50" x2="380" y2="50" class="major-line"/>
+                            <line x1="40" y1="30" x2="380" y2="30"/>
+                            <line x1="40" y1="10" x2="380" y2="10" class="major-line"/>
+
+                            <!-- 縦線（回数） -->
+                            <line x1="40" y1="10" x2="40" y2="170" class="major-line"/>
+                            <line x1="74" y1="10" x2="74" y2="170"/>
+                            <line x1="108" y1="10" x2="108" y2="170"/>
+                            <line x1="142" y1="10" x2="142" y2="170"/>
+                            <line x1="176" y1="10" x2="176" y2="170"/>
+                            <line x1="210" y1="10" x2="210" y2="170"/>
+                            <line x1="244" y1="10" x2="244" y2="170"/>
+                            <line x1="278" y1="10" x2="278" y2="170"/>
+                            <line x1="312" y1="10" x2="312" y2="170"/>
+                            <line x1="346" y1="10" x2="346" y2="170"/>
+                            <line x1="380" y1="10" x2="380" y2="170" class="major-line"/>
+                        </g>
+
+                        <!-- ランクボーダーライン -->
+                        <line x1="40" y1="50" x2="380" y2="50" class="rank-line s-rank"/>
+                        <text x="385" y="52" class="rank-label" fill="#ffd700">S達人</text>
+
+                        <line x1="40" y1="90" x2="380" y2="90" class="rank-line a-rank"/>
+                        <text x="385" y="92" class="rank-label" fill="#c0c0c0">A上級</text>
+
+                        <line x1="40" y1="130" x2="380" y2="130" class="rank-line b-rank"/>
+                        <text x="385" y="132" class="rank-label" fill="#cd7f32">B中級</text>
+
+                        <!-- 軸ラベル -->
+                        <text x="5" y="12" class="graph-label">35問</text>
+                        <text x="5" y="52" class="graph-label">30問</text>
+                        <text x="5" y="92" class="graph-label">20問</text>
+                        <text x="5" y="132" class="graph-label">10問</text>
+                        <text x="10" y="172" class="graph-label">0問</text>
+
+                        <text x="35" y="185" class="graph-label">1回</text>
+                        <text x="69" y="185" class="graph-label">2回</text>
+                        <text x="103" y="185" class="graph-label">3回</text>
+                        <text x="137" y="185" class="graph-label">4回</text>
+                        <text x="171" y="185" class="graph-label">5回</text>
+                        <text x="205" y="185" class="graph-label">6回</text>
+                        <text x="239" y="185" class="graph-label">7回</text>
+                        <text x="273" y="185" class="graph-label">8回</text>
+                        <text x="307" y="185" class="graph-label">9回</text>
+                        <text x="338" y="185" class="graph-label">10回</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 右パネル -->
+            <div class="right-panel">
+                <div class="section weakness-map">
+                    <div class="section-title">🔍 弱点発見マップ：カベの正体</div>
+                    <table class="weakness-table">
+                        <thead>
+                            <tr>
+                                <th>カベの番号<br>(Q No.)</th>
+                                <th>君の弱点はここだ！</th>
+                                <th>おすすめ訓練メニュー</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="q-numbers">1, 8, 15,<br>22, 29</td>
+                                <td class="weakness-name">分配法則の<br>発見</td>
+                                <td class="drill-name">🛠️ ドリル①：<br>同じ数でまとめる</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">2, 9, 16,<br>23, 30</td>
+                                <td class="weakness-name">0.125の<br>利用</td>
+                                <td class="drill-name">🛠️ ドリル②：<br>分数・小数の混合計算</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">3, 10, 17,<br>24, 31</td>
+                                <td class="weakness-name">結合法則<br>(125×8)</td>
+                                <td class="drill-name">🛠️ ドリル③：<br>かけ算の順序変更</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">4, 11, 18,<br>25, 32</td>
+                                <td class="weakness-name">基準数の<br>工夫</td>
+                                <td class="drill-name">🛠️ ドリル④：<br>キリの良い数・平均</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">5, 12, 19,<br>26, 33</td>
+                                <td class="weakness-name">約分の<br>先読み</td>
+                                <td class="drill-name">🛠️ ドリル⑤：<br>分数のかけ算処理</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">6, 13, 20,<br>27, 34</td>
+                                <td class="weakness-name">数列・<br>規則性</td>
+                                <td class="drill-name">🛠️ ドリル⑥：<br>等差数列の和</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">7, 14, 21,<br>28, 35</td>
+                                <td class="weakness-name">部分的な<br>工夫</td>
+                                <td class="drill-name">🛠️ ドリル⑦：<br>式の一部を変形する</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <div class="rules-title">📋 使い方ガイド</div>
+            <div class="rules-list">
+                <div class="rule-item">
+                    <span class="rule-number">1.</span>
+                    <span class="rule-text"><strong>スタート：</strong>3分間、全力で解く！</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">2.</span>
+                    <span class="rule-text"><strong>ストップ：</strong>時間が来たら、解けた最後の問題の下に線を引く。</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">3.</span>
+                    <span class="rule-text"><strong>チェック：</strong>丸付けをして、最初に間違えた問題（カベ）の番号を記録。</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">4.</span>
+                    <span class="rule-text"><strong>診断：</strong>右の表でカベの番号を探す。それが君がやるべき訓練メニューだ！</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 第3ステージ：持久力・整理力 ========== -->
+    <div class="page stage3">
+        <div class="header">
+            <div class="title-area">
+                <h1>⛰️ 第3ステージ：持久力の洞窟 攻略パスポート</h1>
+                <p class="subtitle">最後まで正確に解き切る力を鍛えよう！</p>
+            </div>
+            <div class="info-boxes">
+                <div class="info-box">
+                    <label>名前：</label>
+                    <input type="text" />
+                </div>
+                <div class="info-box">
+                    <label>目標スコア：</label>
+                    <input type="text" style="width: 60px;" /> 問
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 左パネル -->
+            <div class="left-panel">
+                <!-- 記録ログ -->
+                <div class="section">
+                    <div class="section-title">📝 記録ログ（10回分）</div>
+                    <table class="record-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 8%;">回</th>
+                                <th style="width: 20%;">実施日</th>
+                                <th style="width: 15%;">挑戦セット</th>
+                                <th style="width: 17%;">到達記録</th>
+                                <th style="width: 20%;">ぶつかったカベ</th>
+                                <th style="width: 20%;">判定</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td></td>
+                                <td class="set-column">A / B / C</td>
+                                <td>Q</td>
+                                <td>Q</td>
+                                <td>S / A / B / C</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 成長グラフ -->
+                <div class="section graph-container">
+                    <div class="section-title">📈 成長グラフ</div>
+                    <svg class="graph-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+                        <!-- グリッド -->
+                        <g class="graph-grid">
+                            <!-- 横線（問題数） -->
+                            <line x1="40" y1="170" x2="380" y2="170" class="major-line"/>
+                            <line x1="40" y1="150" x2="380" y2="150"/>
+                            <line x1="40" y1="130" x2="380" y2="130" class="major-line"/>
+                            <line x1="40" y1="110" x2="380" y2="110"/>
+                            <line x1="40" y1="90" x2="380" y2="90" class="major-line"/>
+                            <line x1="40" y1="70" x2="380" y2="70"/>
+                            <line x1="40" y1="50" x2="380" y2="50" class="major-line"/>
+                            <line x1="40" y1="30" x2="380" y2="30"/>
+                            <line x1="40" y1="10" x2="380" y2="10" class="major-line"/>
+
+                            <!-- 縦線（回数） -->
+                            <line x1="40" y1="10" x2="40" y2="170" class="major-line"/>
+                            <line x1="74" y1="10" x2="74" y2="170"/>
+                            <line x1="108" y1="10" x2="108" y2="170"/>
+                            <line x1="142" y1="10" x2="142" y2="170"/>
+                            <line x1="176" y1="10" x2="176" y2="170"/>
+                            <line x1="210" y1="10" x2="210" y2="170"/>
+                            <line x1="244" y1="10" x2="244" y2="170"/>
+                            <line x1="278" y1="10" x2="278" y2="170"/>
+                            <line x1="312" y1="10" x2="312" y2="170"/>
+                            <line x1="346" y1="10" x2="346" y2="170"/>
+                            <line x1="380" y1="10" x2="380" y2="170" class="major-line"/>
+                        </g>
+
+                        <!-- ランクボーダーライン -->
+                        <line x1="40" y1="50" x2="380" y2="50" class="rank-line s-rank"/>
+                        <text x="385" y="52" class="rank-label" fill="#ffd700">S達人</text>
+
+                        <line x1="40" y1="90" x2="380" y2="90" class="rank-line a-rank"/>
+                        <text x="385" y="92" class="rank-label" fill="#c0c0c0">A上級</text>
+
+                        <line x1="40" y1="130" x2="380" y2="130" class="rank-line b-rank"/>
+                        <text x="385" y="132" class="rank-label" fill="#cd7f32">B中級</text>
+
+                        <!-- 軸ラベル -->
+                        <text x="5" y="12" class="graph-label">35問</text>
+                        <text x="5" y="52" class="graph-label">30問</text>
+                        <text x="5" y="92" class="graph-label">20問</text>
+                        <text x="5" y="132" class="graph-label">10問</text>
+                        <text x="10" y="172" class="graph-label">0問</text>
+
+                        <text x="35" y="185" class="graph-label">1回</text>
+                        <text x="69" y="185" class="graph-label">2回</text>
+                        <text x="103" y="185" class="graph-label">3回</text>
+                        <text x="137" y="185" class="graph-label">4回</text>
+                        <text x="171" y="185" class="graph-label">5回</text>
+                        <text x="205" y="185" class="graph-label">6回</text>
+                        <text x="239" y="185" class="graph-label">7回</text>
+                        <text x="273" y="185" class="graph-label">8回</text>
+                        <text x="307" y="185" class="graph-label">9回</text>
+                        <text x="338" y="185" class="graph-label">10回</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 右パネル -->
+            <div class="right-panel">
+                <div class="section weakness-map">
+                    <div class="section-title">🔍 弱点発見マップ：カベの正体</div>
+                    <table class="weakness-table">
+                        <thead>
+                            <tr>
+                                <th>カベの番号<br>(Q No.)</th>
+                                <th>君の弱点はここだ！</th>
+                                <th>おすすめ訓練メニュー</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="q-numbers">1, 8, 15,<br>22, 29</td>
+                                <td class="weakness-name">整数の<br>逆算</td>
+                                <td class="drill-name">🛠️ ドリル①：<br>□を求める計算(整)</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">2, 9, 16,<br>23, 30</td>
+                                <td class="weakness-name">分数の<br>逆算</td>
+                                <td class="drill-name">🛠️ ドリル②：<br>□を求める計算(分)</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">3, 10, 17,<br>24, 31</td>
+                                <td class="weakness-name">四則混合の<br>順序</td>
+                                <td class="drill-name">🛠️ ドリル③：<br>計算の作法（順序）</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">4, 11, 18,<br>25, 32</td>
+                                <td class="weakness-name">帯分数の<br>処理</td>
+                                <td class="drill-name">🛠️ ドリル④：<br>帯分数のたし・ひき</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">5, 12, 19,<br>26, 33</td>
+                                <td class="weakness-name">多重カッコの<br>展開</td>
+                                <td class="drill-name">🛠️ ドリル⑤：<br>カッコの外し方</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">6, 13, 20,<br>27, 34</td>
+                                <td class="weakness-name">虫食い算</td>
+                                <td class="drill-name">🛠️ ドリル⑥：<br>筆算の復元</td>
+                            </tr>
+                            <tr>
+                                <td class="q-numbers">7, 14, 21,<br>28, 35</td>
+                                <td class="weakness-name">監査力<br>(罠)</td>
+                                <td class="drill-name">🛠️ ドリル⑦：<br>正しいメモの書き方</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <div class="rules-title">📋 使い方ガイド</div>
+            <div class="rules-list">
+                <div class="rule-item">
+                    <span class="rule-number">1.</span>
+                    <span class="rule-text"><strong>スタート：</strong>3分間、全力で解く！</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">2.</span>
+                    <span class="rule-text"><strong>ストップ：</strong>時間が来たら、解けた最後の問題の下に線を引く。</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">3.</span>
+                    <span class="rule-text"><strong>チェック：</strong>丸付けをして、最初に間違えた問題（カベ）の番号を記録。</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-number">4.</span>
+                    <span class="rule-text"><strong>診断：</strong>右の表でカベの番号を探す。それが君がやるべき訓練メニューだ！</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

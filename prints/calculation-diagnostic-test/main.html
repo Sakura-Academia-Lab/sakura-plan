@@ -19,6 +19,19 @@
     <div class="nav-item criteria-menu" onclick="showCriteria()">
         📊 判定基準を見る
     </div>
+
+    <div class="batch-print-section">
+        <div class="section-title">📦 一括印刷</div>
+        <div class="batch-print-btn" onclick="printAllStageUnits('第1部：反射神経')">
+            🖨️ 第1ステージ 全部
+        </div>
+        <div class="batch-print-btn" onclick="printAllStageUnits('第2部：構造視力')">
+            🖨️ 第2ステージ 全部
+        </div>
+        <div class="batch-print-btn" onclick="printAllStageUnits('第3部：持久力・整理力')">
+            🖨️ 第3ステージ 全部
+        </div>
+    </div>
 </div>
 
 <div id="criteria-content" style="display:none;">
@@ -390,6 +403,53 @@
 
         // ページタイトルを更新
         document.title = '計算脳・自動化レベル判定基準';
+    }
+
+    function printAllStageUnits(stage) {
+        // 指定されたステージのすべてのユニットを取得
+        const stageUnits = allData.filter(unit => unit.chapter === stage);
+
+        if (stageUnits.length === 0) {
+            alert(`${stage}のユニットが見つかりません`);
+            return;
+        }
+
+        // コントロールパネルを非表示
+        document.querySelector('.controls').style.display = 'none';
+
+        // すべてのメニュー項目のアクティブ状態を解除
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+        // メインエリアをクリア
+        const area = document.getElementById('sheet-area');
+        area.innerHTML = '';
+
+        // すべてのユニットを連続で表示
+        stageUnits.forEach(unit => {
+            // サバイバルテストの場合は全パターンを表示
+            if (unit.section === 'サバイバルテスト') {
+                unit.patterns.forEach((pattern, patternIndex) => {
+                    area.innerHTML += generateSheet(unit, pattern, unit.patternLabels[patternIndex]);
+                });
+            } else {
+                // 訓練ユニットの場合は全パターンを表示
+                unit.patterns.forEach((pattern, patternIndex) => {
+                    const label = `パターン${patternIndex + 1}`;
+                    area.innerHTML += generateSheet(unit, pattern, label);
+                });
+            }
+        });
+
+        // MathJaxで数式をレンダリング
+        if (window.MathJax) MathJax.typeset();
+
+        // ページタイトルを更新
+        document.title = `${stage} 全ユニット一括印刷`;
+
+        // 少し待ってから印刷ダイアログを開く（MathJaxのレンダリング待ち）
+        setTimeout(() => {
+            window.print();
+        }, 1000);
     }
 </script>
 
