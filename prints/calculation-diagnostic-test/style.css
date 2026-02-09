@@ -28,7 +28,18 @@ body {
 .sidebar-header { padding: 15px; background: #1a252f; border-bottom: 1px solid #3e4f5f; }
 .sidebar-header h1 { font-size: 16px; margin: 0; }
 .nav-group-header { font-size: 13px; font-weight: bold; padding: 12px 15px; cursor: pointer; background: #34495e; border-bottom: 1px solid #2c3e50; display: flex; justify-content: space-between; }
-.nav-section-header { font-size: 12px; font-weight: bold; padding: 10px 20px; cursor: pointer; background: #3e4f5f; border-bottom: 1px solid #34495e; display: flex; justify-content: space-between; color: #ecf0f1; }
+.nav-section-header {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 10px 15px;
+    cursor: pointer;
+    background: #3e4f5f;
+    border-bottom: 1px solid #34495e;
+    display: flex;
+    justify-content: space-between;
+    color: #ecf0f1;
+    line-height: 1.4;
+}
 .nav-item { padding: 10px 30px; cursor: pointer; font-size: 12px; color: #bdc3c7; border-bottom: 1px solid #34495e; }
 .nav-item.active { background: var(--main-orange); color: white; font-weight: bold; }
 

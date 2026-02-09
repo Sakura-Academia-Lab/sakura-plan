@@ -70,6 +70,15 @@
         return chapterName.replace(/第(\d+)章/, "レベル$1");
     }
 
+    function formatSectionLabel(section) {
+        // セクション名をユーザーフレンドリーに変換
+        const labelMap = {
+            'サバイバルテスト': '🔥 総合力診断（サバイバル）※まずはこれ！',
+            '訓練': '💪 弱点克服トレーニング ※診断で落ちた人向け'
+        };
+        return labelMap[section] || section;
+    }
+
     function renderMenu() {
         const container = document.getElementById('menu-container');
         container.innerHTML = '';
@@ -121,7 +130,7 @@
                 const sectionHeader = document.createElement('div');
                 sectionHeader.className = 'nav-section-header';
                 sectionHeader.innerHTML = `
-                    <span>${section}</span>
+                    <span>${formatSectionLabel(section)}</span>
                     <span class="toggle-icon">${isSectionOpen ? '▼' : '▶'}</span>
                 `;
                 sectionHeader.onclick = (e) => {
