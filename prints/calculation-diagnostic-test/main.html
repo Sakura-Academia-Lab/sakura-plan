@@ -325,13 +325,16 @@
                 </div>
                 <div class="method-box">目標：${unit.method}</div>
                 <ul class="problems">
-                    ${pattern.problems.map((p, i) => `
+                    ${pattern.problems.map((p, i) => {
+                        const isWideAnswer = p.includes('素因数分解');
+                        return `
                         <li class="problem-item">
                             <span class="p-num">(${i+1})</span>
                             <div class="p-content">\\(${p}\\)</div>
-                            <div class="answer-box-empty"></div>
+                            <div class="answer-box-empty${isWideAnswer ? ' wide' : ''}"></div>
                         </li>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </ul>
             </div>
 
@@ -343,12 +346,14 @@
                     </div>
                 </div>
                 <div class="explanation-container">
-                    ${pattern.problems.map((p, i) => `
+                    ${pattern.problems.map((p, i) => {
+                        const isWideAnswer = p.includes('素因数分解');
+                        return `
                         <div class="exp-unit">
                             <div class="exp-top">
                                 <span class="p-num">(${i+1})</span>
                                 <div class="p-content">\\(${p}\\)</div>
-                                <div class="ans-box-filled">
+                                <div class="ans-box-filled${isWideAnswer ? ' wide' : ''}">
                                     <span class="ans-text">${pattern.answers[i]}</span>
                                 </div>
                             </div>
@@ -358,7 +363,8 @@
                             </div>
                             ` : ''}
                         </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             </div>
         `;

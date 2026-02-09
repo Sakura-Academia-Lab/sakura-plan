@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(git commit:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(for file in sec1b_factors.js sec2_structure.js sec2b_gcd.js sec3_endurance.js)",
+      "Bash(do head -n 5 \"$file\")",
+      "Bash(done)"
     ]
   }
 }

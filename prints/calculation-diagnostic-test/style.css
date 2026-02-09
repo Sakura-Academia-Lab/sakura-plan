@@ -133,7 +133,9 @@ body {
 .p-content { flex-grow: 1; text-align: left; padding: 0 10px; }
 
 .answer-box-empty { width: 110px; height: 45px; border: 1px solid #333; flex-shrink: 0; }
+.answer-box-empty.wide { width: 150px; } /* 素因数分解など、長い回答用 */
 .ans-box-filled { width: 110px; height: 45px; border: 2px solid var(--red-pen); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ans-box-filled.wide { width: 150px; }
 .ans-text { color: var(--red-pen); font-weight: bold; font-size: 18px; }
 
 .exp-unit { margin-bottom: 5px; }
