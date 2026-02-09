@@ -2,7 +2,7 @@ addData({
   id: "sec2_survival",
   chapter: "第2部：構造視力",
   section: "サバイバルテスト",
-  title: "【サバイバル・ストリーク 35】構造視力",
+  title: "【連続正解・チャレンジ 35】構造視力",
   method: "制限時間3分。インターリーブ配列35問（7単元×5レベル）。式の景色を見て、最適な工夫を選択する力を問う。",
   patternLabels: ["セットA", "セットB", "セットC"],
   patterns: [

@@ -19,7 +19,7 @@
 
     <div class="criteria-section">
         <h2>📊 計算脳・自動化レベル判定基準</h2>
-        <p class="criteria-intro">制限時間3分・35問の「サバイバルテスト」の結果（到達スコア）に基づき、生徒の計算回路がどの段階にあるかを4段階で判定します。</p>
+        <p class="criteria-intro">制限時間3分・35問の「連続正解・チャレンジ」の結果（到達記録）に基づき、生徒の計算回路がどの段階にあるかを4段階で判定します。</p>
 
         <div class="rank-table">
             <div class="rank-row rank-s">
@@ -160,14 +160,14 @@
     }
 
     function formatLevelName(chapterName) {
-        return chapterName.replace(/第(\d+)章/, "レベル$1");
+        return chapterName.replace(/第(\d+)部/, "ステージ$1");
     }
 
     function formatSectionLabel(section) {
         // セクション名をユーザーフレンドリーに変換
         const labelMap = {
-            'サバイバルテスト': '🔥 総合力診断（サバイバル）※まずはこれ！',
-            '訓練': '💪 弱点克服トレーニング ※診断で落ちた人向け'
+            'サバイバルテスト': '🔥 連続正解・チャレンジ ※まずはこれ！',
+            '訓練': '💪 弱点克服トレーニング ※チャレンジで落ちた人向け'
         };
         return labelMap[section] || section;
     }
