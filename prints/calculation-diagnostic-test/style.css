@@ -116,6 +116,45 @@ body {
 .handwritten-note { font-family: 'Kiwi Maru', serif; color: var(--red-pen); font-size: 13px; display: block; position: relative; padding-left: 18px; line-height: 1.4; }
 .handwritten-note::before { content: '▶'; position: absolute; left: 0; top: 2px; font-size: 9px; }
 
+/* サバイバルシート（30問・2列レイアウト） */
+.survival-sheet .problems {
+    column-count: 2;
+    column-gap: 10mm;
+}
+.survival-sheet .problem-item {
+    break-inside: avoid;
+    min-height: 30px;
+    font-size: 16px;
+}
+.survival-sheet .p-num {
+    width: 35px;
+    font-size: 13px;
+}
+.survival-sheet .answer-box-empty {
+    width: 80px;
+    height: 35px;
+}
+
+.survival-sheet .explanation-container {
+    column-count: 2;
+    column-gap: 10mm;
+}
+.survival-sheet .exp-unit {
+    break-inside: avoid;
+}
+.survival-sheet .exp-top {
+    min-height: 30px;
+    font-size: 16px;
+}
+.survival-sheet .ans-box-filled {
+    width: 80px;
+    height: 35px;
+}
+.survival-sheet .exp-annotation {
+    min-height: 25px;
+    font-size: 12px;
+}
+
 @media print {
     @page {
         size: A4 portrait;
@@ -170,5 +209,32 @@ body {
     }
     .ultra-few .exp-annotation {
         min-height: 80mm !important;
+    }
+
+    /* サバイバル（30問・2列） */
+    .survival-sheet .problems,
+    .survival-sheet .explanation-container {
+        column-count: 2 !important;
+        column-gap: 8mm !important;
+    }
+    .survival-sheet .problem-item,
+    .survival-sheet .exp-top {
+        min-height: 28px !important;
+        padding: 3px 0 !important;
+        font-size: 14px !important;
+    }
+    .survival-sheet .answer-box-empty,
+    .survival-sheet .ans-box-filled {
+        width: 70px !important;
+        height: 30px !important;
+    }
+    .survival-sheet .exp-annotation {
+        min-height: 20px !important;
+        padding: 2px 0 3px 35px !important;
+        font-size: 11px !important;
+    }
+    .survival-sheet .p-num {
+        width: 30px !important;
+        font-size: 12px !important;
     }
 }
