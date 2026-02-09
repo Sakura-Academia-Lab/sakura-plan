@@ -257,14 +257,15 @@ body {
     }
     .survival-sheet .problem-item,
     .survival-sheet .exp-top {
-        min-height: 28px !important;
-        padding: 3px 0 !important;
-        font-size: 14px !important;
+        min-height: 40px !important;
+        padding: 4px 0 !important;
+        font-size: 13px !important;
+        line-height: 1.4 !important;
     }
     .survival-sheet .answer-box-empty,
     .survival-sheet .ans-box-filled {
         width: 70px !important;
-        height: 30px !important;
+        height: 35px !important;
     }
     .survival-sheet .exp-annotation {
         min-height: 20px !important;
