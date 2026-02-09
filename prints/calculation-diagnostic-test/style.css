@@ -276,3 +276,156 @@ body {
         font-size: 12px !important;
     }
 }
+
+/* 判定基準セクション */
+.criteria-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #1a252f;
+    border-top: 2px solid #3e4f5f;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.criteria-section h2 {
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    color: #3498db;
+}
+
+.criteria-intro {
+    margin: 0 0 15px 0;
+    color: #bdc3c7;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.rank-table {
+    margin-bottom: 15px;
+}
+
+.rank-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 4px;
+    background: #2c3e50;
+    border-left: 4px solid;
+}
+
+.rank-row.rank-s { border-left-color: #f39c12; }
+.rank-row.rank-a { border-left-color: #3498db; }
+.rank-row.rank-b { border-left-color: #27ae60; }
+.rank-row.rank-c { border-left-color: #95a5a6; }
+
+.rank-label {
+    font-size: 18px;
+    font-weight: bold;
+    width: 30px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.rank-row.rank-s .rank-label { color: #f39c12; }
+.rank-row.rank-a .rank-label { color: #3498db; }
+.rank-row.rank-b .rank-label { color: #27ae60; }
+.rank-row.rank-c .rank-label { color: #95a5a6; }
+
+.rank-content {
+    flex: 1;
+}
+
+.rank-score {
+    font-size: 11px;
+    font-weight: bold;
+    color: #ecf0f1;
+    margin-bottom: 3px;
+}
+
+.rank-level {
+    font-size: 10px;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 4px;
+}
+
+.rank-state {
+    font-size: 9px;
+    color: #bdc3c7;
+    line-height: 1.4;
+}
+
+.criteria-details {
+    margin-top: 15px;
+    background: #2c3e50;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.criteria-details summary {
+    padding: 10px 12px;
+    cursor: pointer;
+    background: #34495e;
+    color: #ecf0f1;
+    font-weight: bold;
+    font-size: 11px;
+    list-style: none;
+    user-select: none;
+}
+
+.criteria-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.criteria-details summary::before {
+    content: "▶ ";
+    display: inline-block;
+    margin-right: 5px;
+    transition: transform 0.2s;
+}
+
+.criteria-details[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.criteria-details summary:hover {
+    background: #3e4f5f;
+}
+
+.level-detail {
+    padding: 15px;
+    border-bottom: 1px solid #34495e;
+}
+
+.level-detail:last-child {
+    border-bottom: none;
+}
+
+.level-detail h3 {
+    font-size: 12px;
+    margin: 0 0 8px 0;
+    color: #3498db;
+}
+
+.level-detail p {
+    margin: 0 0 8px 0;
+    color: #bdc3c7;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.level-detail strong {
+    color: #ecf0f1;
+}
+
+.level-detail ul {
+    margin: 5px 0 8px 15px;
+    padding: 0;
+    color: #95a5a6;
+    font-size: 9px;
+}
+
+.level-detail li {
+    margin-bottom: 3px;
+}
