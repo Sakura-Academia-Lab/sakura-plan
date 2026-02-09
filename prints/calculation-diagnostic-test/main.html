@@ -184,6 +184,10 @@
         const area = document.getElementById('sheet-area');
         const label = patternLabels[activePatternIdx] || String.fromCharCode(65 + activePatternIdx);
 
+        // ページタイトルを動的に更新（PDF名に反映）
+        const pageTitle = `${formatLevelName(unit.chapter)} ${unit.title} 【${label}】`;
+        document.title = pageTitle;
+
         // 問題数に応じたレイアウト選択
         let layoutClass = '';
         if (pattern.problems.length >= 20) {
@@ -194,15 +198,19 @@
             layoutClass = 'few-problems'; // 暗算Bなど：90px余白
         }
 
+        // 現在の日付を取得（印刷日として使用）
+        const today = new Date();
+        const printDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
+
         area.innerHTML = `
             <div class="page page-break ${layoutClass}">
                 <div class="header">
                     <div class="title-area">
                         <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
-                        <div class="main-title">${unit.title} <span class="pattern-label">【${label}】</span></div>
+                        <div class="main-title">${unit.title}<span class="pattern-label">【${label}】</span></div>
                     </div>
                     <div class="info-box">
-                        <div class="info-item date-item">月　日</div>
+                        <div class="info-item date-item print-date">${printDate}</div>
                         <div class="info-item name-item">名前</div>
                     </div>
                 </div>

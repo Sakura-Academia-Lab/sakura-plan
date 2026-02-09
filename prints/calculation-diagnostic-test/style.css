@@ -60,10 +60,23 @@ body {
 }
 .color-exp { border-bottom-color: var(--red-pen); }
 .chapter-label { font-size: 11px; color: #7f8c8d; }
-.main-title { font-size: 20px; font-weight: bold; margin-top: 3px; }
+.main-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 3px;
+    white-space: nowrap; /* タイトルの改行を防ぐ */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .info-box { display: flex; gap: 10px; align-items: flex-end; }
 .info-item { border-bottom: 1px solid #333; height: 30px; display: flex; align-items: flex-end; font-size: 11px; }
-.date-item { width: 70px; }
+.date-item { width: 90px; }
+.print-date {
+    font-size: 10px;
+    color: #666;
+    border-bottom: none;
+    padding-bottom: 2px;
+}
 .name-item { width: 130px; }
 
 .method-box {
@@ -165,6 +178,19 @@ body {
     body { margin: 0; padding: 0; background: white; }
     #sidebar, .controls { display: none !important; }
     #main-content { margin-left: 0; padding: 0; }
+
+    /* 印刷時：タイトルの改行を確実に防ぐ */
+    .main-title {
+        white-space: nowrap !important;
+        overflow: visible !important;
+    }
+
+    /* 印刷日を表示 */
+    .print-date {
+        display: flex !important;
+        font-size: 9px !important;
+        color: #333 !important;
+    }
 
     .page {
         margin: 0;
