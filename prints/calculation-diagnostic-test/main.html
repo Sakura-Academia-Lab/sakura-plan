@@ -199,9 +199,11 @@
                                     <span class="ans-text">${pattern.answers[i]}</span>
                                 </div>
                             </div>
+                            ${layoutClass !== 'survival-sheet' ? `
                             <div class="exp-annotation">
                                 ${pattern.annotations[i] ? `<span class="handwritten-note">${wrapAnnotationMath(pattern.annotations[i])}</span>` : ''}
                             </div>
+                            ` : ''}
                         </div>
                     `).join('')}
                 </div>
@@ -211,14 +213,14 @@
     }
 </script>
 
+<script src="sec1_survival.js"></script>
+<script src="sec2_survival.js"></script>
+<script src="sec3_survival.js"></script>
 <script src="sec1_reflexes.js"></script>
 <script src="sec1b_factors.js"></script>
 <script src="sec2_structure.js"></script>
 <script src="sec2b_gcd.js"></script>
 <script src="sec3_endurance.js"></script>
-<script src="sec1_survival.js"></script>
-<script src="sec2_survival.js"></script>
-<script src="sec3_survival.js"></script>
 
 </body>
 </html>
