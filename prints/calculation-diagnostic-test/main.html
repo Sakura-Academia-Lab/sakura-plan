@@ -437,7 +437,8 @@
             // サバイバルテストの場合は全パターンを表示
             if (unit.section === 'サバイバルテスト') {
                 unit.patterns.forEach((pattern, patternIndex) => {
-                    area.innerHTML += generateSheet(unit, pattern, pattern.label || `セット${String.fromCharCode(65 + patternIndex)}`);
+                    const label = unit.patternLabels ? unit.patternLabels[patternIndex] : `セット${String.fromCharCode(65 + patternIndex)}`;
+                    area.innerHTML += generateSheet(unit, pattern, label);
                 });
             } else {
                 // 訓練ユニットの場合は全パターンを表示
