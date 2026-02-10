@@ -135,11 +135,11 @@
 <div id="main-content">
     <div class="controls">
         <div class="tabs" id="pattern-tabs">
-            <button class="tab active" onclick="setPattern(0)">パターンA</button>
-            <button class="tab" onclick="setPattern(1)">パターンB</button>
-            <button class="tab" onclick="setPattern(2)">パターンC</button>
-            <button class="tab" onclick="setPattern(3)">パターンD</button>
-            <button class="tab" onclick="setPattern(4)">パターンE</button>
+            <button class="tab active" onclick="setPattern(0)">レベル1</button>
+            <button class="tab" onclick="setPattern(1)">レベル2</button>
+            <button class="tab" onclick="setPattern(2)">レベル3</button>
+            <button class="tab" onclick="setPattern(3)">レベル4</button>
+            <button class="tab" onclick="setPattern(4)">レベル5</button>
         </div>
         <div class="actions">
             <button class="btn-print" onclick="window.print()">印刷用レイアウトを表示</button>
@@ -296,18 +296,18 @@
         const pattern = unit.patterns[activePatternIdx];
 
         // タブラベル更新（動的）
-        const patternLabels = unit.patternLabels || ['パターンA', 'パターンB', 'パターンC', 'パターンD', 'パターンE'];
+        const patternLabels = unit.patterns.map(p => p.label);
         document.querySelectorAll('.tab').forEach((t, i) => {
             if (i < unit.patterns.length) {
                 t.style.display = '';
-                t.textContent = patternLabels[i] || `パターン${String.fromCharCode(65 + i)}`;
+                t.textContent = patternLabels[i] || `レベル${i + 1}`;
             } else {
                 t.style.display = 'none';
             }
         });
 
         const area = document.getElementById('sheet-area');
-        const label = patternLabels[activePatternIdx] || String.fromCharCode(65 + activePatternIdx);
+        const label = patternLabels[activePatternIdx] || `レベル${activePatternIdx + 1}`;
 
         // ページタイトルを動的に更新（PDF名に反映）
         const pageTitle = `${formatLevelName(unit.chapter)} ${unit.title} 【${label}】`;
@@ -437,12 +437,12 @@
             // サバイバルテストの場合は全パターンを表示
             if (unit.section === 'サバイバルテスト') {
                 unit.patterns.forEach((pattern, patternIndex) => {
-                    area.innerHTML += generateSheet(unit, pattern, unit.patternLabels[patternIndex]);
+                    area.innerHTML += generateSheet(unit, pattern, pattern.label || `セット${String.fromCharCode(65 + patternIndex)}`);
                 });
             } else {
                 // 訓練ユニットの場合は全パターンを表示
                 unit.patterns.forEach((pattern, patternIndex) => {
-                    const label = `パターン${patternIndex + 1}`;
+                    const label = pattern.label || `レベル${patternIndex + 1}`;
                     area.innerHTML += generateSheet(unit, pattern, label);
                 });
             }
