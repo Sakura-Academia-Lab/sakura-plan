@@ -207,28 +207,13 @@
             hierarchy[chapter][section].push({ unit, idx });
         });
 
-        // Render hierarchy
+        // Render hierarchy (すべて常に表示)
         Object.keys(hierarchy).forEach(chapter => {
-            const isChapterOpen = openChapters.has(chapter);
-
             // Chapter header
             const chapterHeader = document.createElement('div');
             chapterHeader.className = 'nav-group-header';
-            chapterHeader.innerHTML = `
-                <span>${formatLevelName(chapter)}</span>
-                <span class="toggle-icon">${isChapterOpen ? '▼' : '▶'}</span>
-            `;
-            chapterHeader.onclick = () => {
-                if(openChapters.has(chapter)) {
-                    openChapters.delete(chapter);
-                } else {
-                    openChapters.add(chapter);
-                }
-                renderMenu();
-            };
+            chapterHeader.innerHTML = `<span>${formatLevelName(chapter)}</span>`;
             container.appendChild(chapterHeader);
-
-            if (!isChapterOpen) return;
 
             // Chapter wrapper
             const chapterWrapper = document.createElement('div');
@@ -237,28 +222,11 @@
 
             // Sections within chapter
             Object.keys(hierarchy[chapter]).forEach(section => {
-                const sectionKey = chapter + '|' + section;
-                const isSectionOpen = openSections.has(sectionKey);
-
                 // Section header
                 const sectionHeader = document.createElement('div');
                 sectionHeader.className = 'nav-section-header';
-                sectionHeader.innerHTML = `
-                    <span>${formatSectionLabel(section)}</span>
-                    <span class="toggle-icon">${isSectionOpen ? '▼' : '▶'}</span>
-                `;
-                sectionHeader.onclick = (e) => {
-                    e.stopPropagation();
-                    if(openSections.has(sectionKey)) {
-                        openSections.delete(sectionKey);
-                    } else {
-                        openSections.add(sectionKey);
-                    }
-                    renderMenu();
-                };
+                sectionHeader.innerHTML = `<span>${formatSectionLabel(section)}</span>`;
                 chapterWrapper.appendChild(sectionHeader);
-
-                if (!isSectionOpen) return;
 
                 // Units within section
                 hierarchy[chapter][section].forEach(({ unit, idx }) => {
