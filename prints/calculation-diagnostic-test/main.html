@@ -307,11 +307,13 @@
                         <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
                         <div class="main-title">${isSurvivalTest ? '3分チャレンジ' : unit.title}<span class="pattern-label">【${label}】</span></div>
                     </div>
-                    <div class="header-date">${printDate}</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-item name-item">名前</div>
-                    ${isSurvivalTest ? '<div class="info-item score-item">得点</div>' : ''}
+                    <div class="header-right">
+                        <div class="header-date">${printDate}</div>
+                        <div class="info-box">
+                            <div class="info-item name-item">名前</div>
+                            ${isSurvivalTest ? '<div class="info-item score-item">得点</div>' : ''}
+                        </div>
+                    </div>
                 </div>
                 ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
                 <ul class="problems">
@@ -412,11 +414,13 @@
                         <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
                         <div class="main-title">${isSurvivalTest ? '3分チャレンジ' : unit.title}<span class="pattern-label">【${label}】</span></div>
                     </div>
-                    <div class="header-date">${printDate}</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-item name-item">名前</div>
-                    ${isSurvivalTest ? '<div class="info-item score-item">得点</div>' : ''}
+                    <div class="header-right">
+                        <div class="header-date">${printDate}</div>
+                        <div class="info-box">
+                            <div class="info-item name-item">名前</div>
+                            ${isSurvivalTest ? '<div class="info-item score-item">得点</div>' : ''}
+                        </div>
+                    </div>
                 </div>
                 ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
                 <ul class="problems">
