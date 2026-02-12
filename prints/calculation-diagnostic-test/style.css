@@ -98,6 +98,7 @@ body {
 .header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     border-bottom: 2px solid var(--main-orange);
     padding-bottom: 5px;
     margin-bottom: 10px;
@@ -112,16 +113,19 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.info-box { display: flex; gap: 10px; align-items: flex-end; }
-.info-item { border-bottom: 1px solid #333; height: 30px; display: flex; align-items: flex-end; font-size: 11px; }
-.date-item { width: 90px; }
-.print-date {
+.header-date {
     font-size: 10px;
     color: #666;
-    border-bottom: none;
-    padding-bottom: 2px;
+    padding-top: 5px;
 }
-.name-item { width: 130px; }
+.info-box {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+.info-item { border-bottom: 1px solid #333; height: 30px; display: flex; align-items: flex-end; font-size: 11px; }
+.name-item { width: 180px; }
 .score-item { width: 80px; }
 
 .method-box {
