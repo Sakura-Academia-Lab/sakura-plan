@@ -295,19 +295,23 @@
         const today = new Date();
         const printDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
 
+        // サバイバルテストかどうかを判定
+        const isSurvivalTest = unit.section === 'サバイバルテスト';
+
         area.innerHTML = `
             <div class="page page-break ${layoutClass}">
                 <div class="header">
                     <div class="title-area">
                         <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
-                        <div class="main-title">${unit.title}<span class="pattern-label">【${label}】</span></div>
+                        <div class="main-title">${isSurvivalTest ? '3分チャレンジ' : unit.title}<span class="pattern-label">【${label}】</span></div>
                     </div>
                     <div class="info-box">
                         <div class="info-item date-item print-date">${printDate}</div>
                         <div class="info-item name-item">名前</div>
+                        ${isSurvivalTest ? '<div class="info-item score-item">得点</div>' : ''}
                     </div>
                 </div>
-                <div class="method-box">目標：${unit.method}</div>
+                ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
                 <ul class="problems">
                     ${pattern.problems.map((p, i) => {
                         const isWideAnswer = p.includes('素因数分解');
@@ -379,6 +383,84 @@
     function showPassport() {
         // 攻略パスポート（記録用紙）を新しいタブで開く
         window.open('record-passport.html', '_blank');
+    }
+
+    function generateSheet(unit, pattern, label) {
+        // サバイバルテストかどうかを判定
+        const isSurvivalTest = unit.section === 'サバイバルテスト';
+
+        // 問題数に応じたレイアウト選択
+        let layoutClass = '';
+        if (pattern.problems.length >= 20) {
+            layoutClass = 'survival-sheet';
+        } else if (pattern.problems.length <= 2) {
+            layoutClass = 'ultra-few';
+        } else if (pattern.problems.length <= 5) {
+            layoutClass = 'few-problems';
+        }
+
+        // 現在の日付を取得
+        const today = new Date();
+        const printDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
+
+        return `
+            <div class="page page-break ${layoutClass}">
+                <div class="header">
+                    <div class="title-area">
+                        <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
+                        <div class="main-title">${isSurvivalTest ? '3分チャレンジ' : unit.title}<span class="pattern-label">【${label}】</span></div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-item date-item print-date">${printDate}</div>
+                        <div class="info-item name-item">名前</div>
+                        ${isSurvivalTest ? '<div class="info-item score-item">得点</div>' : ''}
+                    </div>
+                </div>
+                ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
+                <ul class="problems">
+                    ${pattern.problems.map((p, i) => {
+                        const isWideAnswer = p.includes('素因数分解');
+                        return `
+                        <li class="problem-item">
+                            <span class="p-num">(${i+1})</span>
+                            <div class="p-content">\\(${p}\\)</div>
+                            <div class="answer-box-empty${isWideAnswer ? ' wide' : ''}"></div>
+                        </li>
+                        `;
+                    }).join('')}
+                </ul>
+            </div>
+
+            <div class="page ${layoutClass}">
+                <div class="header color-exp">
+                    <div class="title-area">
+                        <span class="chapter-label">解答と指導ポイント</span>
+                        <div class="main-title">${unit.title} <span class="pattern-label">【${label}】解説</span></div>
+                    </div>
+                </div>
+                <div class="explanation-container">
+                    ${pattern.problems.map((p, i) => {
+                        const isWideAnswer = p.includes('素因数分解');
+                        return `
+                        <div class="exp-unit">
+                            <div class="exp-top">
+                                <span class="p-num">(${i+1})</span>
+                                <div class="p-content">\\(${p}\\)</div>
+                                <div class="ans-box-filled${isWideAnswer ? ' wide' : ''}">
+                                    <span class="ans-text">${pattern.answers[i]}</span>
+                                </div>
+                            </div>
+                            ${layoutClass !== 'survival-sheet' ? `
+                            <div class="exp-annotation">
+                                ${pattern.annotations[i] ? `<span class="handwritten-note">${wrapAnnotationMath(pattern.annotations[i])}</span>` : ''}
+                            </div>
+                            ` : ''}
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
     }
 
     function printAllStageUnits(stage) {

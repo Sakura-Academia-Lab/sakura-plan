@@ -122,6 +122,7 @@ body {
     padding-bottom: 2px;
 }
 .name-item { width: 130px; }
+.score-item { width: 80px; }
 
 .method-box {
     background: #fdf2e9;
