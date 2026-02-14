@@ -25,9 +25,29 @@ body {
     padding: 0;
     z-index: 100;
 }
-.sidebar-header { padding: 15px; background: #1a252f; border-bottom: 1px solid #3e4f5f; }
-.sidebar-header h1 { font-size: 16px; margin: 0; }
-.nav-group-header { font-size: 13px; font-weight: bold; padding: 12px 15px; cursor: pointer; background: #34495e; border-bottom: 1px solid #2c3e50; display: flex; justify-content: space-between; }
+
+.sidebar-header {
+    padding: 15px;
+    background: #1a252f;
+    border-bottom: 1px solid #3e4f5f;
+}
+
+.sidebar-header h1 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.nav-group-header {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 12px 15px;
+    cursor: pointer;
+    background: #34495e;
+    border-bottom: 1px solid #2c3e50;
+    display: flex;
+    justify-content: space-between;
+}
+
 .nav-section-header {
     font-size: 11px;
     font-weight: bold;
@@ -40,8 +60,20 @@ body {
     color: #ecf0f1;
     line-height: 1.4;
 }
-.nav-item { padding: 10px 30px; cursor: pointer; font-size: 12px; color: #bdc3c7; border-bottom: 1px solid #34495e; }
-.nav-item.active { background: var(--main-orange); color: white; font-weight: bold; }
+
+.nav-item {
+    padding: 10px 30px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #bdc3c7;
+    border-bottom: 1px solid #34495e;
+}
+
+.nav-item.active {
+    background: var(--main-orange);
+    color: white;
+    font-weight: bold;
+}
 
 /* 一括印刷セクション */
 .batch-print-section {
@@ -49,6 +81,7 @@ body {
     border-top: 2px solid #3e4f5f;
     padding-top: 15px;
 }
+
 .batch-print-section .section-title {
     font-size: 12px;
     font-weight: bold;
@@ -57,6 +90,7 @@ body {
     background: #34495e;
     margin-bottom: 5px;
 }
+
 .batch-print-btn {
     padding: 12px 20px;
     margin: 5px 15px;
@@ -68,21 +102,60 @@ body {
     border-radius: 6px;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 .batch-print-btn:hover {
     background: linear-gradient(135deg, #229954 0%, #27ae60 100%);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
 }
 
 /* メインレイアウト */
-#main-content { margin-left: 250px; flex-grow: 1; padding: 15px; }
-.controls { display: flex; justify-content: space-between; background: white; padding: 8px 15px; border-radius: 8px; margin-bottom: 15px; }
-.tabs { display: flex; gap: 4px; }
-.tab { padding: 6px 12px; border: 1px solid var(--border-gray); background: white; cursor: pointer; border-radius: 4px; font-size: 12px; }
-.tab.active { background: var(--main-orange); color: white; }
-.btn-print { background: #27ae60; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
+#main-content {
+    margin-left: 250px;
+    flex-grow: 1;
+    padding: 15px;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.tabs {
+    display: flex;
+    gap: 4px;
+}
+
+.tab {
+    padding: 6px 12px;
+    border: 1px solid var(--border-gray);
+    background: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.tab.active {
+    background: var(--main-orange);
+    color: white;
+}
+
+.btn-print {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+}
 
 /* A4 用紙設定 */
 .page {
@@ -103,34 +176,63 @@ body {
     padding-bottom: 5px;
     margin-bottom: 10px;
 }
-.color-exp { border-bottom-color: var(--red-pen); }
-.chapter-label { font-size: 11px; color: #7f8c8d; }
+
+.color-exp {
+    border-bottom-color: var(--red-pen);
+}
+
+.chapter-label {
+    font-size: 11px;
+    color: #7f8c8d;
+}
+
 .main-title {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     margin-top: 3px;
-    white-space: nowrap; /* タイトルの改行を防ぐ */
+    white-space: nowrap;
+    /* タイトルの改行を防ぐ */
     overflow: hidden;
     text-overflow: ellipsis;
+    flex-shrink: 1;
+    /* タイトルが長すぎる場合に縮小を許可 */
 }
+
 .header-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 3px;
+    flex-shrink: 0;
+    /* 名前欄は縮ませない */
 }
+
 .header-date {
     font-size: 10px;
     color: #666;
 }
+
 .info-box {
     display: flex;
     gap: 10px;
     align-items: flex-end;
 }
-.info-item { border-bottom: 1px solid #333; height: 30px; display: flex; align-items: flex-end; font-size: 11px; }
-.name-item { width: 180px; }
-.score-item { width: 80px; }
+
+.info-item {
+    border-bottom: 1px solid #333;
+    height: 30px;
+    display: flex;
+    align-items: flex-end;
+    font-size: 11px;
+}
+
+.name-item {
+    width: 150px;
+}
+
+.score-item {
+    width: 80px;
+}
 
 .method-box {
     background: #fdf2e9;
@@ -140,65 +242,206 @@ body {
     font-size: 12px;
 }
 
-.problems { list-style: none; padding: 0; margin: 0; }
-.problem-item, .exp-top {
+.problems {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.problem-item,
+.exp-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 18px;
     border-bottom: 1px dashed var(--border-gray);
     padding: 8px 0;
-    min-height: 55px;
+    min-height: 65px;
 }
 
 /* ★ 5問以下の設定（暗算Bなど） */
-.few-problems .problem-item, 
+.few-problems .problem-item,
 .few-problems .exp-top {
     min-height: 90px;
 }
+
 .few-problems .exp-annotation {
     min-height: 70px;
 }
 
 /* ★ 2題構成（レベル5）専用：問題用紙も解説用紙も同じ幅・高さに固定 */
-.ultra-few .problem-item, 
+.ultra-few .problem-item,
 .ultra-few .exp-top {
-    min-height: 110mm; /* A4の約半分弱。これで2問目が真ん中付近に来る */
+    min-height: 110mm;
+    /* A4の約半分弱。これで2問目が真ん中付近に来る */
     align-items: flex-start;
     padding-top: 20px;
 }
+
 .ultra-few .exp-annotation {
-    min-height: 100mm; /* 解説側の書き込みスペース */
+    min-height: 100mm;
+    /* 解説側の書き込みスペース */
 }
 
-.p-num { width: 40px; color: #95a5a6; font-size: 14px; flex-shrink: 0; }
-.p-content { flex-grow: 1; text-align: left; padding: 0 10px; }
+.p-num {
+    width: 40px;
+    color: #95a5a6;
+    font-size: 14px;
+    flex-shrink: 0;
+}
 
-.answer-box-empty { width: 110px; height: 45px; border: 1px solid #333; flex-shrink: 0; }
-.answer-box-empty.wide { width: 150px; } /* 素因数分解など、長い回答用 */
-.ans-box-filled { width: 110px; height: 45px; border: 2px solid var(--red-pen); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.ans-box-filled.wide { width: 150px; }
-.ans-text { color: var(--red-pen); font-weight: bold; font-size: 18px; }
+.p-content {
+    flex-grow: 1;
+    text-align: left;
+    padding: 0 10px;
+}
 
-.exp-unit { margin-bottom: 5px; }
-.exp-annotation { padding: 4px 0 8px 40px; min-height: 35px; }
-.handwritten-note { font-family: 'Kiwi Maru', serif; color: var(--red-pen); font-size: 13px; display: block; position: relative; padding-left: 18px; line-height: 1.4; }
-.handwritten-note::before { content: '▶'; position: absolute; left: 0; top: 2px; font-size: 9px; }
+.answer-box-empty {
+    width: 110px;
+    height: 55px;
+    border: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.answer-box-empty.wide {
+    width: 150px;
+}
+
+/* 素因数分解など、長い回答用 */
+.ans-box-filled {
+    width: 110px;
+    height: 55px;
+    border: 2px solid var(--red-pen);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ans-box-filled.wide {
+    width: 150px;
+}
+
+.ans-text {
+    color: var(--red-pen);
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.exp-unit {
+    margin-bottom: 5px;
+}
+
+.exp-annotation {
+    padding: 4px 0 8px 40px;
+    min-height: 35px;
+}
+
+.handwritten-note {
+    font-family: 'Kiwi Maru', serif;
+    color: var(--red-pen);
+    font-size: 13px;
+    display: block;
+    position: relative;
+    padding-left: 18px;
+    line-height: 1.4;
+}
+
+.handwritten-note::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 9px;
+}
+
+/* 訓練シート 2列レイアウト（パターン1左・パターン2右） */
+.two-col-sheet .two-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5mm;
+    margin-top: 4px;
+}
+
+.two-col-sheet .col-section {
+    border: 1px solid var(--border-gray);
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+.two-col-sheet .col-header {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--main-orange);
+    border-bottom: 1.5px solid var(--main-orange);
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+
+.two-col-sheet .col-header-ans {
+    color: var(--red-pen);
+    border-bottom-color: var(--red-pen);
+}
+
+.two-col-sheet .col-coaching {
+    font-size: 10px;
+    color: #555;
+    background: #fdf2e9;
+    padding: 2px 6px;
+    border-left: 3px solid var(--main-orange);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.two-col-sheet .problem-item,
+.two-col-sheet .exp-top {
+    min-height: 48px;
+    font-size: 15px;
+    padding: 4px 0;
+}
+
+.two-col-sheet .p-num {
+    width: 26px;
+    font-size: 12px;
+}
+
+.two-col-sheet .p-content {
+    font-size: 15px;
+    padding: 0 4px;
+}
+
+
+
+.two-col-sheet .ans-text {
+    font-size: 14px;
+}
+
+.two-col-sheet .exp-annotation {
+    min-height: 16px;
+    padding: 2px 0 4px 26px;
+}
+
+.two-col-sheet .handwritten-note {
+    font-size: 11px;
+}
 
 /* サバイバルシート（30問・2列レイアウト） */
 .survival-sheet .problems {
     column-count: 2;
     column-gap: 10mm;
 }
+
 .survival-sheet .problem-item {
     break-inside: avoid;
     min-height: 30px;
     font-size: 16px;
 }
+
 .survival-sheet .p-num {
     width: 35px;
     font-size: 13px;
 }
+
 .survival-sheet .answer-box-empty {
     width: 80px;
     height: 35px;
@@ -208,17 +451,21 @@ body {
     column-count: 2;
     column-gap: 10mm;
 }
+
 .survival-sheet .exp-unit {
     break-inside: avoid;
 }
+
 .survival-sheet .exp-top {
     min-height: 30px;
     font-size: 16px;
 }
+
 .survival-sheet .ans-box-filled {
     width: 80px;
     height: 35px;
 }
+
 .survival-sheet .exp-annotation {
     min-height: 25px;
     font-size: 12px;
@@ -230,9 +477,21 @@ body {
         margin: 0;
     }
 
-    body { margin: 0; padding: 0; background: white; }
-    #sidebar, .controls { display: none !important; }
-    #main-content { margin-left: 0; padding: 0; }
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    #sidebar,
+    .controls {
+        display: none !important;
+    }
+
+    #main-content {
+        margin-left: 0;
+        padding: 0;
+    }
 
     /* 印刷時：タイトルの改行を確実に防ぐ */
     .main-title {
@@ -263,14 +522,17 @@ body {
     }
 
     /* 印刷時：10問が収まるように間隔を詰める */
-    .problem-item, .exp-top {
+    .problem-item,
+    .exp-top {
         min-height: 46px !important;
         padding: 5px 0 !important;
     }
+
     .exp-annotation {
         min-height: 18px !important;
         padding: 2px 0 3px 40px !important;
     }
+
     .exp-unit {
         margin-bottom: 2px !important;
     }
@@ -280,6 +542,7 @@ body {
     .few-problems .exp-top {
         min-height: 75px !important;
     }
+
     .few-problems .exp-annotation {
         min-height: 55px !important;
     }
@@ -289,6 +552,7 @@ body {
     .ultra-few .exp-top {
         min-height: 100mm !important;
     }
+
     .ultra-few .exp-annotation {
         min-height: 80mm !important;
     }
@@ -299,6 +563,7 @@ body {
         column-count: 2 !important;
         column-gap: 8mm !important;
     }
+
     .survival-sheet .problem-item,
     .survival-sheet .exp-top {
         min-height: 40px !important;
@@ -306,16 +571,19 @@ body {
         font-size: 13px !important;
         line-height: 1.4 !important;
     }
+
     .survival-sheet .answer-box-empty,
     .survival-sheet .ans-box-filled {
         width: 70px !important;
         height: 35px !important;
     }
+
     .survival-sheet .exp-annotation {
         min-height: 20px !important;
         padding: 2px 0 3px 35px !important;
         font-size: 11px !important;
     }
+
     .survival-sheet .p-num {
         width: 30px !important;
         font-size: 12px !important;
@@ -374,13 +642,24 @@ body {
     border-radius: 6px;
     background: #f8f9fa;
     border-left: 5px solid;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.rank-row.rank-s { border-left-color: #f39c12; }
-.rank-row.rank-a { border-left-color: #3498db; }
-.rank-row.rank-b { border-left-color: #27ae60; }
-.rank-row.rank-c { border-left-color: #95a5a6; }
+.rank-row.rank-s {
+    border-left-color: #f39c12;
+}
+
+.rank-row.rank-a {
+    border-left-color: #3498db;
+}
+
+.rank-row.rank-b {
+    border-left-color: #27ae60;
+}
+
+.rank-row.rank-c {
+    border-left-color: #95a5a6;
+}
 
 .rank-label {
     font-size: 28px;
@@ -390,10 +669,21 @@ body {
     flex-shrink: 0;
 }
 
-.rank-row.rank-s .rank-label { color: #f39c12; }
-.rank-row.rank-a .rank-label { color: #3498db; }
-.rank-row.rank-b .rank-label { color: #27ae60; }
-.rank-row.rank-c .rank-label { color: #95a5a6; }
+.rank-row.rank-s .rank-label {
+    color: #f39c12;
+}
+
+.rank-row.rank-a .rank-label {
+    color: #3498db;
+}
+
+.rank-row.rank-b .rank-label {
+    color: #27ae60;
+}
+
+.rank-row.rank-c .rank-label {
+    color: #95a5a6;
+}
 
 .rank-content {
     flex: 1;

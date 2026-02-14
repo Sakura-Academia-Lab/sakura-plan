@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <title>計算力・自動化トレーニング ～反射神経・構造視力・持久力を鍛える～</title>
@@ -8,299 +9,370 @@
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="sidebar">
-    <div class="sidebar-header">
-        <h1>計算力・自動化トレーニング</h1>
-        <p>反射神経・構造視力・持久力を鍛える</p>
-    </div>
-    <div id="menu-container"></div>
-    <div class="nav-item criteria-menu" onclick="showCriteria()">
-        📊 判定基準を見る
-    </div>
-    <div class="nav-item passport-menu" onclick="showPassport()">
-        📝 攻略パスポート
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h1>計算力・自動化トレーニング</h1>
+            <p>反射神経・構造視力・持久力を鍛える</p>
+        </div>
+        <div id="menu-container"></div>
+        <div class="nav-item criteria-menu" onclick="showCriteria()">
+            📊 判定基準を見る
+        </div>
+        <div class="nav-item passport-menu" onclick="showPassport()">
+            📝 攻略パスポート
+        </div>
+
+        <div class="batch-print-section">
+            <div class="section-title">📦 一括印刷</div>
+            <div class="batch-print-btn" onclick="printAllStageUnits('第1部：反射神経')">
+                🖨️ 第1ステージ 全部
+            </div>
+            <div class="batch-print-btn" onclick="printAllStageUnits('第2部：構造視力')">
+                🖨️ 第2ステージ 全部
+            </div>
+            <div class="batch-print-btn" onclick="printAllStageUnits('第3部：持久力・整理力')">
+                🖨️ 第3ステージ 全部
+            </div>
+        </div>
     </div>
 
-    <div class="batch-print-section">
-        <div class="section-title">📦 一括印刷</div>
-        <div class="batch-print-btn" onclick="printAllStageUnits('第1部：反射神経')">
-            🖨️ 第1ステージ 全部
-        </div>
-        <div class="batch-print-btn" onclick="printAllStageUnits('第2部：構造視力')">
-            🖨️ 第2ステージ 全部
-        </div>
-        <div class="batch-print-btn" onclick="printAllStageUnits('第3部：持久力・整理力')">
-            🖨️ 第3ステージ 全部
-        </div>
-    </div>
-</div>
+    <div id="criteria-content" style="display:none;">
+        <div class="criteria-section-main">
+            <h2>📊 計算脳・自動化レベル判定基準</h2>
+            <p class="criteria-intro">制限時間3分・35問の「連続正解・チャレンジ」の結果（到達記録）に基づき、生徒の計算回路がどの段階にあるかを4段階で判定します。</p>
 
-<div id="criteria-content" style="display:none;">
-    <div class="criteria-section-main">
-        <h2>📊 計算脳・自動化レベル判定基準</h2>
-        <p class="criteria-intro">制限時間3分・35問の「連続正解・チャレンジ」の結果（到達記録）に基づき、生徒の計算回路がどの段階にあるかを4段階で判定します。</p>
+            <div class="rank-table">
+                <div class="rank-row rank-s">
+                    <div class="rank-label">S</div>
+                    <div class="rank-content">
+                        <div class="rank-score">30〜35問</div>
+                        <div class="rank-level">完全自動化 (Mastery / Automatic)</div>
+                        <div class="rank-state">「直感（System 1）」計算プロセスが長期記憶化されており、ワーキングメモリを消費せず「景色」として答えが見えている状態。</div>
+                    </div>
+                </div>
 
-        <div class="rank-table">
-            <div class="rank-row rank-s">
-                <div class="rank-label">S</div>
-                <div class="rank-content">
-                    <div class="rank-score">30〜35問</div>
-                    <div class="rank-level">完全自動化 (Mastery / Automatic)</div>
-                    <div class="rank-state">「直感（System 1）」計算プロセスが長期記憶化されており、ワーキングメモリを消費せず「景色」として答えが見えている状態。</div>
+                <div class="rank-row rank-a">
+                    <div class="rank-label">A</div>
+                    <div class="rank-content">
+                        <div class="rank-score">20〜29問</div>
+                        <div class="rank-level">流暢性 (Fluency)</div>
+                        <div class="rank-state">「高速処理」解法は正しいが、まだ意識的な操作（思い出そうとする努力）が必要。負荷がかかるとミスが出る可能性がある。</div>
+                    </div>
+                </div>
+
+                <div class="rank-row rank-b">
+                    <div class="rank-label">B</div>
+                    <div class="rank-content">
+                        <div class="rank-score">10〜19問</div>
+                        <div class="rank-level">手順的知識 (Procedural)</div>
+                        <div class="rank-state">「手作業」筆算や指などの「外部メモリ」に頼らないと処理できない。計算だけで脳の容量が埋まり、思考停止しやすい。</div>
+                    </div>
+                </div>
+
+                <div class="rank-row rank-c">
+                    <div class="rank-label">C</div>
+                    <div class="rank-content">
+                        <div class="rank-score">0〜9問</div>
+                        <div class="rank-level">未習熟 (Pre-structural)</div>
+                        <div class="rank-state">「迷走」基礎知識（九九や足し算）の検索に失敗している、または誤った概念（バグ）を持っている状態。</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="rank-row rank-a">
-                <div class="rank-label">A</div>
-                <div class="rank-content">
-                    <div class="rank-score">20〜29問</div>
-                    <div class="rank-level">流暢性 (Fluency)</div>
-                    <div class="rank-state">「高速処理」解法は正しいが、まだ意識的な操作（思い出そうとする努力）が必要。負荷がかかるとミスが出る可能性がある。</div>
+            <details class="criteria-details">
+                <summary>各レベルの詳細分析と指導指針</summary>
+
+                <div class="level-detail">
+                    <h3>Sランク：完全自動化（The "Hands and Feet of Genius"）</h3>
+                    <p><strong>状態：</strong>「天才の手足」の状態です。0.125を見れば即座に1/8が浮かび、57を見れば3×19の構造が見えています。意識しなくても勝手に処理が進むため、難問の「条件整理」や「戦略立案」に脳のリソースを全振りできます。
+                    </p>
+                    <p><strong>判定サイン：</strong></p>
+                    <ul>
+                        <li>鉛筆が止まらない</li>
+                        <li>計算用紙が白い（頭の中で処理が完結している）</li>
+                        <li>「なんで？」と聞くと「当たり前だから」と答える</li>
+                    </ul>
+                    <p><strong>次のステップ：</strong>タイムアタック（2分以内など）でさらに回路を太くするか、より複雑な入試問題へ進む。</p>
                 </div>
-            </div>
 
-            <div class="rank-row rank-b">
-                <div class="rank-label">B</div>
-                <div class="rank-content">
-                    <div class="rank-score">10〜19問</div>
-                    <div class="rank-level">手順的知識 (Procedural)</div>
-                    <div class="rank-state">「手作業」筆算や指などの「外部メモリ」に頼らないと処理できない。計算だけで脳の容量が埋まり、思考停止しやすい。</div>
+                <div class="level-detail">
+                    <h3>Aランク：流暢性（Proficiency）</h3>
+                    <p><strong>状態：</strong>正しい解き方は知っていますが、「意味理解と柔軟性」がわずかに不足しています。例えば、「25×4=100」は知っているが、「24×25」を見た瞬間に「6×4×25」と分解するのに一瞬の間（1〜2秒）があります。この数秒のラグが、3分間のテストでは命取りとなり、後半の問題にたどり着けません。
+                    </p>
+                    <p><strong>判定サイン：</strong></p>
+                    <ul>
+                        <li>正解はするが、筆算を少し書こうとして消す跡がある</li>
+                        <li>「えーっと…」という想起の時間がある</li>
+                    </ul>
+                    <p><strong>次のステップ：</strong>「過剰学習（Overlearning）」。同じ問題を、飽きるほど繰り返して「考えずにできる」領域へ押し込む。</p>
                 </div>
-            </div>
 
-            <div class="rank-row rank-c">
-                <div class="rank-label">C</div>
-                <div class="rank-content">
-                    <div class="rank-score">0〜9問</div>
-                    <div class="rank-level">未習熟 (Pre-structural)</div>
-                    <div class="rank-state">「迷走」基礎知識（九九や足し算）の検索に失敗している、または誤った概念（バグ）を持っている状態。</div>
+                <div class="level-detail">
+                    <h3>Bランク：手順的知識（Routine Expertise）</h3>
+                    <p><strong>状態：</strong>「ルーチン的熟達」の状態です。やり方は知っていますが、毎回「手順」を最初からなぞっています。例えば、帯分数の引き算で、一度すべて仮分数に直してから計算しているため、タイムロスが膨大です。脳のワーキングメモリが計算手順だけでパンクしており、ケアレスミスが多発します。
+                    </p>
+                    <p><strong>判定サイン：</strong></p>
+                    <ul>
+                        <li>筆算が多い</li>
+                        <li>簡単な計算（13−8など）で指が動く、または目が宙を泳ぐ</li>
+                        <li>テスト終了後に「疲れた」と言う（認知負荷が高い証拠）</li>
+                    </ul>
+                    <p><strong>次のステップ：</strong>悪いフォーム（筆算依存）の矯正。「計算くらぶ」メソッドの「書き方」を徹底的に真似させる。</p>
                 </div>
-            </div>
-        </div>
 
-        <details class="criteria-details">
-            <summary>各レベルの詳細分析と指導指針</summary>
-
-            <div class="level-detail">
-                <h3>Sランク：完全自動化（The "Hands and Feet of Genius"）</h3>
-                <p><strong>状態：</strong>「天才の手足」の状態です。0.125を見れば即座に1/8が浮かび、57を見れば3×19の構造が見えています。意識しなくても勝手に処理が進むため、難問の「条件整理」や「戦略立案」に脳のリソースを全振りできます。</p>
-                <p><strong>判定サイン：</strong></p>
-                <ul>
-                    <li>鉛筆が止まらない</li>
-                    <li>計算用紙が白い（頭の中で処理が完結している）</li>
-                    <li>「なんで？」と聞くと「当たり前だから」と答える</li>
-                </ul>
-                <p><strong>次のステップ：</strong>タイムアタック（2分以内など）でさらに回路を太くするか、より複雑な入試問題へ進む。</p>
-            </div>
-
-            <div class="level-detail">
-                <h3>Aランク：流暢性（Proficiency）</h3>
-                <p><strong>状態：</strong>正しい解き方は知っていますが、「意味理解と柔軟性」がわずかに不足しています。例えば、「25×4=100」は知っているが、「24×25」を見た瞬間に「6×4×25」と分解するのに一瞬の間（1〜2秒）があります。この数秒のラグが、3分間のテストでは命取りとなり、後半の問題にたどり着けません。</p>
-                <p><strong>判定サイン：</strong></p>
-                <ul>
-                    <li>正解はするが、筆算を少し書こうとして消す跡がある</li>
-                    <li>「えーっと…」という想起の時間がある</li>
-                </ul>
-                <p><strong>次のステップ：</strong>「過剰学習（Overlearning）」。同じ問題を、飽きるほど繰り返して「考えずにできる」領域へ押し込む。</p>
-            </div>
-
-            <div class="level-detail">
-                <h3>Bランク：手順的知識（Routine Expertise）</h3>
-                <p><strong>状態：</strong>「ルーチン的熟達」の状態です。やり方は知っていますが、毎回「手順」を最初からなぞっています。例えば、帯分数の引き算で、一度すべて仮分数に直してから計算しているため、タイムロスが膨大です。脳のワーキングメモリが計算手順だけでパンクしており、ケアレスミスが多発します。</p>
-                <p><strong>判定サイン：</strong></p>
-                <ul>
-                    <li>筆算が多い</li>
-                    <li>簡単な計算（13−8など）で指が動く、または目が宙を泳ぐ</li>
-                    <li>テスト終了後に「疲れた」と言う（認知負荷が高い証拠）</li>
-                </ul>
-                <p><strong>次のステップ：</strong>悪いフォーム（筆算依存）の矯正。「計算くらぶ」メソッドの「書き方」を徹底的に真似させる。</p>
-            </div>
-
-            <div class="level-detail">
-                <h3>Cランク：未習熟（Counting / Pre-structural）</h3>
-                <p><strong>状態：</strong>計算以前に、数の概念や基礎事実（Math Facts）が欠落しています。この段階の生徒に複雑な応用問題を解かせるのは逆効果（認知負荷が高すぎて学習不能になる）です。</p>
-                <p><strong>判定サイン：</strong></p>
-                <ul>
-                    <li>問題を見てフリーズする</li>
-                    <li>九九のレベルで誤答がある</li>
-                </ul>
-                <p><strong>次のステップ：</strong>第1部（反射神経）のQ1〜10レベル（1桁計算、基礎変換）だけを抜き出して、徹底反復する。</p>
-            </div>
-        </details>
-    </div>
-</div>
-
-<div id="main-content">
-    <div class="controls">
-        <div class="tabs" id="pattern-tabs">
-            <button class="tab active" onclick="setPattern(0)">レベル1</button>
-            <button class="tab" onclick="setPattern(1)">レベル2</button>
-            <button class="tab" onclick="setPattern(2)">レベル3</button>
-            <button class="tab" onclick="setPattern(3)">レベル4</button>
-            <button class="tab" onclick="setPattern(4)">レベル5</button>
-        </div>
-        <div class="actions">
-            <button class="btn-print" onclick="window.print()">印刷用レイアウトを表示</button>
+                <div class="level-detail">
+                    <h3>Cランク：未習熟（Counting / Pre-structural）</h3>
+                    <p><strong>状態：</strong>計算以前に、数の概念や基礎事実（Math
+                        Facts）が欠落しています。この段階の生徒に複雑な応用問題を解かせるのは逆効果（認知負荷が高すぎて学習不能になる）です。</p>
+                    <p><strong>判定サイン：</strong></p>
+                    <ul>
+                        <li>問題を見てフリーズする</li>
+                        <li>九九のレベルで誤答がある</li>
+                    </ul>
+                    <p><strong>次のステップ：</strong>第1部（反射神経）のQ1〜10レベル（1桁計算、基礎変換）だけを抜き出して、徹底反復する。</p>
+                </div>
+            </details>
         </div>
     </div>
-    <div id="sheet-area"></div>
-</div>
 
-<script>
-    window.curriculumData = [];
-    let activeUnitIdx = 0;
-    let activePatternIdx = 0;
-    let openChapters = new Set();
-    let openSections = new Set();
+    <div id="main-content">
+        <div class="controls">
+            <div class="tabs" id="pattern-tabs">
+                <button class="tab active" onclick="setPattern(0)">レベル1</button>
+                <button class="tab" onclick="setPattern(1)">レベル2</button>
+                <button class="tab" onclick="setPattern(2)">レベル3</button>
+                <button class="tab" onclick="setPattern(3)">レベル4</button>
+                <button class="tab" onclick="setPattern(4)">レベル5</button>
+            </div>
+            <div class="actions">
+                <button class="btn-print" onclick="window.print()">印刷用レイアウトを表示</button>
+            </div>
+        </div>
+        <div id="sheet-area"></div>
+    </div>
 
-    // annotations内のLaTeX記法を\(と\)で自動的に囲む
-    function wrapAnnotationMath(text) {
-        if (!text) return '';
-        // 日本語・記号で区切り、バックスラッシュコマンドを含む部分を数式として処理
-        const segments = text.split(/([\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff\u3000-\u303f★☆・。、「」（）！？\s]+)/);
-        return segments.map(seg => {
-            if (seg.includes('\\') && /[a-z]/.test(seg)) {
-                return `\\(${seg.trim()}\\)`;
-            }
-            return seg;
-        }).join('');
-    }
+    <script>
+        window.curriculumData = [];
+        let activeUnitIdx = 0;
+        let activePatternIdx = 0;
+        let openChapters = new Set();
+        let openSections = new Set();
 
-    function addData(unitData) {
-        window.curriculumData.push(unitData);
-        if(window.curriculumData.length === 1) {
-            openChapters.add(unitData.chapter);
-            if(unitData.section) openSections.add(unitData.chapter + '|' + unitData.section);
-            renderMenu();
-            renderSheet();
-        } else {
-            renderMenu();
+        // annotations内のLaTeX記法を\(と\)で自動的に囲む
+        function wrapAnnotationMath(text) {
+            if (!text) return '';
+            // 日本語・記号で区切り、バックスラッシュコマンドを含む部分を数式として処理
+            const segments = text.split(/([\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff\u3000-\u303f★☆・。、「」（）！？\s]+)/);
+            return segments.map(seg => {
+                if (seg.includes('\\') && /[a-z]/.test(seg)) {
+                    return `\\(${seg.trim()}\\)`;
+                }
+                return seg;
+            }).join('');
         }
-    }
 
-    function formatLevelName(chapterName) {
-        return chapterName.replace(/第(\d+)部/, "ステージ$1");
-    }
+        function addData(unitData) {
+            window.curriculumData.push(unitData);
+            if (window.curriculumData.length === 1) {
+                openChapters.add(unitData.chapter);
+                if (unitData.section) openSections.add(unitData.chapter + '|' + unitData.section);
+                renderMenu();
+                renderSheet();
+            } else {
+                renderMenu();
+            }
+        }
 
-    function formatSectionLabel(section) {
-        // セクション名をユーザーフレンドリーに変換
-        const labelMap = {
-            'サバイバルテスト': '🔥 連続正解・チャレンジ ※まずはこれ！',
-            '訓練': '💪 弱点克服トレーニング ※チャレンジで落ちた人向け'
-        };
-        return labelMap[section] || section;
-    }
+        function formatLevelName(chapterName) {
+            return chapterName.replace(/第(\d+)部/, "ステージ$1");
+        }
 
-    function renderMenu() {
-        const container = document.getElementById('menu-container');
-        container.innerHTML = '';
+        function formatSectionLabel(section) {
+            // セクション名をユーザーフレンドリーに変換
+            const labelMap = {
+                'サバイバルテスト': '🔥 連続正解・チャレンジ ※まずはこれ！',
+                '訓練': '💪 弱点克服トレーニング ※チャレンジで落ちた人向け'
+            };
+            return labelMap[section] || section;
+        }
 
-        // Group units by chapter and section
-        const hierarchy = {};
-        window.curriculumData.forEach((unit, idx) => {
-            const chapter = unit.chapter;
-            const section = unit.section || '未分類';
-            if (!hierarchy[chapter]) hierarchy[chapter] = {};
-            if (!hierarchy[chapter][section]) hierarchy[chapter][section] = [];
-            hierarchy[chapter][section].push({ unit, idx });
-        });
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
 
-        // Render hierarchy (すべて常に表示)
-        Object.keys(hierarchy).forEach(chapter => {
-            // Chapter header
-            const chapterHeader = document.createElement('div');
-            chapterHeader.className = 'nav-group-header';
-            chapterHeader.innerHTML = `<span>${formatLevelName(chapter)}</span>`;
-            container.appendChild(chapterHeader);
+            // Group units by chapter and section
+            const hierarchy = {};
+            window.curriculumData.forEach((unit, idx) => {
+                const chapter = unit.chapter;
+                const section = unit.section || '未分類';
+                if (!hierarchy[chapter]) hierarchy[chapter] = {};
+                if (!hierarchy[chapter][section]) hierarchy[chapter][section] = [];
+                hierarchy[chapter][section].push({ unit, idx });
+            });
 
-            // Chapter wrapper
-            const chapterWrapper = document.createElement('div');
-            chapterWrapper.className = 'nav-level-wrapper';
-            container.appendChild(chapterWrapper);
+            // Render hierarchy (すべて常に表示)
+            Object.keys(hierarchy).forEach(chapter => {
+                // Chapter header
+                const chapterHeader = document.createElement('div');
+                chapterHeader.className = 'nav-group-header';
+                chapterHeader.innerHTML = `<span>${formatLevelName(chapter)}</span>`;
+                container.appendChild(chapterHeader);
 
-            // Sections within chapter
-            Object.keys(hierarchy[chapter]).forEach(section => {
-                // Section header
-                const sectionHeader = document.createElement('div');
-                sectionHeader.className = 'nav-section-header';
-                sectionHeader.innerHTML = `<span>${formatSectionLabel(section)}</span>`;
-                chapterWrapper.appendChild(sectionHeader);
+                // Chapter wrapper
+                const chapterWrapper = document.createElement('div');
+                chapterWrapper.className = 'nav-level-wrapper';
+                container.appendChild(chapterWrapper);
 
-                // Units within section
-                hierarchy[chapter][section].forEach(({ unit, idx }) => {
-                    const unitItem = document.createElement('div');
-                    unitItem.className = `nav-item ${idx === activeUnitIdx ? 'active' : ''}`;
-                    unitItem.innerText = unit.title;
-                    unitItem.onclick = (e) => {
-                        e.stopPropagation();
-                        activeUnitIdx = idx;
-                        // コントロールパネルを再表示
-                        document.querySelector('.controls').style.display = 'flex';
-                        renderMenu();
-                        renderSheet();
-                    };
-                    chapterWrapper.appendChild(unitItem);
+                // Sections within chapter
+                Object.keys(hierarchy[chapter]).forEach(section => {
+                    // Section header
+                    const sectionHeader = document.createElement('div');
+                    sectionHeader.className = 'nav-section-header';
+                    sectionHeader.innerHTML = `<span>${formatSectionLabel(section)}</span>`;
+                    chapterWrapper.appendChild(sectionHeader);
+
+                    // Units within section
+                    hierarchy[chapter][section].forEach(({ unit, idx }) => {
+                        const unitItem = document.createElement('div');
+                        unitItem.className = `nav-item ${idx === activeUnitIdx ? 'active' : ''}`;
+                        unitItem.innerText = unit.title;
+                        unitItem.onclick = (e) => {
+                            e.stopPropagation();
+                            activeUnitIdx = idx;
+                            // コントロールパネルを再表示
+                            document.querySelector('.controls').style.display = 'flex';
+                            renderMenu();
+                            renderSheet();
+                        };
+                        chapterWrapper.appendChild(unitItem);
+                    });
                 });
             });
-        });
-    }
-
-    function setPattern(idx) {
-        const unit = window.curriculumData[activeUnitIdx];
-        if (!unit || idx >= unit.patterns.length) return;
-        activePatternIdx = idx;
-        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
-        renderSheet();
-    }
-
-    function renderSheet() {
-        if (window.curriculumData.length === 0) return;
-        const unit = window.curriculumData[activeUnitIdx];
-
-        // パターン数チェック・調整
-        if (activePatternIdx >= unit.patterns.length) activePatternIdx = 0;
-        const pattern = unit.patterns[activePatternIdx];
-
-        // サバイバルテストかどうかを判定
-        const isSurvivalTest = unit.section === 'サバイバルテスト';
-
-        // タブラベル更新（動的）
-        const patternLabels = isSurvivalTest && unit.patternLabels
-            ? unit.patternLabels
-            : unit.patterns.map(p => p.label);
-        document.querySelectorAll('.tab').forEach((t, i) => {
-            if (i < unit.patterns.length) {
-                t.style.display = '';
-                t.textContent = patternLabels[i] || `レベル${i + 1}`;
-            } else {
-                t.style.display = 'none';
-            }
-        });
-
-        const area = document.getElementById('sheet-area');
-        const label = patternLabels[activePatternIdx] || `レベル${activePatternIdx + 1}`;
-
-        // ページタイトルを動的に更新（PDF名に反映）
-        const pageTitle = `${formatLevelName(unit.chapter)} ${unit.title} 【${label}】`;
-        document.title = pageTitle;
-
-        // 問題数に応じたレイアウト選択
-        let layoutClass = '';
-        if (pattern.problems.length >= 20) {
-            layoutClass = 'survival-sheet'; // 30問想定：2列
-        } else if (pattern.problems.length <= 2) {
-            layoutClass = 'ultra-few'; // レベル5用：110mm余白
-        } else if (pattern.problems.length <= 5) {
-            layoutClass = 'few-problems'; // 暗算Bなど：90px余白
         }
 
-        // 現在の日付を取得（印刷日として使用）
-        const today = new Date();
-        const printDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
+        function setPattern(idx) {
+            const unit = window.curriculumData[activeUnitIdx];
+            if (!unit || idx >= unit.patterns.length) return;
+            activePatternIdx = idx;
+            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+            renderSheet();
+        }
 
-        area.innerHTML = `
+        function renderSheet() {
+            if (window.curriculumData.length === 0) return;
+            const unit = window.curriculumData[activeUnitIdx];
+
+            // パターン数チェック・調整
+            if (activePatternIdx >= unit.patterns.length) activePatternIdx = 0;
+            const pattern = unit.patterns[activePatternIdx];
+
+            // サバイバルテストかどうかを判定
+            const isSurvivalTest = unit.section === 'サバイバルテスト';
+
+            // タブラベル更新（動的）
+            const patternLabels = isSurvivalTest && unit.patternLabels
+                ? unit.patternLabels
+                : unit.patterns.map(p => p.label);
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                if (i < unit.patterns.length) {
+                    t.style.display = '';
+                    t.textContent = patternLabels[i] || `レベル${i + 1}`;
+                } else {
+                    t.style.display = 'none';
+                }
+            });
+
+            const area = document.getElementById('sheet-area');
+            const label = patternLabels[activePatternIdx] || `レベル${activePatternIdx + 1}`;
+
+            // ★ 2列レイアウト（パターン1左・パターン2右）
+            if (pattern.twoColumn) {
+                const col1 = pattern.col1;
+                const col2 = pattern.col2;
+                const today = new Date();
+                const printDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+                const pageTitle = `${formatLevelName(unit.chapter)} ${unit.title} 【${label}】`;
+                document.title = pageTitle;
+
+                const renderProblems = (col) => col.problems.map((p, i) => `
+                <li class="problem-item">
+                    <span class="p-num">(${i + 1})</span>
+                    <div class="p-content">\\(${p}\\)</div>
+                    <div class="answer-box-empty"></div>
+                </li>`).join('');
+
+
+
+                area.innerHTML = `
+                <div class="page page-break two-col-sheet">
+                    <div class="header">
+                        <div class="title-area">
+                            <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
+                            <div class="main-title">${unit.title}<span class="pattern-label">【${label}】</span></div>
+                        </div>
+                        <div class="header-right">
+                            <div class="header-date">${printDate}</div>
+                            <div class="info-box"><div class="info-item name-item">名前</div></div>
+                        </div>
+                    </div>
+                    <div class="method-box">${unit.method}</div>
+                    <div class="two-col-layout">
+                        <div class="col-section">
+                            <div class="col-header">${col1.label}</div>
+                            <div class="col-coaching">${col1.coaching}</div>
+                            <ul class="problems">${renderProblems(col1)}</ul>
+                        </div>
+                        <div class="col-section">
+                            <div class="col-header">${col2.label}</div>
+                            <div class="col-coaching">${col2.coaching}</div>
+                            <ul class="problems">${renderProblems(col2)}</ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="page two-col-sheet">
+                    <div class="header color-exp">
+                        <div class="title-area">
+                            <span class="chapter-label">解答と指導ポイント</span>
+                            <div class="main-title">${unit.title}<span class="pattern-label">【${label}】解説</span></div>
+                        </div>
+                    </div>
+                    <div class="two-col-layout">
+                        <div class="col-section">
+                            <div class="col-header col-header-ans">${col1.label}【解答】</div>
+                            <div class="explanation-container">${renderAnswers(col1)}</div>
+                        </div>
+                        <div class="col-section">
+                            <div class="col-header col-header-ans">${col2.label}【解答】</div>
+                            <div class="explanation-container">${renderAnswers(col2)}</div>
+                        </div>
+                    </div>
+                </div>`;
+                if (window.MathJax) MathJax.typeset();
+                return;
+            }
+
+            // ページタイトルを動的に更新（PDF名に反映）
+            const pageTitle = `${formatLevelName(unit.chapter)} ${unit.title} 【${label}】`;
+            document.title = pageTitle;
+
+            // 問題数に応じたレイアウト選択
+            let layoutClass = '';
+            if (pattern.problems.length >= 20) {
+                layoutClass = 'survival-sheet'; // 30問想定：2列
+            } else if (pattern.problems.length <= 2) {
+                layoutClass = 'ultra-few'; // レベル5用：110mm余白
+            } else if (pattern.problems.length <= 5) {
+                layoutClass = 'few-problems'; // 暗算Bなど：90px余白
+            }
+
+            // 現在の日付を取得（印刷日として使用）
+            const today = new Date();
+            const printDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+
+            area.innerHTML = `
             <div class="page page-break ${layoutClass}">
                 <div class="header">
                     <div class="title-area">
@@ -318,15 +390,15 @@
                 ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
                 <ul class="problems">
                     ${pattern.problems.map((p, i) => {
-                        const isWideAnswer = p.includes('素因数分解');
-                        return `
+                const isWideAnswer = p.includes('素因数分解');
+                return `
                         <li class="problem-item">
-                            <span class="p-num">(${i+1})</span>
+                            <span class="p-num">(${i + 1})</span>
                             <div class="p-content">\\(${p}\\)</div>
                             <div class="answer-box-empty${isWideAnswer ? ' wide' : ''}"></div>
                         </li>
                         `;
-                    }).join('')}
+            }).join('')}
                 </ul>
             </div>
 
@@ -339,14 +411,14 @@
                 </div>
                 <div class="explanation-container">
                     ${pattern.problems.map((p, i) => {
-                        const isWideAnswer = p.includes('素因数分解');
-                        return `
+                const isWideAnswer = p.includes('素因数分解');
+                return `
                         <div class="exp-unit">
                             <div class="exp-top">
-                                <span class="p-num">(${i+1})</span>
+                                <span class="p-num">(${i + 1})</span>
                                 <div class="p-content">\\(${p}\\)</div>
                                 <div class="ans-box-filled${isWideAnswer ? ' wide' : ''}">
-                                    <span class="ans-text">${pattern.answers[i]}</span>
+                                    <span class="ans-text">\\(${pattern.answers[i]}\\)</span>
                                 </div>
                             </div>
                             ${layoutClass !== 'survival-sheet' ? `
@@ -356,58 +428,120 @@
                             ` : ''}
                         </div>
                         `;
-                    }).join('')}
+            }).join('')}
                 </div>
             </div>
         `;
-        if (window.MathJax) MathJax.typeset();
-    }
+            if (window.MathJax) MathJax.typeset();
+        }
 
-    function showCriteria() {
-        // メニュー項目のアクティブ状態を更新
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        document.querySelector('.criteria-menu').classList.add('active');
+        function showCriteria() {
+            // メニュー項目のアクティブ状態を更新
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.criteria-menu').classList.add('active');
 
-        // コントロールパネルを非表示
-        document.querySelector('.controls').style.display = 'none';
+            // コントロールパネルを非表示
+            document.querySelector('.controls').style.display = 'none';
 
-        // メインエリアに判定基準を表示
-        const area = document.getElementById('sheet-area');
-        const criteriaContent = document.getElementById('criteria-content').innerHTML;
-        area.innerHTML = `
+            // メインエリアに判定基準を表示
+            const area = document.getElementById('sheet-area');
+            const criteriaContent = document.getElementById('criteria-content').innerHTML;
+            area.innerHTML = `
             <div class="page criteria-page">
                 ${criteriaContent}
             </div>
         `;
 
-        // ページタイトルを更新
-        document.title = '計算脳・自動化レベル判定基準';
-    }
-
-    function showPassport() {
-        // 攻略パスポート（記録用紙）を新しいタブで開く
-        window.open('record-passport.html', '_blank');
-    }
-
-    function generateSheet(unit, pattern, label) {
-        // サバイバルテストかどうかを判定
-        const isSurvivalTest = unit.section === 'サバイバルテスト';
-
-        // 問題数に応じたレイアウト選択
-        let layoutClass = '';
-        if (pattern.problems.length >= 20) {
-            layoutClass = 'survival-sheet';
-        } else if (pattern.problems.length <= 2) {
-            layoutClass = 'ultra-few';
-        } else if (pattern.problems.length <= 5) {
-            layoutClass = 'few-problems';
+            // ページタイトルを更新
+            document.title = '計算脳・自動化レベル判定基準';
         }
 
-        // 現在の日付を取得
-        const today = new Date();
-        const printDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
+        function showPassport() {
+            // 攻略パスポート（記録用紙）を新しいタブで開く
+            window.open('record-passport.html', '_blank');
+        }
 
-        return `
+        function generateSheet(unit, pattern, label) {
+            // ★ 2列レイアウトの場合
+            if (pattern.twoColumn) {
+                const col1 = pattern.col1;
+                const col2 = pattern.col2;
+                const today = new Date();
+                const printDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+
+                const renderProblems = (col) => col.problems.map((p, i) => `
+                <li class="problem-item">
+                    <span class="p-num">(${i + 1})</span>
+                    <div class="p-content">\\(${p}\\)</div>
+                    <div class="answer-box-empty"></div>
+                </li>`).join('');
+
+
+
+                return `
+                <div class="page page-break two-col-sheet">
+                    <div class="header">
+                        <div class="title-area">
+                            <span class="chapter-label">${formatLevelName(unit.chapter)}</span>
+                            <div class="main-title">${unit.title}<span class="pattern-label">【${label}】</span></div>
+                        </div>
+                        <div class="header-right">
+                            <div class="header-date">${printDate}</div>
+                            <div class="info-box"><div class="info-item name-item">名前</div></div>
+                        </div>
+                    </div>
+                    <div class="method-box">${unit.method}</div>
+                    <div class="two-col-layout">
+                        <div class="col-section">
+                            <div class="col-header">${col1.label}</div>
+                            <div class="col-coaching">${col1.coaching}</div>
+                            <ul class="problems">${renderProblems(col1)}</ul>
+                        </div>
+                        <div class="col-section">
+                            <div class="col-header">${col2.label}</div>
+                            <div class="col-coaching">${col2.coaching}</div>
+                            <ul class="problems">${renderProblems(col2)}</ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="page two-col-sheet">
+                    <div class="header color-exp">
+                        <div class="title-area">
+                            <span class="chapter-label">解答と指導ポイント</span>
+                            <div class="main-title">${unit.title}<span class="pattern-label">【${label}】解説</span></div>
+                        </div>
+                    </div>
+                    <div class="two-col-layout">
+                        <div class="col-section">
+                            <div class="col-header col-header-ans">${col1.label}【解答】</div>
+                            <div class="explanation-container">${renderAnswers(col1)}</div>
+                        </div>
+                        <div class="col-section">
+                            <div class="col-header col-header-ans">${col2.label}【解答】</div>
+                            <div class="explanation-container">${renderAnswers(col2)}</div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // サバイバルテストかどうかを判定
+            const isSurvivalTest = unit.section === 'サバイバルテスト';
+
+            // 問題数に応じたレイアウト選択
+            let layoutClass = '';
+            if (pattern.problems.length >= 20) {
+                layoutClass = 'survival-sheet';
+            } else if (pattern.problems.length <= 2) {
+                layoutClass = 'ultra-few';
+            } else if (pattern.problems.length <= 5) {
+                layoutClass = 'few-problems';
+            }
+
+            // 現在の日付を取得
+            const today = new Date();
+            const printDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+
+            return `
             <div class="page page-break ${layoutClass}">
                 <div class="header">
                     <div class="title-area">
@@ -425,15 +559,15 @@
                 ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
                 <ul class="problems">
                     ${pattern.problems.map((p, i) => {
-                        const isWideAnswer = p.includes('素因数分解');
-                        return `
+                const isWideAnswer = p.includes('素因数分解');
+                return `
                         <li class="problem-item">
-                            <span class="p-num">(${i+1})</span>
+                            <span class="p-num">(${i + 1})</span>
                             <div class="p-content">\\(${p}\\)</div>
                             <div class="answer-box-empty${isWideAnswer ? ' wide' : ''}"></div>
                         </li>
                         `;
-                    }).join('')}
+            }).join('')}
                 </ul>
             </div>
 
@@ -446,93 +580,81 @@
                 </div>
                 <div class="explanation-container">
                     ${pattern.problems.map((p, i) => {
-                        const isWideAnswer = p.includes('素因数分解');
-                        return `
-                        <div class="exp-unit">
-                            <div class="exp-top">
-                                <span class="p-num">(${i+1})</span>
-                                <div class="p-content">\\(${p}\\)</div>
-                                <div class="ans-box-filled${isWideAnswer ? ' wide' : ''}">
-                                    <span class="ans-text">${pattern.answers[i]}</span>
-                                </div>
-                            </div>
-                            ${layoutClass !== 'survival-sheet' ? `
-                            <div class="exp-annotation">
-                                ${pattern.annotations[i] ? `<span class="handwritten-note">${wrapAnnotationMath(pattern.annotations[i])}</span>` : ''}
-                            </div>
-                            ` : ''}
-                        </div>
+                const isWideAnswer = p.includes('素因数分解');
+                return `
+
                         `;
-                    }).join('')}
+            }).join('')}
                 </div>
             </div>
         `;
-    }
-
-    function printAllStageUnits(stage) {
-        // 指定されたステージのすべてのユニットを取得
-        const stageUnits = window.curriculumData.filter(unit => unit.chapter === stage);
-
-        if (stageUnits.length === 0) {
-            alert(`${stage}のユニットが見つかりません`);
-            return;
         }
 
-        // コントロールパネルを非表示
-        document.querySelector('.controls').style.display = 'none';
+        function printAllStageUnits(stage) {
+            // 指定されたステージのすべてのユニットを取得
+            const stageUnits = window.curriculumData.filter(unit => unit.chapter === stage);
 
-        // すべてのメニュー項目のアクティブ状態を解除
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-
-        // メインエリアをクリア
-        const area = document.getElementById('sheet-area');
-        area.innerHTML = '';
-
-        // すべてのユニットを連続で表示
-        stageUnits.forEach(unit => {
-            // サバイバルテストの場合は全パターンを表示
-            if (unit.section === 'サバイバルテスト') {
-                unit.patterns.forEach((pattern, patternIndex) => {
-                    const label = unit.patternLabels ? unit.patternLabels[patternIndex] : `セット${String.fromCharCode(65 + patternIndex)}`;
-                    area.innerHTML += generateSheet(unit, pattern, label);
-                });
-            } else {
-                // 訓練ユニットの場合は全パターンを表示
-                unit.patterns.forEach((pattern, patternIndex) => {
-                    const label = pattern.label || `レベル${patternIndex + 1}`;
-                    area.innerHTML += generateSheet(unit, pattern, label);
-                });
+            if (stageUnits.length === 0) {
+                alert(`${stage}のユニットが見つかりません`);
+                return;
             }
-        });
 
-        // MathJaxで数式をレンダリング
-        if (window.MathJax) MathJax.typeset();
+            // コントロールパネルを非表示
+            document.querySelector('.controls').style.display = 'none';
 
-        // ページタイトルを更新
-        document.title = `${stage} 全ユニット一括印刷`;
+            // すべてのメニュー項目のアクティブ状態を解除
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-        // 少し待ってから印刷ダイアログを開く（MathJaxのレンダリング待ち）
-        setTimeout(() => {
-            window.print();
-        }, 1000);
-    }
-</script>
+            // メインエリアをクリア
+            const area = document.getElementById('sheet-area');
+            area.innerHTML = '';
 
-<script src="sec1_survival_1.js"></script>
-<script src="sec1_survival_2.js"></script>
-<script src="sec2_survival.js"></script>
-<script src="sec3_survival.js"></script>
-<script src="sec1a_decimal_fraction.js"></script>
-<script src="sec1b_squares.js"></script>
-<script src="sec1c_pi.js"></script>
-<script src="sec1d_primes.js"></script>
-<script src="sec1e_golden_pairs.js"></script>
-<script src="sec1f_mental_and_factorization.js"></script>
-<script src="sec1h_approximation.js"></script>
-<script src="sec2_structure.js"></script>
-<script src="sec2b_gcd.js"></script>
-<script src="sec3_endurance.js"></script>
-<script src="sec3_audit.js"></script>
+            // すべてのユニットを連続で表示
+            stageUnits.forEach(unit => {
+                // サバイバルテストの場合は全パターンを表示
+                if (unit.section === 'サバイバルテスト') {
+                    unit.patterns.forEach((pattern, patternIndex) => {
+                        const label = unit.patternLabels ? unit.patternLabels[patternIndex] : `セット${String.fromCharCode(65 + patternIndex)}`;
+                        area.innerHTML += generateSheet(unit, pattern, label);
+                    });
+                } else {
+                    // 訓練ユニットの場合は全パターンを表示
+                    unit.patterns.forEach((pattern, patternIndex) => {
+                        const label = pattern.label || `レベル${patternIndex + 1}`;
+                        area.innerHTML += generateSheet(unit, pattern, label);
+                    });
+                }
+            });
+
+            // MathJaxで数式をレンダリング
+            if (window.MathJax) MathJax.typeset();
+
+            // ページタイトルを更新
+            document.title = `${stage} 全ユニット一括印刷`;
+
+            // 少し待ってから印刷ダイアログを開く（MathJaxのレンダリング待ち）
+            setTimeout(() => {
+                window.print();
+            }, 1000);
+        }
+    </script>
+
+    <script src="sec1_survival_1.js"></script>
+    <script src="sec1_survival_2.js"></script>
+    <script src="sec2_survival.js"></script>
+    <script src="sec3_survival.js"></script>
+    <script src="sec1a_decimal_fraction.js"></script>
+    <script src="sec1b_squares.js"></script>
+    <script src="sec1c_pi.js"></script>
+    <script src="sec1d_primes.js"></script>
+    <script src="sec1e_golden_pairs.js"></script>
+    <script src="sec1f_mental_and_factorization.js"></script>
+    <script src="sec1g_approximation.js"></script>
+    <script src="sec2_structure.js"></script>
+    <script src="sec2b_gcd.js"></script>
+    <script src="sec3_endurance.js"></script>
+    <script src="sec3_audit.js"></script>
 
 </body>
+
 </html>
