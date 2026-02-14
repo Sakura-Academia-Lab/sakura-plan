@@ -40,13 +40,12 @@
 
         .page {
             width: 277mm;
-            height: 190mm;
+            min-height: 190mm;
             background: white;
             margin: 20px auto;
             padding: 15mm;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: relative;
-            overflow: hidden;
         }
 
         /* ステージ別の背景グラデーション */
@@ -126,7 +125,8 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            height: calc(100% - 120px);
+            margin-bottom: 80px;
+            /* 使い方ガイドのための余白 */
         }
 
         .left-panel,
@@ -292,10 +292,7 @@
 
         /* 運用ルール */
         .rules {
-            position: absolute;
-            bottom: 15mm;
-            left: 15mm;
-            right: 15mm;
+            margin-top: 20px;
             background: #fffacd;
             border: 2px solid #ffa500;
             border-radius: 8px;
@@ -559,7 +556,7 @@
                         <tbody>
                             <tr>
                                 <td class="q-numbers">1, 2, 9, 10,<br>17, 18, 25, 26,<br>33, 34</td>
-                                <td class="weakness-name">小数・分数<br>神の数etc.</td>
+                                <td class="weakness-name">小数・分数<br>基本変換etc.</td>
                                 <td class="drill-name">🛠️ ドリルA：<br>小数・分数の変換</td>
                             </tr>
                             <tr>
