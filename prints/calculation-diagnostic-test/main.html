@@ -191,12 +191,12 @@
         }
 
         function formatSectionLabel(section) {
-            // セクション名をユーザーフレンドリーに変換
+            // セクション名を非表示にする（メニューのフラット化）
             const labelMap = {
-                'サバイバルテスト': '🔥 連続正解・チャレンジ ※まずはこれ！',
-                '訓練': '💪 弱点克服トレーニング ※チャレンジで落ちた人向け'
+                'サバイバルテスト': '',
+                '訓練': ''
             };
-            return labelMap[section] || section;
+            return labelMap[section] !== undefined ? labelMap[section] : section;
         }
 
         function renderMenu() {
@@ -228,11 +228,14 @@
 
                 // Sections within chapter
                 Object.keys(hierarchy[chapter]).forEach(section => {
-                    // Section header
-                    const sectionHeader = document.createElement('div');
-                    sectionHeader.className = 'nav-section-header';
-                    sectionHeader.innerHTML = `<span>${formatSectionLabel(section)}</span>`;
-                    chapterWrapper.appendChild(sectionHeader);
+                    const label = formatSectionLabel(section);
+                    if (label) {
+                        // Section header
+                        const sectionHeader = document.createElement('div');
+                        sectionHeader.className = 'nav-section-header';
+                        sectionHeader.innerHTML = `<span>${label}</span>`;
+                        chapterWrapper.appendChild(sectionHeader);
+                    }
 
                     // Units within section
                     hierarchy[chapter][section].forEach(({ unit, idx }) => {
