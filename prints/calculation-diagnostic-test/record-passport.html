@@ -120,6 +120,25 @@
             background: transparent;
         }
 
+        /* レイアウト再編 */
+        .top-row {
+            display: grid;
+            grid-template-columns: 55% 43%;
+            gap: 2%;
+            margin-bottom: 15px;
+        }
+
+        .record-section,
+        .weakness-map {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .graph-section {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
         /* メインコンテンツ：2カラム */
         .main-content {
             display: grid;
@@ -140,8 +159,9 @@
         .section {
             border: 2px solid #333;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             background: white;
+            height: 100%;
         }
 
         .section-title {
@@ -177,8 +197,13 @@
 
         .record-table td {
             border: 1px solid #999;
-            padding: 6px 3px;
+            padding: 4px 3px;
             text-align: center;
+        }
+
+        .record-table .left-align {
+            text-align: left;
+            padding-left: 8px;
         }
 
         .record-table .set-column {
@@ -188,8 +213,8 @@
 
         /* 成長グラフ */
         .graph-container {
-            flex: 1;
             position: relative;
+            width: 100%;
         }
 
         .graph-svg {
@@ -377,206 +402,181 @@
             </div>
         </div>
 
-        <div class="main-content">
-            <!-- 左パネル -->
-            <div class="left-panel">
-                <!-- 記録ログ -->
-                <div class="section">
-                    <div class="section-title">📝 記録ログ（10回分）</div>
-                    <table class="record-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 8%;">回</th>
-                                <th style="width: 20%;">実施日</th>
-                                <th style="width: 15%;">挑戦セット</th>
-                                <th style="width: 17%;">到達記録</th>
-                                <th style="width: 20%;">ぶつかったカベ</th>
-                                <th style="width: 20%;">判定</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- 成長グラフ（40問） -->
-                <div class="section graph-container">
-                    <div class="section-title">📈 成長グラフ（40問）</div>
-                    <svg class="graph-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
-                        <!-- グリッド -->
-                        <g class="graph-grid">
-                            <!-- 横線（問題数） -->
-                            <line x1="40" y1="170" x2="380" y2="170" class="major-line" /> <!-- 0 -->
-                            <line x1="40" y1="150" x2="380" y2="150" /> <!-- 5 -->
-                            <line x1="40" y1="130" x2="380" y2="130" class="major-line" /> <!-- 10 -->
-                            <line x1="40" y1="110" x2="380" y2="110" /> <!-- 15 -->
-                            <line x1="40" y1="90" x2="380" y2="90" class="major-line" /> <!-- 20 -->
-                            <line x1="40" y1="70" x2="380" y2="70" /> <!-- 25 -->
-                            <line x1="40" y1="50" x2="380" y2="50" class="major-line" /> <!-- 30 -->
-                            <line x1="40" y1="30" x2="380" y2="30" /> <!-- 35 -->
-                            <line x1="40" y1="10" x2="380" y2="10" class="major-line" /> <!-- 40 -->
-
-                            <!-- 縦線（回数） -->
-                            <line x1="40" y1="10" x2="40" y2="170" class="major-line" />
-                            <line x1="74" y1="10" x2="74" y2="170" />
-                            <line x1="108" y1="10" x2="108" y2="170" />
-                            <line x1="142" y1="10" x2="142" y2="170" />
-                            <line x1="176" y1="10" x2="176" y2="170" />
-                            <line x1="210" y1="10" x2="210" y2="170" />
-                            <line x1="244" y1="10" x2="244" y2="170" />
-                            <line x1="278" y1="10" x2="278" y2="170" />
-                            <line x1="312" y1="10" x2="312" y2="170" />
-                            <line x1="346" y1="10" x2="346" y2="170" />
-                            <line x1="380" y1="10" x2="380" y2="170" class="major-line" />
-                        </g>
-
-                        <!-- ランクボーダーライン（S=35, A=30, B=20 くらい？） -->
-                        <line x1="40" y1="30" x2="380" y2="30" class="rank-line s-rank" />
-                        <text x="385" y="32" class="rank-label" fill="#ffd700">S達人</text>
-
-                        <line x1="40" y1="50" x2="380" y2="50" class="rank-line a-rank" />
-                        <text x="385" y="52" class="rank-label" fill="#c0c0c0">A上級</text>
-
-                        <line x1="40" y1="90" x2="380" y2="90" class="rank-line b-rank" />
-                        <text x="385" y="92" class="rank-label" fill="#cd7f32">B中級</text>
-
-                        <!-- 軸ラベル -->
-                        <text x="5" y="12" class="graph-label">40問</text>
-                        <text x="5" y="52" class="graph-label">30問</text>
-                        <text x="5" y="92" class="graph-label">20問</text>
-                        <text x="5" y="132" class="graph-label">10問</text>
-                        <text x="10" y="172" class="graph-label">0問</text>
-
-                        <text x="35" y="185" class="graph-label">1回</text>
-                        <text x="69" y="185" class="graph-label">2回</text>
-                        <text x="103" y="185" class="graph-label">3回</text>
-                        <text x="137" y="185" class="graph-label">4回</text>
-                        <text x="171" y="185" class="graph-label">5回</text>
-                        <text x="205" y="185" class="graph-label">6回</text>
-                        <text x="239" y="185" class="graph-label">7回</text>
-                        <text x="273" y="185" class="graph-label">8回</text>
-                        <text x="307" y="185" class="graph-label">9回</text>
-                        <text x="338" y="185" class="graph-label">10回</text>
-                    </svg>
-                </div>
+        <div class="top-row">
+            <!-- 記録ログ -->
+            <div class="section record-section">
+                <div class="section-title">📝 記録ログ（10回分）</div>
+                <table class="record-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%;">回</th>
+                            <th style="width: 14%;">実施日</th>
+                            <th style="width: 30%;">挑戦セット（〇をつける）</th>
+                            <th style="width: 25%;">到達記録</th>
+                            <th style="width: 25%;">ぶつかったカベ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <!-- 右パネル -->
-            <div class="right-panel">
-                <div class="section weakness-map">
-                    <div class="section-title">🔍 弱点発見マップ：カベの正体</div>
-                    <table class="weakness-table">
-                        <thead>
-                            <tr>
-                                <th>カベの番号<br>(Q No.)</th>
-                                <th>君の弱点はここだ！</th>
-                                <th>おすすめ訓練メニュー</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="q-numbers">1, 2, 9, 10,<br>17, 18, 25, 26,<br>33, 34</td>
-                                <td class="weakness-name">小数・分数<br>基本変換etc.</td>
-                                <td class="drill-name">🛠️ ドリルA：<br>小数・分数の変換</td>
-                            </tr>
-                            <tr>
-                                <td class="q-numbers">3, 4, 11, 12,<br>19, 20, 27, 28,<br>35, 36</td>
-                                <td class="weakness-name">平方数・三角数</td>
-                                <td class="drill-name">🛠️ ドリルB：<br>数の性質（平方・三角）</td>
-                            </tr>
-                            <tr>
-                                <td class="q-numbers">5, 6, 13, 14,<br>21, 22, 29, 30,<br>37, 38</td>
-                                <td class="weakness-name">3.14の段</td>
-                                <td class="drill-name">🛠️ ドリルC：<br>3.14の暗記と計算</td>
-                            </tr>
-                            <tr>
-                                <td class="q-numbers">7, 8, 15, 16,<br>23, 24, 31, 32,<br>39, 40</td>
-                                <td class="weakness-name">素数・倍数判定</td>
-                                <td class="drill-name">🛠️ ドリルD：<br>約数・倍数の感覚</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="section weakness-map">
+                <div class="section-title">🔍 弱点発見マップ：カベの正体</div>
+                <table class="weakness-table">
+                    <thead>
+                        <tr>
+                            <th>カベの番号<br>(Q No.)</th>
+                            <th>君の弱点はここだ！</th>
+                            <th>おすすめ訓練メニュー</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="q-numbers">1, 2, 9, 10,<br>17, 18, 25, 26,<br>33, 34</td>
+                            <td class="weakness-name">小数・分数<br>基本変換etc.</td>
+                            <td class="drill-name">🛠️ ドリルA：<br>小数・分数の変換</td>
+                        </tr>
+                        <tr>
+                            <td class="q-numbers">3, 4, 11, 12,<br>19, 20, 27, 28,<br>35, 36</td>
+                            <td class="weakness-name">平方数・三角数</td>
+                            <td class="drill-name">🛠️ ドリルB：<br>数の性質（平方・三角）</td>
+                        </tr>
+                        <tr>
+                            <td class="q-numbers">5, 6, 13, 14,<br>21, 22, 29, 30,<br>37, 38</td>
+                            <td class="weakness-name">3.14の段</td>
+                            <td class="drill-name">🛠️ ドリルC：<br>3.14の暗記と計算</td>
+                        </tr>
+                        <tr>
+                            <td class="q-numbers">7, 8, 15, 16,<br>23, 24, 31, 32,<br>39, 40</td>
+                            <td class="weakness-name">素数・倍数判定</td>
+                            <td class="drill-name">🛠️ ドリルD：<br>約数・倍数の感覚</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 成長グラフ（40問）：全幅 -->
+        <div class="section graph-section">
+            <div class="section-title">📈 成長グラフ（40問）</div>
+            <div class="graph-container" style="height: 120px;">
+                <svg class="graph-svg" viewBox="0 0 1000 120" preserveAspectRatio="none">
+                    <!-- グリッド -->
+                    <g class="graph-grid">
+                        <line x1="40" y1="100" x2="980" y2="100" class="major-line" /> <!-- 0 -->
+                        <line x1="40" y1="75" x2="980" y2="75" /> <!-- 10 -->
+                        <line x1="40" y1="50" x2="980" y2="50" class="major-line" /> <!-- 20 -->
+                        <line x1="40" y1="25" x2="980" y2="25" /> <!-- 30 -->
+                        <line x1="40" y1="5" x2="980" y2="5" class="major-line" /> <!-- 40 -->
+
+                        <!-- 縦線（回数） -->
+                        <line x1="40" y1="5" x2="40" y2="100" class="major-line" />
+                        <line x1="134" y1="5" x2="134" y2="100" />
+                        <line x1="228" y1="5" x2="228" y2="100" />
+                        <line x1="322" y1="5" x2="322" y2="100" />
+                        <line x1="416" y1="5" x2="416" y2="100" />
+                        <line x1="510" y1="5" x2="510" y2="100" />
+                        <line x1="604" y1="5" x2="604" y2="100" />
+                        <line x1="698" y1="5" x2="698" y2="100" />
+                        <line x1="792" y1="5" x2="792" y2="100" />
+                        <line x1="886" y1="5" x2="886" y2="100" />
+                        <line x1="980" y1="5" x2="980" y2="100" class="major-line" />
+                    </g>
+                    <!-- ランクボーダー -->
+                    <line x1="40" y1="12" x2="980" y2="12" class="rank-line s-rank" stroke-width="1" />
+                    <text x="982" y="15" class="rank-label" font-size="9" fill="#ffd700">S達人</text>
+                    <line x1="40" y1="25" x2="980" y2="25" class="rank-line a-rank" stroke-width="1" />
+                    <text x="982" y="28" class="rank-label" font-size="9" fill="#c0c0c0">A上級</text>
+                    <line x1="40" y1="50" x2="980" y2="50" class="rank-line b-rank" stroke-width="1" />
+                    <text x="982" y="53" class="rank-label" font-size="9" fill="#cd7f32">B中級</text>
+
+                    <!-- 軸ラベル -->
+                    <text x="5" y="8" class="graph-label" font-size="9">40問</text>
+                    <text x="5" y="53" class="graph-label" font-size="9">20問</text>
+                    <text x="10" y="103" class="graph-label" font-size="9">0問</text>
+
+                    <text x="35" y="115" class="graph-label" font-size="9">1回</text>
+                    <text x="129" y="115" class="graph-label" font-size="9">2回</text>
+                    <text x="223" y="115" class="graph-label" font-size="9">3回</text>
+                    <text x="317" y="115" class="graph-label" font-size="9">4回</text>
+                    <text x="411" y="115" class="graph-label" font-size="9">5回</text>
+                    <text x="505" y="115" class="graph-label" font-size="9">6回</text>
+                    <text x="599" y="115" class="graph-label" font-size="9">7回</text>
+                    <text x="693" y="115" class="graph-label" font-size="9">8回</text>
+                    <text x="787" y="115" class="graph-label" font-size="9">9回</text>
+                    <text x="874" y="115" class="graph-label" font-size="9">10回</text>
+                </svg>
             </div>
         </div>
 
@@ -622,208 +622,176 @@
             </div>
         </div>
 
-        <div class="main-content">
-            <!-- 左パネル -->
-            <div class="left-panel">
-                <!-- 記録ログ -->
-                <div class="section">
-                    <div class="section-title">📝 記録ログ（10回分）</div>
-                    <table class="record-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 8%;">回</th>
-                                <th style="width: 20%;">実施日</th>
-                                <th style="width: 15%;">挑戦セット</th>
-                                <th style="width: 17%;">到達記録</th>
-                                <th style="width: 20%;">ぶつかったカベ</th>
-                                <th style="width: 20%;">判定</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td></td>
-                                <td class="set-column">A～E</td>
-                                <td>Q</td>
-                                <td>Q</td>
-                                <td>S / A / B / C</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- 成長グラフ（30問） -->
-                <div class="section graph-container">
-                    <div class="section-title">📈 成長グラフ（30問）</div>
-                    <svg class="graph-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
-                        <!-- グリッド -->
-                        <g class="graph-grid">
-                            <!-- 横線（問題数） Max=30, Min=0. 5px/問 -->
-                            <line x1="40" y1="170" x2="380" y2="170" class="major-line" /> <!-- 0 -->
-                            <line x1="40" y1="120" x2="380" y2="120" class="major-line" /> <!-- 10 -->
-                            <line x1="40" y1="70" x2="380" y2="70" class="major-line" /> <!-- 20 -->
-                            <line x1="40" y1="20" x2="380" y2="20" class="major-line" /> <!-- 30 -->
-
-                            <!-- 補助線 -->
-                            <line x1="40" y1="145" x2="380" y2="145" /> <!-- 5 -->
-                            <line x1="40" y1="95" x2="380" y2="95" /> <!-- 15 -->
-                            <line x1="40" y1="45" x2="380" y2="45" /> <!-- 25 -->
-
-                            <!-- 縦線（回数） -->
-                            <line x1="40" y1="20" x2="40" y2="170" class="major-line" />
-                            <line x1="74" y1="20" x2="74" y2="170" />
-                            <line x1="108" y1="20" x2="108" y2="170" />
-                            <line x1="142" y1="20" x2="142" y2="170" />
-                            <line x1="176" y1="20" x2="176" y2="170" />
-                            <line x1="210" y1="20" x2="210" y2="170" />
-                            <line x1="244" y1="20" x2="244" y2="170" />
-                            <line x1="278" y1="20" x2="278" y2="170" />
-                            <line x1="312" y1="20" x2="312" y2="170" />
-                            <line x1="346" y1="20" x2="346" y2="170" />
-                            <line x1="380" y1="20" x2="380" y2="170" class="major-line" />
-                        </g>
-
-                        <!-- ランクボーダーライン（S=27, A=24, B=15 くらい？） -->
-                        <!-- S=27: 170 - 27*5 = 35 -->
-                        <line x1="40" y1="35" x2="380" y2="35" class="rank-line s-rank" />
-                        <text x="385" y="37" class="rank-label" fill="#ffd700">S達人</text>
-
-                        <!-- A=24: 170 - 24*5 = 50 -->
-                        <line x1="40" y1="50" x2="380" y2="50" class="rank-line a-rank" />
-                        <text x="385" y="52" class="rank-label" fill="#c0c0c0">A上級</text>
-
-                        <!-- B=15: 170 - 15*5 = 95 -->
-                        <line x1="40" y1="95" x2="380" y2="95" class="rank-line b-rank" />
-                        <text x="385" y="97" class="rank-label" fill="#cd7f32">B中級</text>
-
-                        <!-- 軸ラベル -->
-                        <text x="5" y="22" class="graph-label">30問</text>
-                        <text x="5" y="72" class="graph-label">20問</text>
-                        <text x="5" y="122" class="graph-label">10問</text>
-                        <text x="10" y="172" class="graph-label">0問</text>
-
-                        <text x="35" y="185" class="graph-label">1回</text>
-                        <text x="69" y="185" class="graph-label">2回</text>
-                        <text x="103" y="185" class="graph-label">3回</text>
-                        <text x="137" y="185" class="graph-label">4回</text>
-                        <text x="171" y="185" class="graph-label">5回</text>
-                        <text x="205" y="185" class="graph-label">6回</text>
-                        <text x="239" y="185" class="graph-label">7回</text>
-                        <text x="273" y="185" class="graph-label">8回</text>
-                        <text x="307" y="185" class="graph-label">9回</text>
-                        <text x="338" y="185" class="graph-label">10回</text>
-                    </svg>
-                </div>
+        <div class="top-row">
+            <!-- 記録ログ -->
+            <div class="section record-section">
+                <div class="section-title">📝 記録ログ（10回分）</div>
+                <table class="record-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%;">回</th>
+                            <th style="width: 14%;">実施日</th>
+                            <th style="width: 30%;">挑戦セット（〇をつける）</th>
+                            <th style="width: 25%;">到達記録</th>
+                            <th style="width: 25%;">ぶつかったカベ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td></td>
+                            <td class="set-column">A B C D E</td>
+                            <td class="left-align">Q.</td>
+                            <td class="left-align">Q.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <!-- 右パネル -->
-            <div class="right-panel">
-                <div class="section weakness-map">
-                    <div class="section-title">🔍 弱点発見マップ：カベの正体</div>
-                    <table class="weakness-table">
-                        <thead>
-                            <tr>
-                                <th>カベの番号<br>(Q No.)</th>
-                                <th>君の弱点はここだ！</th>
-                                <th>おすすめ訓練メニュー</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="q-numbers">1, 7, 13, 19, 25</td>
-                                <td class="weakness-name">黄金ペア・分配法則</td>
-                                <td class="drill-name">🛠️ ドリルE：<br>黄金ペア</td>
-                            </tr>
-                            <tr>
-                                <td class="q-numbers">2, 8, 14, 20, 26</td>
-                                <td class="weakness-name">補数の発見</td>
-                                <td class="drill-name">🛠️ ドリルF：<br>素因数分解・暗算</td>
-                            </tr>
-                            <tr>
-                                <td class="q-numbers">3, 4, 9, 10,<br>15, 16, 21, 22,<br>27, 28</td>
-                                <td class="weakness-name">計算技術・素因数分解</td>
-                                <td class="drill-name">🛠️ ドリルF：<br>素因数分解・暗算</td>
-                            </tr>
-                            <tr>
-                                <td class="q-numbers">5, 6, 11, 12,<br>17, 18, 23, 24,<br>29, 30</td>
-                                <td class="weakness-name">概数・範囲</td>
-                                <td class="drill-name">🛠️ ドリルG：<br>概算</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="section weakness-map">
+                <div class="section-title">🔍 弱点発見マップ：カベの正体</div>
+                <table class="weakness-table">
+                    <thead>
+                        <tr>
+                            <th>カベの番号<br>(Q No.)</th>
+                            <th>君の弱点はここだ！</th>
+                            <th>おすすめ訓練メニュー</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="q-numbers">1, 2, 8, 9, 15, 16,<br>22, 23, 29, 30</td>
+                            <td class="weakness-name">黄金ペア・補数</td>
+                            <td class="drill-name">🛠️ ドリルE：<br>黄金ペアの習得</td>
+                        </tr>
+                        <tr>
+                            <td class="q-numbers">3, 4, 10, 11, 17, 18,<br>24, 25</td>
+                            <td class="weakness-name">瞬発暗算・分解</td>
+                            <td class="drill-name">🛠️ ドリルF：<br>素因数分解と暗算</td>
+                        </tr>
+                        <tr>
+                            <td class="q-numbers">5, 6, 7, 12, 13, 14,<br>19, 20, 21, 26, 27, 28</td>
+                            <td class="weakness-name">近似計算</td>
+                            <td class="drill-name">🛠️ ドリルG：<br>スウガク的な近似計算</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 成長グラフ（30問）：全幅 -->
+        <div class="section graph-section">
+            <div class="section-title">📈 成長グラフ（30問）</div>
+            <div class="graph-container" style="height: 120px;">
+                <svg class="graph-svg" viewBox="0 0 1000 120" preserveAspectRatio="none">
+                    <!-- グリッド -->
+                    <g class="graph-grid">
+                        <line x1="40" y1="100" x2="980" y2="100" class="major-line" /> <!-- 0 -->
+                        <line x1="40" y1="67" x2="980" y2="67" class="major-line" /> <!-- 10 -->
+                        <line x1="40" y1="34" x2="980" y2="34" class="major-line" /> <!-- 20 -->
+                        <line x1="40" y1="1" x2="980" y2="1" class="major-line" /> <!-- 30 -->
+
+                        <!-- 縦線 -->
+                        <line x1="40" y1="1" x2="40" y2="100" class="major-line" />
+                        <line x1="134" y1="1" x2="134" y2="100" />
+                        <line x1="228" y1="1" x2="228" y2="100" />
+                        <line x1="322" y1="1" x2="322" y2="100" />
+                        <line x1="416" y1="1" x2="416" y2="100" />
+                        <line x1="510" y1="1" x2="510" y2="100" />
+                        <line x1="604" y1="1" x2="604" y2="100" />
+                        <line x1="698" y1="1" x2="698" y2="100" />
+                        <line x1="792" y1="1" x2="792" y2="100" />
+                        <line x1="886" y1="1" x2="886" y2="100" />
+                        <line x1="980" y1="1" x2="980" y2="100" class="major-line" />
+                    </g>
+                    <!-- ランクボーダー -->
+                    <line x1="40" y1="10" x2="980" y2="10" class="rank-line s-rank" stroke-width="1" />
+                    <text x="982" y="13" class="rank-label" font-size="9" fill="#ffd700">S達人</text>
+                    <line x1="40" y1="20" x2="980" y2="20" class="rank-line a-rank" stroke-width="1" />
+                    <text x="982" y="23" class="rank-label" font-size="9" fill="#c0c0c0">A上級</text>
+                    <line x1="40" y1="50" x2="980" y2="50" class="rank-line b-rank" stroke-width="1" />
+                    <text x="982" y="53" class="rank-label" font-size="9" fill="#cd7f32">B中級</text>
+
+                    <!-- 軸ラベル -->
+                    <text x="5" y="8" class="graph-label" font-size="9">30問</text>
+                    <text x="5" y="41" class="graph-label" font-size="9">20問</text>
+                    <text x="5" y="74" class="graph-label" font-size="9">10問</text>
+                    <text x="10" y="103" class="graph-label" font-size="9">0問</text>
+
+                    <text x="35" y="115" class="graph-label" font-size="9">1回</text>
+                    <text x="129" y="115" class="graph-label" font-size="9">2回</text>
+                    <text x="223" y="115" class="graph-label" font-size="9">3回</text>
+                    <text x="317" y="115" class="graph-label" font-size="9">4回</text>
+                    <text x="411" y="115" class="graph-label" font-size="9">5回</text>
+                    <text x="505" y="115" class="graph-label" font-size="9">6回</text>
+                    <text x="599" y="115" class="graph-label" font-size="9">7回</text>
+                    <text x="693" y="115" class="graph-label" font-size="9">8回</text>
+                    <text x="787" y="115" class="graph-label" font-size="9">9回</text>
+                    <text x="874" y="115" class="graph-label" font-size="9">10回</text>
+                </svg>
             </div>
         </div>
 
