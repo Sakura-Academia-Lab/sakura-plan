@@ -27,13 +27,13 @@
 
         <div class="batch-print-section">
             <div class="section-title">📦 一括印刷</div>
-            <div class="batch-print-btn" onclick="printAllStageUnits('第1部：反射神経')">
+            <div class="batch-print-btn" onclick="printAllStageUnits('ステージ1')">
                 🖨️ 第1ステージ 全部
             </div>
-            <div class="batch-print-btn" onclick="printAllStageUnits('第2部：構造視力')">
+            <div class="batch-print-btn" onclick="printAllStageUnits('ステージ2')">
                 🖨️ 第2ステージ 全部
             </div>
-            <div class="batch-print-btn" onclick="printAllStageUnits('第3部：持久力・整理力')">
+            <div class="batch-print-btn" onclick="printAllStageUnits('ステージ3')">
                 🖨️ 第3ステージ 全部
             </div>
         </div>
@@ -174,8 +174,34 @@
             }).join('');
         }
 
+        function renderAnswers(col) {
+            return col.problems.map((p, i) => {
+                const isWideAnswer = p.includes('素因数分解');
+                const isVertical = p.includes('範囲') || p.includes('概数');
+                return `
+                <div class="exp-unit">
+                    <div class="exp-top${isVertical ? ' vertical' : ''}">
+                        <span class="p-num">(${i + 1})</span>
+                        <div class="p-content">\\(${p}\\)</div>
+                        <div class="ans-box-filled${isWideAnswer ? ' wide' : ''}">
+                            <span class="ans-text">\\(${col.answers[i]}\\)</span>
+                        </div>
+                    </div>
+                    <div class="exp-annotation">
+                        ${col.annotations && col.annotations[i] ? `<span class="handwritten-note">${wrapAnnotationMath(col.annotations[i])}</span>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
         function addData(unitData) {
-            window.curriculumData.push(unitData);
+            const existingIdx = window.curriculumData.findIndex(u => u.id === unitData.id);
+            if (existingIdx !== -1) {
+                window.curriculumData[existingIdx] = unitData;
+            } else {
+                window.curriculumData.push(unitData);
+            }
+
             if (window.curriculumData.length === 1) {
                 openChapters.add(unitData.chapter);
                 if (unitData.section) openSections.add(unitData.chapter + '|' + unitData.section);
@@ -394,8 +420,9 @@
                 <ul class="problems">
                     ${pattern.problems.map((p, i) => {
                 const isWideAnswer = p.includes('素因数分解');
+                const isVertical = p.includes('範囲') || p.includes('概数');
                 return `
-                        <li class="problem-item">
+                        <li class="problem-item${isVertical ? ' vertical' : ''}">
                             <span class="p-num">(${i + 1})</span>
                             <div class="p-content">\\(${p}\\)</div>
                             <div class="answer-box-empty${isWideAnswer ? ' wide' : ''}"></div>
@@ -415,9 +442,10 @@
                 <div class="explanation-container">
                     ${pattern.problems.map((p, i) => {
                 const isWideAnswer = p.includes('素因数分解');
+                const isVertical = p.includes('範囲') || p.includes('概数');
                 return `
                         <div class="exp-unit">
-                            <div class="exp-top">
+                            <div class="exp-top${isVertical ? ' vertical' : ''}">
                                 <span class="p-num">(${i + 1})</span>
                                 <div class="p-content">\\(${p}\\)</div>
                                 <div class="ans-box-filled${isWideAnswer ? ' wide' : ''}">
@@ -563,8 +591,9 @@
                 <ul class="problems">
                     ${pattern.problems.map((p, i) => {
                 const isWideAnswer = p.includes('素因数分解');
+                const isVertical = p.includes('範囲') || p.includes('概数');
                 return `
-                        <li class="problem-item">
+                        <li class="problem-item${isVertical ? ' vertical' : ''}">
                             <span class="p-num">(${i + 1})</span>
                             <div class="p-content">\\(${p}\\)</div>
                             <div class="answer-box-empty${isWideAnswer ? ' wide' : ''}"></div>
@@ -594,8 +623,8 @@
         }
 
         function printAllStageUnits(stage) {
-            // 指定されたステージのすべてのユニットを取得
-            const stageUnits = window.curriculumData.filter(unit => unit.chapter === stage);
+            // 指定されたステージのすべてのユニットを取得（前方一致で検索し、分割されたステージにも対応）
+            const stageUnits = window.curriculumData.filter(unit => unit.chapter.startsWith(stage));
 
             if (stageUnits.length === 0) {
                 alert(`${stage}のユニットが見つかりません`);
@@ -654,6 +683,13 @@
     <script src="sec2_survival.js"></script>
     <script src="sec2_structure.js"></script>
     <script src="sec2b_gcd.js"></script>
+    <script src="sec2a_distribution_basic.js"></script>
+    <script src="sec2b_distribution_advanced.js"></script>
+    <script src="sec2c_associative.js"></script>
+    <script src="sec2d_decimal_fraction_calc.js"></script>
+    <script src="sec2e_reduction.js"></script>
+    <script src="sec2f_sequence.js"></script>
+    <script src="sec2g_digits_zero.js"></script>
     <script src="sec3_survival.js"></script>
     <script src="sec3_endurance.js"></script>
     <script src="sec3_audit.js"></script>

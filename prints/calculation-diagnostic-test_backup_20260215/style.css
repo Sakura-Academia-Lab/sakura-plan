@@ -433,18 +433,34 @@ body {
 
 .survival-sheet .problem-item {
     break-inside: avoid;
-    min-height: 30px;
+    min-height: 85px;
+    /* 解答欄が下に来るため高さを確保 */
     font-size: 16px;
+    flex-direction: column;
+    /* 解答欄を下へ */
+    align-items: flex-start;
+    /* 左寄せ */
+    padding: 8px 0;
 }
 
-.survival-sheet .p-num {
-    width: 35px;
-    font-size: 13px;
+.survival-sheet .p-content {
+    width: 100%;
+    padding: 4px 0 8px 35px;
+    /* 番号の分だけインセット */
+    box-sizing: border-box;
+    line-height: 1.6;
 }
 
 .survival-sheet .answer-box-empty {
-    width: 80px;
-    height: 35px;
+    width: 100px;
+    height: 40px;
+    margin-left: 35px;
+    /* 番号の真下に合わせる */
+}
+
+.survival-sheet .answer-box-empty.wide {
+    width: 200px;
+    /* 素因数分解用：以前より幅広に */
 }
 
 .survival-sheet .explanation-container {
@@ -457,18 +473,39 @@ body {
 }
 
 .survival-sheet .exp-top {
-    min-height: 30px;
+    min-height: 35px;
     font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.survival-sheet .exp-top.vertical {
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 60px;
 }
 
 .survival-sheet .ans-box-filled {
     width: 80px;
     height: 35px;
+    flex-shrink: 0;
+}
+
+.survival-sheet .exp-top.vertical .ans-box-filled {
+    margin-left: 35px;
+    height: 40px;
+}
+
+.survival-sheet .ans-box-filled.wide {
+    width: 200px;
 }
 
 .survival-sheet .exp-annotation {
     min-height: 25px;
     font-size: 12px;
+    padding-left: 35px;
 }
 
 @media print {
@@ -570,17 +607,45 @@ body {
         padding: 4px 0 !important;
         font-size: 13px !important;
         line-height: 1.4 !important;
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+    .survival-sheet .problem-item.vertical,
+    .survival-sheet .exp-top.vertical {
+        min-height: 70px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .survival-sheet .p-content {
+        padding: 0 6px !important;
+    }
+
+    .survival-sheet .problem-item.vertical .p-content {
+        padding: 4px 0 6px 30px !important;
     }
 
     .survival-sheet .answer-box-empty,
     .survival-sheet .ans-box-filled {
-        width: 70px !important;
+        width: 80px !important;
         height: 35px !important;
+        margin-left: 0 !important;
+    }
+
+    .survival-sheet .problem-item.vertical .answer-box-empty,
+    .survival-sheet .exp-top.vertical .ans-box-filled {
+        margin-left: 30px !important;
+    }
+
+    .survival-sheet .answer-box-empty.wide,
+    .survival-sheet .ans-box-filled.wide {
+        width: 180px !important;
     }
 
     .survival-sheet .exp-annotation {
         min-height: 20px !important;
-        padding: 2px 0 3px 35px !important;
+        padding: 2px 0 3px 30px !important;
         font-size: 11px !important;
     }
 

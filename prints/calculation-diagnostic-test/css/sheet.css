@@ -1,0 +1,515 @@
+/* A4 用紙設定 */
+.page {
+    width: 210mm;
+    min-height: 296mm;
+    padding: 10mm 15mm;
+    margin: 0 auto 20px;
+    background: white;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--main-orange);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.color-exp {
+    border-bottom-color: var(--red-pen);
+}
+
+.chapter-label {
+    font-size: 11px;
+    color: #7f8c8d;
+}
+
+.main-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+}
+
+.header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.header-date {
+    font-size: 10px;
+    color: #666;
+}
+
+.info-box {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.info-item {
+    border-bottom: 1px solid #333;
+    height: 30px;
+    display: flex;
+    align-items: flex-end;
+    font-size: 11px;
+}
+
+.name-item {
+    width: 150px;
+}
+
+.score-item {
+    width: 80px;
+}
+
+.method-box {
+    background: #fdf2e9;
+    padding: 8px 12px;
+    border-left: 4px solid var(--main-orange);
+    margin-bottom: 15px;
+    font-size: 12px;
+}
+
+.problems {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.problem-item,
+.exp-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    border-bottom: 1px dashed var(--border-gray);
+    padding: 8px 0;
+    min-height: 65px;
+}
+
+/* ★ 5問以下の設定 */
+.few-problems .problem-item,
+.few-problems .exp-top {
+    min-height: 90px;
+}
+
+.few-problems .exp-annotation {
+    min-height: 70px;
+}
+
+/* ★ 2題構成専用 */
+.ultra-few .problem-item,
+.ultra-few .exp-top {
+    min-height: 110mm;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+.ultra-few .exp-annotation {
+    min-height: 100mm;
+}
+
+.p-num {
+    width: 40px;
+    color: #95a5a6;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.p-content {
+    flex-grow: 1;
+    text-align: left;
+    padding: 0 10px;
+}
+
+/* 解答欄の基本サイズ。幅(width)や高さ(height)を変えることで調整できます */
+.answer-box-empty {
+    width: 110px;
+    height: 55px;
+    border: 1px solid #333;
+    flex-shrink: 0;
+    position: relative;
+    /* 内部のテキスト配置用 */
+}
+
+/* 解答欄を広くする場合（素因数分解、範囲問題など） */
+.answer-box-empty.wide {
+    width: 150px;
+}
+
+.ans-box-filled {
+    width: 110px;
+    height: 55px;
+    border: 2px solid var(--red-pen);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ans-box-filled.wide {
+    width: 150px;
+}
+
+.ans-text {
+    color: var(--red-pen);
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.exp-unit {
+    margin-bottom: 5px;
+}
+
+.exp-annotation {
+    padding: 4px 0 8px 40px;
+    min-height: 35px;
+}
+
+.handwritten-note {
+    font-family: 'Kiwi Maru', serif;
+    color: var(--red-pen);
+    font-size: 13px;
+    display: block;
+    position: relative;
+    padding-left: 18px;
+    line-height: 1.4;
+}
+
+.handwritten-note::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 9px;
+}
+
+/* 2列レイアウト */
+.two-col-sheet .two-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5mm;
+    margin-top: 4px;
+}
+
+.two-col-sheet .col-section {
+    border: 1px solid var(--border-gray);
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+.two-col-sheet .col-header {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--main-orange);
+    border-bottom: 1.5px solid var(--main-orange);
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+
+.two-col-sheet .col-header-ans {
+    color: var(--red-pen);
+    border-bottom-color: var(--red-pen);
+}
+
+.two-col-sheet .col-coaching {
+    font-size: 10px;
+    color: #555;
+    background: #fdf2e9;
+    padding: 2px 6px;
+    border-left: 3px solid var(--main-orange);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.two-col-sheet .problem-item,
+.two-col-sheet .exp-top {
+    min-height: 48px;
+    font-size: 15px;
+    padding: 4px 0;
+}
+
+.two-col-sheet .p-num {
+    width: 26px;
+    font-size: 12px;
+}
+
+.two-col-sheet .p-content {
+    font-size: 15px;
+    padding: 0 4px;
+}
+
+.two-col-sheet .ans-text {
+    font-size: 14px;
+}
+
+.two-col-sheet .exp-annotation {
+    min-height: 16px;
+    padding: 2px 0 4px 26px;
+}
+
+.two-col-sheet .handwritten-note {
+    font-size: 11px;
+}
+
+/* サバイバルシート */
+.survival-sheet .problems {
+    column-count: 2;
+    column-gap: 10mm;
+}
+
+.survival-sheet .problem-item {
+    break-inside: avoid;
+    min-height: 40px;
+    font-size: 16px;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.survival-sheet .p-content {
+    flex-grow: 1;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/* サバイバルテスト（3分チャレンジ）専用の解答欄サイズ */
+.survival-sheet .answer-box-empty {
+    width: 100px;
+    /* 横幅。ここを大きくすると解答欄が右に伸びます */
+    height: 35px;
+    /* 高さ */
+}
+
+/* サバイバルテストで解答欄を広くする場合 */
+.survival-sheet .answer-box-empty.wide {
+    width: 200px;
+    /* 範囲問題や素因数分解の時の幅 */
+}
+
+.survival-sheet .explanation-container {
+    column-count: 2;
+    column-gap: 10mm;
+}
+
+.survival-sheet .exp-unit {
+    break-inside: avoid;
+}
+
+.survival-sheet .exp-top {
+    min-height: 35px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.survival-sheet .exp-top.vertical {
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 60px;
+}
+
+.survival-sheet .ans-box-filled {
+    width: 80px;
+    height: 35px;
+    flex-shrink: 0;
+}
+
+.survival-sheet .exp-top.vertical .ans-box-filled {
+    margin-left: 35px;
+    height: 40px;
+}
+
+/* 素因数分解の解答欄の幅（個別設定） */
+.answer-box-empty.factor,
+.ans-box-filled.factor {
+    width: 160px;
+    /* ←素因数分解の幅を変えたい場合はここを調整 */
+}
+
+/* 範囲問題（以上・以下）の解答欄の幅（個別設定） */
+.answer-box-empty.range,
+.ans-box-filled.range {
+    width: 180px;
+    /* ←範囲問題の幅を変えたい場合はここを調整 */
+}
+
+.survival-sheet .exp-annotation {
+    min-height: 25px;
+    font-size: 12px;
+    padding-left: 35px;
+}
+
+/* 解答欄の中に表示する「以上」「未満」などの補助テキスト */
+.range-guide {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    padding: 0 5px 5px;
+    box-sizing: border-box;
+    font-size: 10px;
+    color: #888;
+    pointer-events: none;
+}
+
+.range-guide span {
+    flex: 1;
+    text-align: right;
+}
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    #sidebar,
+    .controls {
+        display: none !important;
+    }
+
+    #main-content {
+        margin-left: 0;
+        padding: 0;
+    }
+
+    .main-title {
+        white-space: nowrap !important;
+        overflow: visible !important;
+    }
+
+    .page {
+        margin: 0;
+        width: 210mm;
+        height: 297mm;
+        padding: 10mm 15mm;
+        box-shadow: none;
+        border: none;
+        overflow: hidden;
+    }
+
+    .page-break {
+        page-break-after: always;
+        break-after: page;
+    }
+
+    .problem-item,
+    .exp-top {
+        min-height: 46px !important;
+        padding: 5px 0 !important;
+    }
+
+    .exp-annotation {
+        min-height: 18px !important;
+        padding: 2px 0 3px 40px !important;
+    }
+
+    .exp-unit {
+        margin-bottom: 2px !important;
+    }
+
+    .few-problems .problem-item,
+    .few-problems .exp-top {
+        min-height: 75px !important;
+    }
+
+    .few-problems .exp-annotation {
+        min-height: 55px !important;
+    }
+
+    .ultra-few .problem-item,
+    .ultra-few .exp-top {
+        min-height: 100mm !important;
+    }
+
+    .ultra-few .exp-annotation {
+        min-height: 80mm !important;
+    }
+
+    .survival-sheet .problems,
+    .survival-sheet .explanation-container {
+        column-count: 2 !important;
+        column-gap: 8mm !important;
+    }
+
+    .survival-sheet .problem-item,
+    .survival-sheet .exp-top {
+        min-height: 40px !important;
+        padding: 4px 0 !important;
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+    .survival-sheet .problem-item.vertical,
+    .survival-sheet .exp-top.vertical {
+        min-height: 70px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .survival-sheet .p-content {
+        padding: 0 6px !important;
+    }
+
+    .survival-sheet .problem-item.vertical .p-content {
+        padding: 4px 0 6px 30px !important;
+    }
+
+    .survival-sheet .answer-box-empty,
+    .survival-sheet .ans-box-filled {
+        width: 80px !important;
+        height: 35px !important;
+        margin-left: 0 !important;
+    }
+
+    .survival-sheet .problem-item.vertical .answer-box-empty,
+    .survival-sheet .exp-top.vertical .ans-box-filled {
+        margin-left: 30px !important;
+    }
+
+    /* 印刷時の解答欄の幅（個別設定） */
+    .survival-sheet .answer-box-empty.factor,
+    .survival-sheet .ans-box-filled.factor {
+        width: 140px !important;
+        /* ←印刷時の素因数分解の幅 */
+    }
+
+    .survival-sheet .answer-box-empty.range,
+    .survival-sheet .ans-box-filled.range {
+        width: 230px !important;
+        /* ←印刷時の範囲問題の幅 */
+    }
+
+    .survival-sheet .exp-annotation {
+        min-height: 20px !important;
+        padding: 2px 0 3px 30px !important;
+        font-size: 11px !important;
+    }
+
+    .survival-sheet .p-num {
+        width: 30px !important;
+        font-size: 12px !important;
+    }
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>計算力トレーニング：第1ステージ（反射神経）</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/ui.css">
+    <link rel="stylesheet" href="css/sheet.css">
+    <link rel="stylesheet" href="css/criteria.css">
+</head>
+
+<body>
+
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" style="text-decoration: none; color: inherit;">
+                <h1>計算力トレーニング</h1>
+                <p>第1ステージ：反射神経</p>
+            </a>
+        </div>
+        <div id="menu-container"></div>
+        <div class="nav-item criteria-menu" onclick="showCriteria()">
+            📊 判定基準を見る
+        </div>
+        <div class="nav-item passport-menu" onclick="showPassport()">
+            📝 攻略パスポート
+        </div>
+
+        <div class="batch-print-section">
+            <div class="section-title">📦 一括印刷</div>
+            <div class="batch-print-btn" onclick="printAllStageUnits('ステージ1')">
+                🖨️ 第1ステージ 全部
+            </div>
+        </div>
+        <div style="margin-top: 20px; padding: 10px;">
+            <a href="index.html" class="nav-item">🏠 トップページに戻る</a>
+        </div>
+    </div>
+
+    <!-- 判定基準コンテンツ（core.js の showCriteria で使用） -->
+    <div id="criteria-content" style="display:none;">
+        <div class="criteria-section-main">
+            <h2>📊 計算脳・自動化レベル判定基準</h2>
+            <p class="criteria-intro">制限時間3分・35問の「連続正解・チャレンジ」の結果（到達記録）に基づき、生徒の計算回路がどの段階にあるかを4段階で判定します。</p>
+
+            <div class="rank-table">
+                <div class="rank-row rank-s">
+                    <div class="rank-label">S</div>
+                    <div class="rank-content">
+                        <div class="rank-score">30〜35問</div>
+                        <div class="rank-level">完全自動化 (Mastery / Automatic)</div>
+                        <div class="rank-state">「直感（System 1）」計算プロセスが長期記憶化されており、ワーキングメモリを消費せず「景色」として答えが見えている状態。</div>
+                    </div>
+                </div>
+                <div class="rank-row rank-a">
+                    <div class="rank-label">A</div>
+                    <div class="rank-content">
+                        <div class="rank-score">20〜29問</div>
+                        <div class="rank-level">流暢性 (Fluency)</div>
+                        <div class="rank-state">「高速処理」解法は正しいが、まだ意識的な操作（思い出そうとする努力）が必要。負荷がかかるとミスが出る可能性がある。</div>
+                    </div>
+                </div>
+                <div class="rank-row rank-b">
+                    <div class="rank-label">B</div>
+                    <div class="rank-content">
+                        <div class="rank-score">10〜19問</div>
+                        <div class="rank-level">手順的知識 (Procedural)</div>
+                        <div class="rank-state">「手作業」筆算や指などの「外部メモリ」に頼らないと処理できない。計算だけで脳の容量が埋まり、思考停止しやすい。</div>
+                    </div>
+                </div>
+                <div class="rank-row rank-c">
+                    <div class="rank-label">C</div>
+                    <div class="rank-content">
+                        <div class="rank-score">0〜9問</div>
+                        <div class="rank-level">未習熟 (Pre-structural)</div>
+                        <div class="rank-state">「迷走」基礎知識（九九や足し算）の検索に失敗している、または誤った概念（バグ）を持っている状態。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="controls">
+            <div class="tabs" id="pattern-tabs">
+                <button class="tab active" onclick="setPattern(0)">レベル1</button>
+                <button class="tab" onclick="setPattern(1)">レベル2</button>
+                <button class="tab" onclick="setPattern(2)">レベル3</button>
+                <button class="tab" onclick="setPattern(3)">レベル4</button>
+                <button class="tab" onclick="setPattern(4)">レベル5</button>
+            </div>
+            <div class="actions">
+                <button class="btn-print" onclick="window.print()">印刷用レイアウトを表示</button>
+            </div>
+        </div>
+        <div id="sheet-area"></div>
+    </div>
+
+    <script src="js/core.js"></script>
+    <script src="sec1_survival_1.js"></script>
+    <script src="sec1a_decimal_fraction.js"></script>
+    <script src="sec1b_squares.js"></script>
+    <script src="sec1c_pi.js"></script>
+    <script src="sec1d_primes.js"></script>
+    <script src="sec1_survival_2.js"></script>
+    <script src="sec1e_golden_pairs.js"></script>
+    <script src="sec1f_mental_and_factorization.js"></script>
+    <script src="sec1g_approximation.js"></script>
+
+</body>
+
+</html>
