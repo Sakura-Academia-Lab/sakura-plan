@@ -37,9 +37,10 @@ function renderAnswers(col) {
                     <span class="ans-text">${safeWrapMath(col.answers[i])}</span>
                 </div>
             </div>
+            ${col.annotations && col.annotations[i] ? `
             <div class="exp-annotation">
-                ${col.annotations && col.annotations[i] ? `<span class="handwritten-note">${wrapAnnotationMath(col.annotations[i])}</span>` : ''}
-            </div>
+                <span class="handwritten-note">${wrapAnnotationMath(col.annotations[i])}</span>
+            </div>` : ''}
         </div>`;
     }).join('');
 }

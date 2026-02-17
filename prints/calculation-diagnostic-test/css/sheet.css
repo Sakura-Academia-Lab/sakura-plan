@@ -135,7 +135,7 @@
 /* 解答欄の基本サイズ。幅(width)や高さ(height)を変えることで調整できます */
 .answer-box-empty {
     width: 110px;
-    height: 55px;
+    height: 40px;
     border: 1px solid #333;
     flex-shrink: 0;
     position: relative;
@@ -149,7 +149,7 @@
 
 .ans-box-filled {
     width: 110px;
-    height: 55px;
+    height: 45px;
     border: 2px solid var(--red-pen);
     display: flex;
     align-items: center;
