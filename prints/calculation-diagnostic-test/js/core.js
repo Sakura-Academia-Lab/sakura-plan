@@ -26,7 +26,11 @@ function safeWrapMath(text) {
 }
 
 function renderAnswers(col) {
-    return col.problems.map((p, i) => {
+    // Handle both "problems/answers" and "questions" data structures
+    const problems = col.questions ? col.questions.map(q => q.q) : col.problems;
+    const answers = col.questions ? col.questions.map(q => q.a) : col.answers;
+
+    return problems.map((p, i) => {
         const isVertical = p.includes('範囲') || p.includes('概数');
         return `
         <div class="exp-unit">
@@ -34,7 +38,7 @@ function renderAnswers(col) {
                 <span class="p-num">(${i + 1})</span>
                 <div class="p-content">${safeWrapMath(p)}</div>
                 <div class="ans-box-filled${p.includes('素因数分解') ? ' factor' : ''}${p.includes('範囲') ? ' range' : ''}">
-                    <span class="ans-text">${safeWrapMath(col.answers[i])}</span>
+                    <span class="ans-text">${safeWrapMath(answers[i])}</span>
                 </div>
             </div>
             ${col.annotations && col.annotations[i] ? `
@@ -168,12 +172,16 @@ function renderSheet() {
         const pageTitle = `${formatLevelName(unit.chapter)} ${unit.title} 【${label}】`;
         document.title = pageTitle;
 
-        const renderProblems = (col) => col.problems.map((p, i) => `
+        const renderProblems = (col) => {
+            // Handle both "problems" and "questions" data structures
+            const problems = col.questions ? col.questions.map(q => q.q) : col.problems;
+            return problems.map((p, i) => `
         <li class="problem-item">
             <span class="p-num">(${i + 1})</span>
             <div class="p-content">${safeWrapMath(p)}</div>
             <div class="answer-box-empty"></div>
         </li>`).join('');
+        };
 
         area.innerHTML = `
         <div class="page page-break two-col-sheet">
@@ -226,12 +234,16 @@ function renderSheet() {
     const pageTitle = `${formatLevelName(unit.chapter)} ${unit.title} 【${label}】`;
     document.title = pageTitle;
 
+    // Handle both "problems/answers" and "questions" data structures
+    const problems = pattern.questions ? pattern.questions.map(q => q.q) : pattern.problems;
+    const answers = pattern.questions ? pattern.questions.map(q => q.a) : pattern.answers;
+
     let layoutClass = '';
-    if (pattern.problems.length >= 20) {
+    if (problems.length >= 20) {
         layoutClass = 'survival-sheet';
-    } else if (pattern.problems.length <= 2) {
+    } else if (problems.length <= 2) {
         layoutClass = 'ultra-few';
-    } else if (pattern.problems.length <= 5) {
+    } else if (problems.length <= 5) {
         layoutClass = 'few-problems';
     }
 
@@ -255,7 +267,7 @@ function renderSheet() {
         </div>
         ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
         <ul class="problems">
-            ${pattern.problems.map((p, i) => {
+            ${problems.map((p, i) => {
         // 【カスタマイズ用注釈】解答欄の幅を広げる判定（特定のキーワードが含まれる場合）
         const isVertical = p.includes('範囲') || p.includes('概数');
 
@@ -289,7 +301,7 @@ function renderSheet() {
             </div>
         </div>
         <div class="explanation-container">
-            ${pattern.problems.map((p, i) => {
+            ${problems.map((p, i) => {
         // 【カスタマイズ用注釈】解答と解説の幅判定（問題文にキーワードがあれば広くする）
         const isVertical = p.includes('範囲') || p.includes('概数');
         return `
@@ -298,7 +310,7 @@ function renderSheet() {
                         <span class="p-num">(${i + 1})</span>
                         <div class="p-content">${safeWrapMath(p)}</div>
                         <div class="ans-box-filled${p.includes('素因数分解') ? ' factor' : ''}${p.includes('範囲') ? ' range' : ''}">
-                            <span class="ans-text">${safeWrapMath(pattern.answers[i])}</span>
+                            <span class="ans-text">${safeWrapMath(answers[i])}</span>
                         </div>
                     </div>
                 </div>
@@ -337,12 +349,16 @@ function generateSheet(unit, pattern, label) {
         const today = new Date();
         const printDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
 
-        const renderProblems = (col) => col.problems.map((p, i) => `
+        const renderProblems = (col) => {
+            // Handle both "problems" and "questions" data structures
+            const problems = col.questions ? col.questions.map(q => q.q) : col.problems;
+            return problems.map((p, i) => `
         <li class="problem-item">
             <span class="p-num">(${i + 1})</span>
             <div class="p-content">${safeWrapMath(p)}</div>
             <div class="answer-box-empty"></div>
         </li>`).join('');
+        };
 
         return `
         <div class="page page-break two-col-sheet">
@@ -391,12 +407,17 @@ function generateSheet(unit, pattern, label) {
     }
 
     const isSurvivalTest = unit.section === 'サバイバルテスト';
+
+    // Handle both "problems/answers" and "questions" data structures
+    const problems = pattern.questions ? pattern.questions.map(q => q.q) : pattern.problems;
+    const answers = pattern.questions ? pattern.questions.map(q => q.a) : pattern.answers;
+
     let layoutClass = '';
-    if (pattern.problems.length >= 20) {
+    if (problems.length >= 20) {
         layoutClass = 'survival-sheet';
-    } else if (pattern.problems.length <= 2) {
+    } else if (problems.length <= 2) {
         layoutClass = 'ultra-few';
-    } else if (pattern.problems.length <= 5) {
+    } else if (problems.length <= 5) {
         layoutClass = 'few-problems';
     }
 
@@ -420,7 +441,7 @@ function generateSheet(unit, pattern, label) {
         </div>
         ${isSurvivalTest ? '' : `<div class="method-box">目標：${unit.method}</div>`}
         <ul class="problems">
-            ${pattern.problems.map((p, i) => {
+            ${problems.map((p, i) => {
         // 【カスタマイズ用注釈】解答欄の幅を広げる判定
         const isVertical = p.includes('範囲') || p.includes('概数');
 
@@ -454,7 +475,7 @@ function generateSheet(unit, pattern, label) {
             </div>
         </div>
         <div class="explanation-container">
-            ${pattern.problems.map((p, i) => {
+            ${problems.map((p, i) => {
         // 【カスタマイズ用注釈】解答と解説箇所の幅判定
         const isVertical = p.includes('範囲') || p.includes('概数');
         return `
@@ -463,7 +484,7 @@ function generateSheet(unit, pattern, label) {
                         <span class="p-num">(${i + 1})</span>
                         <div class="p-content">${safeWrapMath(p)}</div>
                         <div class="ans-box-filled${p.includes('素因数分解') ? ' factor' : ''}${p.includes('範囲') ? ' range' : ''}">
-                            <span class="ans-text">${safeWrapMath(pattern.answers[i])}</span>
+                            <span class="ans-text">${safeWrapMath(answers[i])}</span>
                         </div>
                     </div>
                 </div>
